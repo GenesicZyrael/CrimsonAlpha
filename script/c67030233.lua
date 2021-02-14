@@ -52,6 +52,7 @@ function s.initial_effect(c)
 	e5:SetCode(EFFECT_MATERIAL_CHECK)
 	e5:SetValue(s.valcheck)
 	c:RegisterEffect(e5)
+	aux.EnableMajesticReturn(c,nil,nil,nil,nil)
 end
 s.listed_names={70902743,21159309}
 s.synchro_nt_required=1
