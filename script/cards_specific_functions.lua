@@ -862,7 +862,7 @@ function Auxiliary.DoubleSnareValidity(c,range,property)
 end
 Auxiliary.StardustCost=Auxiliary.CostWithReplace(Stardust.ReleaseSelfCost,84012625)
 
-function Auxiliary.EnableMajesticReturn(c,extracat,extrainfo,extraop)
+function Auxiliary.EnableMajesticReturn(c,extracat,extrainfo,extraop,returneff)
 	if not extracat then extracat=0 end
 	--return
 	local e1=Effect.CreateEffect(c)
@@ -880,6 +880,10 @@ function Auxiliary.EnableMajesticReturn(c,extracat,extrainfo,extraop)
 	e2:SetProperty(0)
 	e2:SetCondition(Auxiliary.MajesticReturnCondition2)
 	c:RegisterEffect(e2)
+	if returneff then
+		e1:SetLabelObject(returneff)
+		e2:SetLabelObject(returneff)
+	end	
 end
 function Auxiliary.MajesticReturnCondition1(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsHasEffect(27001071)
@@ -902,6 +906,7 @@ function Auxiliary.MajesticReturnTarget(c,extrainfo)
 			local g=Duel.SelectTarget(tp,Auxiliary.MajesticSPFilter,tp,LOCATION_GRAVE,0,1,1,nil,c,e,tp)
 			Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
 			Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+			if extrainfo then extrainfo(e,tp,eg,ep,ev,re,r,rp,chk) end
 	end
 end
 
@@ -912,6 +917,9 @@ function Auxiliary.MajesticReturnOperation(c,extraop)
 		if c:GetOriginalType()&0x802040~=0 and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0
 			and c:IsLocation(LOCATION_EXTRA) and tc and tc:IsRelateToEffect(e) then
 			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+			if extraop then
+				extraop(e,tp,eg,ep,ev,re,r,rp)
+			end			
 		end
 	end
 end
