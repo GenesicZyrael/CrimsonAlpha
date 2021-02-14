@@ -862,6 +862,8 @@ function Auxiliary.DoubleSnareValidity(c,range,property)
 end
 Auxiliary.StardustCost=Auxiliary.CostWithReplace(Stardust.ReleaseSelfCost,84012625)
 
+
+--- START of INSERT: CrimsonAlpha
 function Auxiliary.EnableMajesticReturn(c,extracat,extrainfo,extraop,returneff)
 	if not extracat then extracat=0 end
 	--return
@@ -909,17 +911,22 @@ function Auxiliary.MajesticReturnTarget(c,extrainfo)
 			if extrainfo then extrainfo(e,tp,eg,ep,ev,re,r,rp,chk) end
 	end
 end
-
 function Auxiliary.MajesticReturnOperation(c,extraop)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		local tc=Duel.GetFirstTarget()
 		local c=e:GetHandler()
-		if c:GetOriginalType()&0x802040~=0 and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0
-			and c:IsLocation(LOCATION_EXTRA) and tc and tc:IsRelateToEffect(e) then
-			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-			if extraop then
-				extraop(e,tp,eg,ep,ev,re,r,rp)
-			end			
-		end
+		local sc=Duel.GetFirstMatchingCard(Auxiliary.NecroValleyFilter(Auxiliary.MajesticReturnSubstituteFilter),tp,LOCATION_GRAVE,0,nil)
+		if sc and Duel.SelectYesNo(tp,aux.Stringid(27001073,0)) then
+			Duel.Remove(sc,POS_FACEUP,REASON_COST)
+		else
+			if c:GetOriginalType()&0x802040~=0 and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0
+				and c:IsLocation(LOCATION_EXTRA) and tc and tc:IsRelateToEffect(e) then
+				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+				if extraop then
+					extraop(e,tp,eg,ep,ev,re,r,rp)
+				end			
+			end
+		end					
 	end
 end
+--- END of INSERT: CrimsonAlpha
