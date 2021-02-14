@@ -55,6 +55,7 @@ function s.initial_effect(c)
 	aux.EnableMajesticReturn(c,nil,nil,nil,nil)
 end
 s.listed_names={70902743,21159309}
+s.majestic_base={70902743}
 s.synchro_nt_required=1
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler()==Duel.GetAttacker()
