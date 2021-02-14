@@ -58,6 +58,8 @@ function s.initial_effect(c)
 end
 s.listed_names={21159309,CARD_STARDUST_DRAGON}
 s.synchro_nt_required=1
+s.majestic_base={CARD_STARDUST_DRAGON}
+
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep==1-tp and Duel.IsChainNegatable(ev)
 end
