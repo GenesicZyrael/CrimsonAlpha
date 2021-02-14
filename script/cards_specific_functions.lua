@@ -894,7 +894,7 @@ function Auxiliary.MajesticSPFilter(c,mc,e,tp)
 	return mc.majestic_base and c:IsCode(table.unpack(mc.majestic_base)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function Auxiliary.MajesticReturnTarget(c,extrainfo)
-	return function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			local c=e:GetHandler()
 			if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and Auxiliary.MajesticSPFilter(chkc,e,tp) end
 			if chk==0 then return true end
