@@ -887,32 +887,31 @@ end
 function Auxiliary.MajesticReturnCondition2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsHasEffect(27001071)
 end
-function Auxiliary.MajesticReturnTarget(c,extrainfo)
-	return function(e,tp,eg,ep,ev,re,r,rp,chk)
-		if chk==0 then return true end
-		Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
-		if extrainfo then extrainfo(e,tp,eg,ep,ev,re,r,rp,chk) end
-	end
-end
 function Auxiliary.MajesticReturnSubstituteFilter(c)
 	return c:IsCode(14088859) and c:IsAbleToRemoveAsCost()
 end
+function Auxiliary.MajesticSPFilter(c,mc,e,tp)
+	return mc.majestic_base and c:IsCode(table.unpack(mc.majestic_base)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function Auxiliary.MajesticReturnTarget(c,extrainfo)
+	return function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+			local c=e:GetHandler()
+			if chkc then return chkc:IsLocation(LOCATION_GRAVE) and chkc:IsControler(tp) and Auxiliary.MajesticSPFilter(chkc,e,tp) end
+			if chk==0 then return true end
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+			local g=Duel.SelectTarget(tp,Auxiliary.MajesticSPFilter,tp,LOCATION_GRAVE,0,1,1,nil,c,e,tp)
+			Duel.SetOperationInfo(0,CATEGORY_TODECK,e:GetHandler(),1,0,0)
+			Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,g,1,0,0)
+	end
+end
+
 function Auxiliary.MajesticReturnOperation(c,extraop)
 	return function(e,tp,eg,ep,ev,re,r,rp)
+		local tc=Duel.GetFirstTarget()
 		local c=e:GetHandler()
-		if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
-		-- local sc=Duel.GetFirstMatchingCard(Auxiliary.NecroValleyFilter(Auxiliary.MajestReturnSubstituteFilter),tp,LOCATION_GRAVE,0,nil)
-		-- if sc and Duel.SelectYesNo(tp,aux.Stringid(14088859,0)) then
-			-- Duel.Remove(sc,POS_FACEUP,REASON_COST)
-		-- else
-			Duel.SendtoDeck(c,nil,2,REASON_EFFECT)
-		-- end
-		if c:IsLocation(LOCATION_EXTRA) then
-			local id=c:GetCode()
-			Duel.RaiseSingleEvent(c,EVENT_CUSTOM+id,e,0,0,0,0)
-			if extraop then
-				extraop(e,tp,eg,ep,ev,re,r,rp)
-			end
+		if c:GetOriginalType()&0x802040~=0 and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0
+			and c:IsLocation(LOCATION_EXTRA) and tc and tc:IsRelateToEffect(e) then
+			Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 		end
 	end
 end
