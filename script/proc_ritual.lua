@@ -109,7 +109,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 					local mg=Duel.GetRitualMaterial(tp,not requirementfunc)
 					local mg2=extrafil and extrafil(e,tp,eg,ep,ev,re,r,rp,chk) or Group.CreateGroup()
 					Ritual.CheckMatFilter(matfilter,e,tp,mg,mg2)
-					--
+					--- START of INSERT: CrimsonAlpha
 					local fg=Group.CreateGroup()
 					for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,27200101)}) do
 						fg:AddCard(pe:GetHandler())
@@ -120,7 +120,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 					else
 						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 					end
-					--						
+					--- END of INSERT: CrimsonAlpha						
 				end
 				Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,location)
 			end
@@ -186,7 +186,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 				Ritual.CheckMatFilter(matfilter,e,tp,mg,mg2)
 				local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				--
+				--- START of INSERT: CrimsonAlpha
 				local fg=Group.CreateGroup()
 				for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,27200101)}) do
 					fg:AddCard(pe:GetHandler())
@@ -220,7 +220,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 						fc:RegisterFlagEffect(27200101,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)					
 					end					
 				end
-				--						
+				--- END of INSERT: CrimsonAlpha					
 				local tg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(Ritual.Filter),tp,location,0,1,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 				if #tg>0 then
 					local tc=tg:GetFirst()
