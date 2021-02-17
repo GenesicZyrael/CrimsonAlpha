@@ -74,12 +74,12 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.seqcfilter,1,nil,tp,lg)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,0,LOCATION_ONFIELD+LOCATION_GRAVE)
+	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToHand,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
-	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,Card.IsAbleToHand,tp,LOCATION_MZONE+LOCATION_GRAVE,LOCATION_ONFIELD+LOCATION_GRAVE,1,1,nil)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
@@ -100,8 +100,13 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
 		local te=e:GetLabelObject()
+		local cn=te:GetCondition()
+		local cs=te:GetCost()
 		local tg=te:GetTarget()
+		
 		return tg(e,tp,eg,ep,ev,re,r,rp,0,chkc)
+			-- and cs(e,tp,eg,ep,ev,re,r,rp,0)
+			-- and cn(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if chk==0 then
 		if e:GetLabel()==0 then return false end
@@ -115,7 +120,11 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabelObject(te)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	e:SetProperty(te:GetProperty())
+	local cn=te:GetCondition()
 	local tg=te:GetTarget()
+	local cs=te:GetCost()
+	-- if cn then cn(e,tp,eg,ep,ev,re,r,rp) end
+	-- if cs then cs(e,tp,eg,ep,ev,re,r,rp,1) end
 	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 	Duel.ClearOperationInfo(0)
 end
