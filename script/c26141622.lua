@@ -2,16 +2,16 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
-	local e1=Ritual.AddProcGreater(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),nil,aux.Stringid(id,0))
+	local e1=Ritual.AddProcEqual(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),nil,aux.Stringid(id,0))
 	c:RegisterEffect(e1)	
-	local e2=Ritual.CreateProc({handler=c,desc=aux.Stringid(id,1),lvtype=RITPROC_GREATER,filter=aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),extrafil=s.extragroup,
+	local e2=Ritual.CreateProc({handler=c,desc=aux.Stringid(id,1),lvtype=RITPROC_EQUAL,filter=aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),extrafil=s.extragroup,
 								extraop=s.extraop,stage2=nil,location=LOCATION_HAND,matfilter=s.charmer_filter})
 	e2:SetCondition(s.condition2)
 	e2:SetCost(s.cost)
 	c:RegisterEffect(e2)
-	local e3=Ritual.CreateProc({handler=c,desc=aux.Stringid(id,2),lvtype=RITPROC_GREATER,filter=aux.FilterBoolFunction(Card.IsCode,44536226),location=LOCATION_GRAVE})
+	local e3=Ritual.CreateProc({handler=c,desc=aux.Stringid(id,2),lvtype=RITPROC_EQUAL,filter=aux.FilterBoolFunction(Card.IsCode,44536226),location=LOCATION_GRAVE})
 	c:RegisterEffect(e3)	
-	local e4=Ritual.CreateProc({handler=c,desc=aux.Stringid(id,3),lvtype=RITPROC_GREATER,filter=aux.FilterBoolFunction(Card.IsCode,44536226),extrafil=s.extragroup,
+	local e4=Ritual.CreateProc({handler=c,desc=aux.Stringid(id,3),lvtype=RITPROC_EQUAL,filter=aux.FilterBoolFunction(Card.IsCode,44536226),extrafil=s.extragroup,
 								extraop=s.extraop,stage2=nil,location=LOCATION_GRAVE,matfilter=s.charmer_filter})
 	e4:SetCondition(s.condition2)
 	e4:SetCost(s.cost)
