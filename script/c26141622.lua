@@ -3,7 +3,12 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
 	local e1=Ritual.AddProcGreater(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),nil,aux.Stringid(id,0))
-	local e2=Ritual.AddProcGreaterCode(c,6,aux.Stringid(id,1),44536226)
+	c:RegisterEffect(e1)
+	local e2=Ritual.AddProcGreater(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),nil,aux.Stringid(55481029,0))
+	-- local e2=Ritual.AddProcGreaterCode(c,6,aux.Stringid(id,1),44536226)
+	e2:SetCost(s.cost)
+	c:RegisterEffect(e2)
+	-- itual.AddProcEqual(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),nil,aux.Stringid(id,0),nil,nil,nil,nil,LOCATION_HAND|LOCATION_GRAVE)
 	--Activate
 	-- local e1=Effect.CreateEffect(c)
 	-- e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -16,6 +21,30 @@ function s.initial_effect(c)
 end
 s.listed_names={44536226}
 
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local fg=Group.CreateGroup()
+	for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,55481029)}) do
+		fg:AddCard(pe:GetHandler())
+	end
+	if chk==0 then 
+		if #fg>0 then
+			return Duel.IsExistingMatchingCard(s.charmer_filter,tp,LOCATION_DECK,0,1,nil) 		
+		-- else
+			-- return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_MZONE,0,1,nil) 
+		end
+	end	
+		local fc=nil
+		if #fg==1 then
+			fc=fg:GetFirst()
+		else
+			fc=fg:Select(tp,1,1,nil)
+		end
+		Duel.Hint(HINT_CARD,0,fc:GetCode())
+		fc:RegisterFlagEffect(55481029,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)	
+		Duel.SendtoGrave(tc,REASON_COST)	
+	-- if chk==0 then return e:GetHandler():IsReleasable() end
+	-- Duel.Release(e:GetHandler(),REASON_COST)
+end
 function s.charmer_filter(c)
 	return (c:IsSetCard(0xbf) or c:IsSetCard(0x10c0)) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
