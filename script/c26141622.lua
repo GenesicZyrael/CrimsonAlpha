@@ -38,7 +38,11 @@ function s.condition1(e,tp,eg,ep,ev,re,r,rp)
 	return not Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,55481029),tp,LOCATION_FZONE,0,1,nil)
 end
 function s.condition2(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,55481029),tp,LOCATION_FZONE,0,1,nil)
+	local fg=Group.CreateGroup()
+	for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,55481029)}) do
+		fg:AddCard(pe:GetHandler())
+	end
+	return #fg>0 and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,55481029),tp,LOCATION_FZONE,0,1,nil)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local fg=Group.CreateGroup()
