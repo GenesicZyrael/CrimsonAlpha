@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	local e1=Ritual.AddProcGreater(c,aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),nil,aux.Stringid(id,0))
 	e1:SetCondition(s.condition1)
 	c:RegisterEffect(e1)	
-	local e2=Ritual.CreateProc({handler=c,desc=aux.Stringid(55481029,3),lvtype=RITPROC_GREATER,filter=aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),extrafil=s.extragroup,
+	local e2=Ritual.CreateProc({handler=c,desc=aux.Stringid(55481029,2),lvtype=RITPROC_GREATER,filter=aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),extrafil=s.extragroup,
 								extraop=s.extraop,stage2=nil,location=LOCATION_HAND,forcedselection=s.ritcheck})
 	e2:SetCondition(s.condition2)
 	e2:SetCost(s.cost)
