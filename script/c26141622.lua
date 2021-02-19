@@ -6,7 +6,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)	
 	local e2=Ritual.CreateProc({handler=c,desc=aux.Stringid(id,1),lvtype=RITPROC_EQUAL,filter=aux.FilterBoolFunction(Card.IsAttribute,ATTRIBUTE_WATER),extrafil=s.extragroup,
 								extraop=s.extraop,stage2=nil,location=LOCATION_HAND,matfilter=s.charmer_filter})
-	e2:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e2:SetCondition(s.condition2)
 	e2:SetCost(s.cost)
 	c:RegisterEffect(e2)
@@ -14,11 +13,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)	
 	local e4=Ritual.CreateProc({handler=c,desc=aux.Stringid(id,3),lvtype=RITPROC_EQUAL,filter=aux.FilterBoolFunction(Card.IsCode,44536226),extrafil=s.extragroup,
 								extraop=s.extraop,stage2=nil,location=LOCATION_GRAVE,matfilter=s.charmer_filter})
-	e4:SetProperty(EFFECT_FLAG_UNCOPYABLE)
 	e4:SetCondition(s.condition2)
 	e4:SetCost(s.cost)
 	c:RegisterEffect(e4)
-
 end
 s.listed_names={44536226}
 function s.extragroup(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -44,7 +41,7 @@ function s.condition2(e,tp,eg,ep,ev,re,r,rp)
 	for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,55481029)}) do
 		fg:AddCard(pe:GetHandler())
 	end
-	return #fg>0 and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,55481029),tp,LOCATION_FZONE,0,1,nil)
+	return e:GetHandler():GetCode()==id and #fg>0 and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,55481029),tp,LOCATION_FZONE,0,1,nil)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local fg=Group.CreateGroup()
