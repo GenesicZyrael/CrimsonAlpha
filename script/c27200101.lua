@@ -100,13 +100,8 @@ end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then
 		local te=e:GetLabelObject()
-		local cn=te:GetCondition()
-		local cs=te:GetCost()
 		local tg=te:GetTarget()
-		
 		return tg(e,tp,eg,ep,ev,re,r,rp,0,chkc)
-			-- and cs(e,tp,eg,ep,ev,re,r,rp,0)
-			-- and cn(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if chk==0 then
 		if e:GetLabel()==0 then return false end
@@ -120,11 +115,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabelObject(te)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	e:SetProperty(te:GetProperty())
-	local cn=te:GetCondition()
 	local tg=te:GetTarget()
-	local cs=te:GetCost()
-	-- if cn then cn(e,tp,eg,ep,ev,re,r,rp) end
-	-- if cs then cs(e,tp,eg,ep,ev,re,r,rp,1) end
 	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 	Duel.ClearOperationInfo(0)
 end
