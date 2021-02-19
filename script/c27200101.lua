@@ -105,8 +105,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local tg=te:GetTarget()
 		
 		return tg(e,tp,eg,ep,ev,re,r,rp,0,chkc)
-			and cs(e,tp,eg,ep,ev,re,r,rp,0)
-			and cn(e,tp,eg,ep,ev,re,r,rp)
+			-- and cs(e,tp,eg,ep,ev,re,r,rp,0)
+			-- and cn(e,tp,eg,ep,ev,re,r,rp)
 	end
 	if chk==0 then
 		if e:GetLabel()==0 then return false end
@@ -123,8 +123,8 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	local cn=te:GetCondition()
 	local tg=te:GetTarget()
 	local cs=te:GetCost()
-	if cn then cn(e,tp,eg,ep,ev,re,r,rp) end
-	if cs then cs(e,tp,eg,ep,ev,re,r,rp,1) end
+	-- if cn then cn(e,tp,eg,ep,ev,re,r,rp) end
+	-- if cs then cs(e,tp,eg,ep,ev,re,r,rp,1) end
 	if tg then tg(e,tp,eg,ep,ev,re,r,rp,1) end
 	Duel.ClearOperationInfo(0)
 end
