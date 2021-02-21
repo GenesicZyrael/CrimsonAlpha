@@ -39,11 +39,10 @@ function s.initial_effect(c)
 	e4:SetTarget(s.thtg)
 	e4:SetOperation(s.thop)
 	c:RegisterEffect(e4)	
-	--Destroy 1 card on the field
+	--Copy Ritual Spell
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e5:SetType(EFFECT_TYPE_QUICK_O)
-	-- e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e5:SetCode(EVENT_FREE_CHAIN)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCountLimit(1,id)
