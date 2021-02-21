@@ -196,7 +196,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 					local g2=Duel.GetMatchingGroup(Ritual.Filter,tp,LOCATION_DECK,0,nil,filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 					if #g>0 then
 						if #g2>0 then 
-							if Duel.SelectYesNo(tp,aux.Stringid(27200101,0)) then
+							if (location ~= LOCATION_DECK) and Duel.SelectYesNo(tp,aux.Stringid(27200101,0)) then
 								location = location+LOCATION_DECK
 								local fc=nil
 								if #fg==1 then
