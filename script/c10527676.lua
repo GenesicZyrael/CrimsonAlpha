@@ -1,4 +1,9 @@
 --Charming Spirit Art - Shokan
+-- Target 1 face-up "Charmer" or "Familiar-Possessed" monster you control; Special Summon 1
+-- monster with 1500 ATK/200 DEF and with the same Attribute from your Deck, but it's effects 
+-- are negated and it's ATK and DEF becomes 0. You can banish this card and 2 monsters in your 
+-- GY with the same Attribute; Special Summon 1 "Familiar-Possessed" monster from your Deck 
+-- or GY. You can only use each effect of "Charming Spirit Art - Shokan" once per turn.
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
