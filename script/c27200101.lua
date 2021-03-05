@@ -43,10 +43,10 @@ function s.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e5:SetType(EFFECT_TYPE_QUICK_O)
-	-- e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e5:SetCode(EVENT_FREE_CHAIN)
 	e5:SetRange(LOCATION_MZONE)
 	e5:SetCountLimit(1,id)
+	e5:SetCondition(s.condition)	
 	e5:SetCost(s.cost)
 	e5:SetTarget(s.target)
 	e5:SetOperation(s.operation)
@@ -84,11 +84,8 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 	end
 end
-function s.cfilter(c)
-	return c:IsFaceup() and c:IsRitualMonster()
-end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil)
+	return Duel.GetTurnPlayer()~=tp
 end
 function s.filter(c)
 	return c:GetType()==TYPE_SPELL+TYPE_RITUAL and c:IsAbleToRemoveAsCost() and c:CheckActivateEffect(false,true,true)~=nil
