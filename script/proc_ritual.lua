@@ -197,7 +197,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 					if #g>0 then
 						if #g2>0 then 
 							if (location ~= LOCATION_DECK) and Duel.SelectYesNo(tp,aux.Stringid(27200101,0)) then
-								location = location+LOCATION_DECK
+								location = LOCATION_DECK
 								local fc=nil
 								if #fg==1 then
 									fc=fg:GetFirst()
@@ -209,7 +209,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 							end
 						end	
 					else
-						location = location+LOCATION_DECK
+						location = LOCATION_DECK
 						local fc=nil
 						if #fg==1 then
 							fc=fg:GetFirst()
