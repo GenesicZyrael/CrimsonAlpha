@@ -2,8 +2,8 @@
 -- [ Pendulum Effect ]
 -- If a "Zefra" card(s) is added to your Extra Deck face-up: Add 1 of those cards to your hand. 
 -- You can send 1 "Zefra" Pendulum Monster from your Deck to the GY, and if you do,
--- change this card's Pendulum Scale to be the same as the sent card's Pendulum Scale,
--- until the End Phase. You can only use each effect of "Zefratorah Metaltron" once per turn.
+-- change this card's Pendulum Scale 1 or 7 until the End Phase. 
+-- You can only use each effect of "Zefratorah Metaltron" once per turn.
 -- ----------------------------------------
 -- [ Lore]
 -- The ten Pyroxenes shone once again and radiated with a great power that it tore the night sky asunder. 
@@ -66,7 +66,7 @@ function s.scfilter(c,pc)
 	return c:IsType(TYPE_PENDULUM) 
 		and c:IsSetCard(0xc4) 
 		and not c:IsForbidden()
-		and c:GetLeftScale()~=pc:GetLeftScale()
+		-- and c:GetLeftScale()~=pc:GetLeftScale()
 end
 function s.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
@@ -75,20 +75,26 @@ function s.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.scop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local scale=1
 	if not c:IsRelateToEffect(e) then return end
 	Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(id,1))
 	local g=Duel.SelectMatchingCard(tp,s.scfilter,tp,LOCATION_DECK,0,1,1,nil,c)
 	local tc=g:GetFirst()
 	if tc and Duel.SendtoGrave(tc,REASON_EFFECT)>0 then
+		if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			scale=7
+		else
+			scale=1
+		end
 		local e1=Effect.CreateEffect(c)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_CHANGE_LSCALE)
-		e1:SetValue(tc:GetLeftScale())
+		e1:SetValue(scale)
 		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
 		c:RegisterEffect(e1)
 		local e2=e1:Clone()
 		e2:SetCode(EFFECT_CHANGE_RSCALE)
-		e2:SetValue(tc:GetRightScale())
+		e2:SetValue(scale)
 		c:RegisterEffect(e2)
 	end
 end
