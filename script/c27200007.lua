@@ -65,7 +65,7 @@ end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_PENDULUM)
 end
-function s.filter(c,e,tp)
+function s.thfilter(c,e,tp)
 	return (c:IsSetCard(0x2a) or c:IsSetCard(0xc4)) and not c:IsCode(id) and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
