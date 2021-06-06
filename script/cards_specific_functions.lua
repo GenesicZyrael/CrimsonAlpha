@@ -355,35 +355,47 @@ function Auxiliary.MaleficSummonOperation(cd,loc)
 end
 
 --Discard cost for Witchcrafter monsters, supports the replacements from the Continuous Spells
-function Auxiliary.WitchcrafterDiscardFilter(c,tp)
-	return c:IsHasEffect(EFFECT_WITCHCRAFTER_REPLACE,tp) and c:IsAbleToGraveAsCost()
+local Witchcrafter={}
+function Witchcrafter.DiscardSpell(c)
+	return c:IsDiscardable() and c:IsType(TYPE_SPELL)
 end
-function Auxiliary.WitchcrafterDiscardGroup(minc)
-	return	function(sg,e,tp,mg)
-				if sg:IsExists(Card.IsHasEffect,1,nil,EFFECT_WITCHCRAFTER_REPLACE,tp) then
-					return #sg==1,#sg>1
-				else
-					return #sg>=minc
-				end
-			end
+function Witchcrafter.DiscardCost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(Witchcrafter.DiscardSpell,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,Witchcrafter.DiscardSpell,1,1,REASON_COST+REASON_DISCARD)
 end
-function Auxiliary.WitchcrafterDiscardCost(f,minc,maxc)
-	if f then f=aux.AND(f,Card.IsDiscardable) else f=Card.IsDiscardable end
-	if not minc then minc=1 end
-	if not maxc then maxc=1 end
-	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
-				if chk==0 then return Duel.IsExistingMatchingCard(f,tp,LOCATION_HAND,0,minc,nil) or Duel.IsExistingMatchingCard(Auxiliary.WitchcrafterDiscardFilter,tp,LOCATION_ONFIELD,0,1,nil,tp) end
-				local g=Duel.GetMatchingGroup(f,tp,LOCATION_HAND,0,nil)
-				g:Merge(Duel.GetMatchingGroup(Auxiliary.WitchcrafterDiscardFilter,tp,LOCATION_ONFIELD,0,nil,tp))
-				local sg=Auxiliary.SelectUnselectGroup(g,e,tp,1,maxc,Auxiliary.WitchcrafterDiscardGroup(minc),1,tp,aux.Stringid(EFFECT_WITCHCRAFTER_REPLACE,2))
-				if sg:IsExists(Card.IsHasEffect,1,nil,EFFECT_WITCHCRAFTER_REPLACE,tp) then
-					local te=sg:GetFirst():IsHasEffect(EFFECT_WITCHCRAFTER_REPLACE,tp)
-					te:UseCountLimit(tp)
-					Duel.SendtoGrave(sg,REASON_COST)
-				else
-					Duel.SendtoGrave(sg,REASON_COST+REASON_DISCARD)
-				end
-			end
+Auxiliary.WitchcrafterDiscardCost=Auxiliary.CostWithReplace(Witchcrafter.DiscardCost,EFFECT_WITCHCRAFTER_REPLACE)
+
+function Witchcrafter.ReleaseCost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsReleasable() end
+	Duel.Release(e:GetHandler(),REASON_COST)
+end
+Auxiliary.WitchcrafterDiscardAndReleaseCost=Auxiliary.CostWithReplace(Witchcrafter.DiscardCost,EFFECT_WITCHCRAFTER_REPLACE,nil,Witchcrafter.ReleaseCost)
+
+function Witchcrafter.repcon(e)
+	return e:GetHandler():IsAbleToGraveAsCost()
+end
+function Witchcrafter.repval(base,e,tp,eg,ep,ev,re,r,rp,chk,extracon)
+	local c=e:GetHandler()
+	return c:IsControler(tp) and c:IsType(TYPE_MONSTER) and c:IsSetCard(0x128)
+end
+function Witchcrafter.repop(id)
+	return function(base,e,tp,eg,ep,ev,re,r,rp)
+		Duel.Hint(HINT_CARD,0,id)
+		Duel.SendtoGrave(base:GetHandler(),REASON_COST)
+	end
+end
+function Auxiliary.CreateWitchcrafterReplace(c,id)
+	local e=Effect.CreateEffect(c)
+	e:SetType(EFFECT_TYPE_FIELD)
+	e:SetCode(EFFECT_WITCHCRAFTER_REPLACE)
+	e:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e:SetTargetRange(1,0)
+	e:SetRange(LOCATION_SZONE)
+	e:SetCountLimit(1,id)
+	e:SetCondition(Witchcrafter.repcon)
+	e:SetValue(Witchcrafter.repval)
+	e:SetOperation(Witchcrafter.repop(id))
+	return e
 end
 
 --Special Summon limit for "Evil HERO" Fusion monsters
@@ -792,6 +804,7 @@ function Auxiliary.SecurityForceCost(e,tp,eg,ep,ev,re,r,rp,chk)
     end
     Duel.Remove(rg,POS_FACEUP,REASON_COST)
 end
+--Standard functions for the "Ursarctic" Special Summoning Quick Effects
 local Ursarctic={}
 function Ursarctic.spcfilter(c)
 	return c:IsLocation(LOCATION_HAND) and c:IsLevelAbove(7)
@@ -850,6 +863,8 @@ function Stardust.ReleaseSelfCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
 	Duel.Release(e:GetHandler(),REASON_COST)
 end
+Auxiliary.StardustCost=Auxiliary.CostWithReplace(Stardust.ReleaseSelfCost,84012625)
+
 function Auxiliary.DoubleSnareValidity(c,range,property)
 	if c then
 		if not property then property=0 end
@@ -861,7 +876,82 @@ function Auxiliary.DoubleSnareValidity(c,range,property)
 		c:RegisterEffect(eff)
 	end
 end
-Auxiliary.StardustCost=Auxiliary.CostWithReplace(Stardust.ReleaseSelfCost,84012625)
+--Standard target and operation functions for the "Cyberdark" effects that Trigger on Normal/Special Summon (also see "Cyberdark World")
+Cyberdark={}
+function Cyberdark.EquipFilter(f)
+	return	function(c,tp)
+				return c:CheckUniqueOnField(tp) and not c:IsForbidden() and (not f or f(c))
+			end
+end
+function Cyberdark.EquipTarget(f,targets,mandatory)
+	f=Cyberdark.EquipFilter(f)
+	if targets then
+		return Cyberdark.EquipTarget_TG(f,mandatory)
+	else
+		return Cyberdark.EquipTarget_NTG(f,mandatory)
+	end
+end
+function Cyberdark.EquipOperation(f,op,targets)
+	f=Cyberdark.EquipFilter(f)
+	if targets then
+		return Cyberdark.EquipOperation_TG(f,op)
+	else
+		return Cyberdark.EquipOperation_NTG(f,op)
+	end
+end
+function Cyberdark.EquipTarget_TG(f,mandatory)
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+		local wc=Duel.IsPlayerAffectedByEffect(tp,EFFECT_CYBERDARK_WORLD)
+		if chkc then return chkc:IsLocation(LOCATION_GRAVE) and (wc or chkc:IsControler(tp)) and f(chkc,tp) end
+		local loc=0
+		if wc then loc=LOCATION_GRAVE end
+		if chk==0 then return mandatory or (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingTarget(f,tp,LOCATION_GRAVE,loc,1,nil,tp)) end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
+		local g=Duel.SelectTarget(tp,f,tp,LOCATION_GRAVE,loc,1,1,nil,tp)
+		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,g,1,0,0)
+		Duel.SetOperationInfo(0,CATEGORY_EQUIP,g,1,0,0)
+	end
+end
+function Cyberdark.EquipTarget_NTG(f,mandatory)
+	return	function(e,tp,eg,ep,ev,re,r,rp,chk)
+		local wc=Duel.IsPlayerAffectedByEffect(tp,EFFECT_CYBERDARK_WORLD)
+		local loc,player=0,tp
+		if wc then 
+			loc=LOCATION_GRAVE 
+			player=PLAYER_ALL
+		end
+		if chk==0 then return mandatory or (Duel.GetLocationCount(tp,LOCATION_SZONE)>0 and Duel.IsExistingMatchingCard(f,tp,LOCATION_GRAVE,loc,1,nil,tp)) end
+		Duel.SetOperationInfo(0,CATEGORY_LEAVE_GRAVE,nil,1,player,0)
+		Duel.SetOperationInfo(0,CATEGORY_EQUIP,nil,1,player,LOCATION_GRAVE)
+	end
+end
+function Cyberdark.EquipOperation_TG(f,op)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+		local c=e:GetHandler()
+		if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
+		local tc=Duel.GetFirstTarget()
+		if tc and tc:IsRelateToEffect(e) and f(tc,tp) then
+			op(c,e,tp,tc)
+		end
+	end
+end
+function Cyberdark.EquipOperation_NTG(f,op)
+	return	function(e,tp,eg,ep,ev,re,r,rp)
+		if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
+		local c=e:GetHandler()
+		if c:IsFacedown() or not c:IsRelateToEffect(e) then return end
+		local wc=Duel.IsPlayerAffectedByEffect(tp,EFFECT_CYBERDARK_WORLD)
+		local loc=0
+		if wc then loc=LOCATION_GRAVE end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
+		local g=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(f),tp,LOCATION_GRAVE,loc,1,1,nil,tp)
+		local tc=g:GetFirst()
+		if tc then
+			op(c,e,tp,tc)
+		end
+	end
+end
 
 
 --- START of INSERT: CrimsonAlpha
