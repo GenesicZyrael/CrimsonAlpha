@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetOperation(s.alop)
 	c:RegisterEffect(e3)
-	-- --to extra & Special summon
+	--to extra & Special summon
 	-- local e4=Effect.CreateEffect(c)
 	-- e4:SetDescription(aux.Stringid(id,2))
 	-- e4:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
@@ -54,12 +54,12 @@ function s.initial_effect(c)
 	e5:SetCode(EFFECT_MATERIAL_CHECK)
 	e5:SetValue(s.valcheck)
 	c:RegisterEffect(e5)
-	aux.EnableMajesticReturn(c,nil,nil,nil,nil)
+	--to extra & Special summon
+	aux.EnableMajesticReturn(c,nil,nil,nil,nil) 
 end
+s.material={21159309,CARD_STARDUST_DRAGON}
 s.listed_names={21159309,CARD_STARDUST_DRAGON}
 s.synchro_nt_required=1
-s.majestic_base={CARD_STARDUST_DRAGON}
-
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) and ep==1-tp and Duel.IsChainNegatable(ev)
 end
@@ -137,7 +137,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	local c=e:GetHandler()
-	if c:GetOriginalType()&0x802040~=0 and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0
+	if c:IsRelateToEffect(e) and c:IsAbleToExtra() and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0
 		and c:IsLocation(LOCATION_EXTRA) and tc and tc:IsRelateToEffect(e) then
 		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 	end
