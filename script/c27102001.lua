@@ -19,16 +19,28 @@ function s.initial_effect(c)
 	e2:SetCondition(s.spcon)
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
-	c:RegisterEffect(e2)	
-	--Destroy monsters
+	c:RegisterEffect(e2)
+	--Activate
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,0))
-	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
-	e3:SetTarget(s.destg)
-	e3:SetOperation(s.desop)
+	e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+	e3:SetType(EFFECT_TYPE_IGNITION)
+	e3:SetRange(LOCATION_HAND)
+	e3:SetCountLimit(1,id)
+	e3:SetCost(s.spcost2)
+	e3:SetTarget(s.sptg2)
+	e3:SetOperation(s.spop2)
 	c:RegisterEffect(e3)	
+	--Destroy monsters
+	local e4=Effect.CreateEffect(c)
+	e4:SetDescription(aux.Stringid(id,1))
+	e4:SetCategory(CATEGORY_DESTROY)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e4:SetCountLimit(1,id)
+	e4:SetTarget(s.destg)
+	e4:SetOperation(s.desop)
+	c:RegisterEffect(e4)	
 end
 s.listed_series={0x22}
 function s.spfilter(c)
@@ -48,7 +60,7 @@ function s.spcon(e,c)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,c)
 	local c=e:GetHandler()
-	local rg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE+LOCATION_HAND,0,c)
+	local rg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_GRAVE+LOCATION_MZONE,0,c)
 	local g=aux.SelectUnselectGroup(rg,e,tp,3,3,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE,nil,nil,true)
 	if #g>0 then
 		g:KeepAlive()
@@ -63,6 +75,51 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	g:DeleteGroup()
 end
+
+function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsDiscardable() end
+	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
+end
+
+function s.spfilter2(c,e,tp)
+	return c:IsSetCard(0x22) and c:IsType(TYPE_MONSTER) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and not c:IsCode(id)
+end
+function s.sptg2(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then
+		local ft=math.min(Duel.GetLocationCount(tp,LOCATION_MZONE),3)
+		if ft>1 and Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
+		if e:GetLabel()==0 and ft<=0 then return false end
+		e:SetLabel(0)
+		local g=Duel.GetMatchingGroup(s.spfilter2,tp,LOCATION_DECK,0,nil,e,tp)
+		return #g>0 and g:CheckWithSumEqual(Card.GetLevel,10,1,ft)
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
+end
+function s.spop2(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local ft=math.min(Duel.GetLocationCount(tp,LOCATION_MZONE),3)
+	if ft>1 and Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
+	local g=Duel.GetMatchingGroup(s.spfilter2,tp,LOCATION_DECK,0,nil,e,tp)
+	if g:CheckWithSumEqual(Card.GetLevel,10,1,ft) then
+		local sg=g:SelectWithSumEqual(tp,Card.GetLevel,10,1,ft)
+		if #sg>0 then
+			Duel.SpecialSummon(sg,0,tp,tp,true,false,POS_FACEUP)
+			local r1=Effect.CreateEffect(c)
+			r1:SetType(EFFECT_TYPE_FIELD)
+			r1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+			r1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+			r1:SetDescription(aux.Stringid(id,2))
+			r1:SetTargetRange(1,0)
+			r1:SetTarget(s.splimit)
+			r1:SetReset(RESET_PHASE+PHASE_END)
+			Duel.RegisterEffect(r1,tp)			
+		end
+	end
+end
+function s.splimit(e,c,sump,sumtype,sumpos,targetp)
+	return not c:IsSetCard(0x22)
+end
+
 function s.desfilter(c)
 	return c:IsFacedown() or not c:IsSetCard(0x22)
 end
