@@ -38,11 +38,19 @@ function s.rfilter(c,mc)
 	local lv=c:GetLevel()
 	return lv==(mlv&0xffff) or lv==(mlv>>16)
 end
+function s.rfilter2(c,mc)
+	local mlv=mc:GetRitualLevel(c)
+	if mlv==mc:GetLevel() then return false end
+	local lv=c:GetLevel()
+	local mlv2=mlv&0xffff
+	if lv~=mlv2 then mlv2=lv else return false end
+	return lv==mlv2
+end
 function s.filter(c,e,tp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if c:IsLocation(LOCATION_MZONE) then ft=ft+1 end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
-	--
+	--- START of INSERT: CrimsonAlpha
 	local location=LOCATION_HAND
 	local fg=Group.CreateGroup()
 	for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,27200101)}) do
@@ -50,11 +58,10 @@ function s.filter(c,e,tp)
 	end
 	if #fg>0 then
 		location=LOCATION_HAND+LOCATION_DECK
-		-- ft=1
 	else
 		location=LOCATION_HAND
 	end
-	--		
+	--- END of INSERT: CrimsonAlpha
 	local sg=Duel.GetMatchingGroup(s.spfilter,tp,location,0,c,e,tp,c)
 	return sg:IsExists(s.rfilter,1,nil,c) or sg:CheckWithSumEqual(Card.GetLevel,c:GetLevel(),1,ft)
 end
@@ -77,7 +84,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 		return mg:IsExists(s.filter,1,nil,e,tp)
 	end
-	--
+	--- START of INSERT: CrimsonAlpha
 	local fg=Group.CreateGroup()
 	for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,27200101)}) do
 		fg:AddCard(pe:GetHandler())
@@ -87,7 +94,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	else
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
 	end
-	--		
+	--- END of INSERT: CrimsonAlpha
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -143,9 +150,18 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	--- END of INSERT: CrimsonAlpha		
 	local b1=sg:IsExists(s.rfilter,1,nil,mc)
 	local b2=sg:CheckWithSumEqual(Card.GetLevel,mc:GetLevel(),1,ft)
+	Debug.Message(b1)
+	Debug.Message(b2)
 	if b1 and (not b2 or Duel.SelectYesNo(tp,aux.Stringid(id,0))) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local tg=sg:FilterSelect(tp,s.rfilter,1,1,nil,mc)
+		local tg=nil
+		--- START of INSERT: CrimsonAlpha
+		if #fg==1 then
+			tg=sg:FilterSelect(tp,s.rfilter2,1,1,nil,mc)
+		else
+			tg=sg:FilterSelect(tp,s.rfilter,1,1,nil,mc)
+		end
+		--- END of INSERT: CrimsonAlpha
 		local tc=tg:GetFirst()
 		tc:SetMaterial(mat)
 		if not mc:IsLocation(LOCATION_EXTRA) then
