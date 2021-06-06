@@ -38,6 +38,7 @@ function s.rfilter(c,mc)
 	local lv=c:GetLevel()
 	return lv==(mlv&0xffff) or lv==(mlv>>16)
 end
+--- START of INSERT: CrimsonAlpha
 function s.rfilter2(c,mc)
 	local mlv=mc:GetRitualLevel(c)
 	if mlv==mc:GetLevel() then return false end
@@ -46,6 +47,7 @@ function s.rfilter2(c,mc)
 	if lv~=mlv2 then mlv2=lv else return false end
 	return lv==mlv2
 end
+--- END of INSERT: CrimsonAlpha
 function s.filter(c,e,tp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if c:IsLocation(LOCATION_MZONE) then ft=ft+1 end
