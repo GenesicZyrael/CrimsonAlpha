@@ -150,8 +150,6 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	--- END of INSERT: CrimsonAlpha		
 	local b1=sg:IsExists(s.rfilter,1,nil,mc)
 	local b2=sg:CheckWithSumEqual(Card.GetLevel,mc:GetLevel(),1,ft)
-	Debug.Message(b1)
-	Debug.Message(b2)
 	if b1 and (not b2 or Duel.SelectYesNo(tp,aux.Stringid(id,0))) then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tg=nil
