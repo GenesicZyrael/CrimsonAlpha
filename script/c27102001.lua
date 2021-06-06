@@ -51,7 +51,7 @@ function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
-	if ft<-2 then return false end
+	if ft<0 then return false end
 	if Duel.IsPlayerAffectedByEffect(tp,69832741) then
 		return Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_MZONE+LOCATION_HAND,0,3,c)
 	else
