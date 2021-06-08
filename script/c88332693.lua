@@ -1,6 +1,7 @@
 --バスター・モード・ゼロ
 --Assault Mode Zero
 --Scripted by AlphaKretin
+--Modified for CrimsonAlpha
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
