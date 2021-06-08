@@ -41,6 +41,16 @@ function s.initial_effect(c)
 	e4:SetTarget(s.destg)
 	e4:SetOperation(s.desop)
 	c:RegisterEffect(e4)	
+	--Activation Limit
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e5:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetTargetRange(0,1)
+	e5:SetValue(1)
+	e5:SetCondition(s.actcon)
+	c:RegisterEffect(e5)
 end
 s.listed_series={0x22}
 function s.spfilter(c)
@@ -133,4 +143,9 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.Destroy(g,REASON_EFFECT)
 	end
+end
+
+function s.actcon(e)
+	local a=Duel.GetAttacker()
+	return a and a:IsControler(e:GetHandlerPlayer()) and a:IsSetCard(0x22)
 end
