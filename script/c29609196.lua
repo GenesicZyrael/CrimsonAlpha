@@ -17,6 +17,7 @@ function s.initial_effect(c)
 end
 
 s.listed_names={CARD_ASSAULT_MODE}
+s.assault_mode_all=id
 function s.spcost2(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsDiscardable() end
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST+REASON_DISCARD)
