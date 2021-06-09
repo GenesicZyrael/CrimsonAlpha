@@ -54,7 +54,6 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local atk=0
 	local g=Duel.GetMatchingGroup(s.ctfilter,tp,0,LOCATION_MZONE,c)
-	Debug.Message(#g)
 	for tc in aux.Next(g) do
 		atk=atk+tc:GetBaseAttack()
 	end	
