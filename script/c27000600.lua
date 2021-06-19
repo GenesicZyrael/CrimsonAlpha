@@ -45,12 +45,8 @@ function s.econ(e)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function s.efilter(e,te)
-	if te:IsActiveType(TYPE_SPELL+TYPE_TRAP) then
-		return true
-	else
-		return (te:IsActiveType(TYPE_MONSTER) and te:GetHandler():IsAttribute(ATTRIBUTE_LIGHT)) 
-			and te:IsActivated() and te:GetOwner()~=e:GetOwner()
-	end
+	return (te:IsActiveType(TYPE_MONSTER) and te:GetHandler():IsAttribute(ATTRIBUTE_LIGHT)) 
+		and te:IsActivated() and te:GetOwner()~=e:GetOwner()
 end
 function s.adtg(e,c)
 	return c:IsSummonType(SUMMON_TYPE_SPECIAL) and not c:IsSetCard(0x1)
