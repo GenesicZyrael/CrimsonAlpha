@@ -54,6 +54,7 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local scale=5
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -61,20 +62,39 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if rg:GetCount()>0 and Duel.SendtoHand(rg,nil,REASON_EFFECT)>0 then
 		Duel.ConfirmCards(1-tp,rg)
 		if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
-			scale=7
-		else
-			scale=1
+			local off=1
+			local ops={}
+			local opval={}
+			if c:GetLeftScale()~=1 then
+				ops[off]=aux.Stringid(id,3)
+				opval[off-1]=1
+				off=off+1
+			end
+			if c:GetLeftScale()~=7 then
+				ops[off]=aux.Stringid(id,4)
+				opval[off-1]=2
+				off=off+1
+			end
+			if off==1 then return end
+			local op=Duel.SelectOption(tp,table.unpack(ops))
+			if opval[op]==1 then
+				scale=1
+			elseif opval[op]==2 then
+				scale=7
+			else 
+				scale=5
+			end
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CHANGE_LSCALE)
+			e1:SetValue(scale)
+			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+			c:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetCode(EFFECT_CHANGE_RSCALE)
+			e2:SetValue(scale)
+			c:RegisterEffect(e2)
 		end
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_CHANGE_LSCALE)
-		e1:SetValue(scale)
-		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-		c:RegisterEffect(e1)
-		local e2=e1:Clone()
-		e2:SetCode(EFFECT_CHANGE_RSCALE)
-		e2:SetValue(scale)
-		c:RegisterEffect(e2)
 	end
 end
 function s.scfilter(c,pc)
