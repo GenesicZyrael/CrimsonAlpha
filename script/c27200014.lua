@@ -1,8 +1,8 @@
  --CCG: Zefratorah Metaltron
 -- [ Pendulum Effect ]
--- If a "Zefra" card(s) is added to your Extra Deck face-up: Add 1 of those cards to your hand. 
--- You can send 1 "Zefra" Pendulum Monster from your Deck to the GY, and if you do,
--- change this card's Pendulum Scale 1 or 7 until the End Phase. 
+-- If a "Zefra" card(s) is added to your Extra Deck face-up: Add 1 of 
+-- those cards to your hand, and if you do, change this card's Pendulum Scale 
+-- to 1 or 7 until the End Phase. 
 -- You can only use each effect of "Zefratorah Metaltron" once per turn.
 -- ----------------------------------------
 -- [ Lore]
@@ -27,14 +27,14 @@ function s.initial_effect(c)
 	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 	--change scale
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,0))
-	e3:SetType(EFFECT_TYPE_IGNITION)
-	e3:SetRange(LOCATION_PZONE)
-	e3:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
-	e3:SetTarget(s.sctg)
-	e3:SetOperation(s.scop)
-	c:RegisterEffect(e3)
+	-- local e3=Effect.CreateEffect(c)
+	-- e3:SetDescription(aux.Stringid(id,0))
+	-- e3:SetType(EFFECT_TYPE_IGNITION)
+	-- e3:SetRange(LOCATION_PZONE)
+	-- e3:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+	-- e3:SetTarget(s.sctg)
+	-- e3:SetOperation(s.scop)
+	-- c:RegisterEffect(e3)
 end
 function s.thfilter(c,tp)
 	return c:IsFaceup() 
@@ -53,13 +53,28 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local g=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):Filter(Card.IsRelateToEffect,nil,e)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local rg=g:Select(tp,1,1,nil)
-	if rg:GetCount()>0 then
-		Duel.SendtoHand(rg,nil,REASON_EFFECT)
+	if rg:GetCount()>0 and Duel.SendtoHand(rg,nil,REASON_EFFECT)>0 then
 		Duel.ConfirmCards(1-tp,rg)
+		if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+			scale=7
+		else
+			scale=1
+		end
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_CHANGE_LSCALE)
+		e1:SetValue(scale)
+		e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+		c:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_CHANGE_RSCALE)
+		e2:SetValue(scale)
+		c:RegisterEffect(e2)
 	end
 end
 function s.scfilter(c,pc)
