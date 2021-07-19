@@ -1,6 +1,10 @@
 --Dragunity Knight Zefraxa
+-- [ Pendulum Effect ]
+-- You cannot Pendulum Summon monsters, except "Dragunity" and "Zefra" monsters. This effect cannot be negated. Once per turn if a monster you control battles an opponent's monster (Quick Effect): You can equip 1 "Dragunity" Tuner from your Deck to that monster, but it cannot be Special Summoned this turn.
+-- ----------------------------------------
+-- [ Monster Effect ]
+-- If this card is sent to the GY or to the Extra Deck face-up: You can target 1 monster you control; equip this card to it, and if you do, it gains 500 ATK. While this card is equipped to a monster: You can send 1 Level 4 or lower "Dragunity" or "Zefra" monster from your hand to the GY; Special Summon this card, then reduce it's Level by the sent monster's Level in the GY. You can only use each effect of "Dragunity Knight Zefraxa" once per turn.
 local s,id=GetID()
-local eid=id * 1000
 function s.initial_effect(c)
 	--pendulum summon
 	Pendulum.AddProcedure(c)
@@ -77,7 +81,6 @@ function s.eqtg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function s.eqop1(e,tp,eg,ep,ev,re,r,rp)
-	Debug.Message(eid+1)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
@@ -128,7 +131,6 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	Debug.Message(eid+2)
 	local c=e:GetHandler()
 	local lv=e:GetLabel()
 	local clv=c:GetLevel()
@@ -164,7 +166,6 @@ function s.eqtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function s.eqop2(e,tp,eg,ep,ev,re,r,rp)
-	Debug.Message(eid+3)
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local tc=Duel.GetFirstTarget()
