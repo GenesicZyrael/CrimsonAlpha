@@ -18,48 +18,25 @@ function s.initial_effect(c)
 		e2:SetProperty(EFFECT_FLAG_DELAY)
 		e2:SetCode(EVENT_TO_GRAVE)
 		e2:SetCountLimit(1,id)
+		e2:SetCondition(s.effcon)
 		e2:SetTarget(s.efftg)
 		e2:SetOperation(s.effop)
 	c:RegisterEffect(e2)
 end
-function s.monsterfilter(c)
-	return c:IsSetCard(0x9d) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
-end
-function s.spelltrapfilter(c)
-	return c:IsSetCard(0x9d) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsAbleToHand()
-end
-
--- function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	-- if chkc then return chkc:GetControler()==tp and chkc:GetLocation()==LOCATION_GRAVE and s.spelltrapfilter(chkc) end
-	-- if chk==0 then return Duel.IsExistingTarget(s.spelltrapfilter,tp,LOCATION_GRAVE,0,1,nil) end
-	-- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-	-- local g=Duel.SelectTarget(tp,s.spelltrapfilter,tp,LOCATION_GRAVE,0,1,1,nil)
-	-- Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
--- end
--- function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	-- local tc=Duel.GetFirstTarget()
-	-- if tc:IsRelateToEffect(e) then
-		-- Duel.SendtoHand(tc,nil,REASON_EFFECT)
-	-- end
--- end
 
 function s.filter(c)
 	return c:IsFaceup() and c:IsControlerCanBeChanged()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.filter(chkc) end
-	if chk==0 then return true end
-	if not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
-		local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
-		Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,#g,0,0)
-	end
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) end
+	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,0,LOCATION_MZONE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONTROL)
+	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_CONTROL,g,#g,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if c:IsRelateToEffect(e) and tc and tc:IsRelateToEffect(e) and not tc:IsImmuneToEffect(e) then
-		c:SetCardTarget(tc)
+	if tc and tc:IsRelateToEffect(e) then
 		Duel.GetControl(tc,tp,PHASE_END,1)
 	end
 end
@@ -67,6 +44,9 @@ end
 function s.efffilter(c)
 	return c:IsSetCard(0x9d)
 		and c:IsType(TYPE_FUSION)
+end
+function s.effcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsReason(REASON_EFFECT)
 end
 function s.efftg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(tp) end
