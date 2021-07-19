@@ -1,5 +1,6 @@
 --Dragunity Knight Zefraxa
 local s,id=GetID()
+local eid=id * 1000
 function s.initial_effect(c)
 	--pendulum summon
 	Pendulum.AddProcedure(c)
@@ -18,7 +19,7 @@ function s.initial_effect(c)
 		e3:SetType(EFFECT_TYPE_QUICK_O)
 		e3:SetCode(EVENT_PRE_DAMAGE_CALCULATE)
 		e3:SetRange(LOCATION_PZONE)
-		e3:SetCountLimit(1,id,EFFECT_COUNT_CODE_SINGLE)
+		e3:SetCountLimit(1)
 		e3:SetTarget(s.eqtg1)
 		e3:SetOperation(s.eqop1)
 	c:RegisterEffect(e3)
@@ -27,7 +28,7 @@ function s.initial_effect(c)
 		e4:SetDescription(aux.Stringid(id,3))
 		e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
 		e4:SetType(EFFECT_TYPE_IGNITION)
-		e4:SetCountLimit(1,id,EFFECT_COUNT_CODE_SINGLE)
+		e4:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
 		e4:SetRange(LOCATION_SZONE)
 		e4:SetCost(s.spcost)
 		e4:SetTarget(s.sptg)
@@ -76,6 +77,7 @@ function s.eqtg1(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function s.eqop1(e,tp,eg,ep,ev,re,r,rp)
+	Debug.Message(eid+1)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
@@ -126,6 +128,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	Debug.Message(eid+2)
 	local c=e:GetHandler()
 	local lv=e:GetLabel()
 	local clv=c:GetLevel()
@@ -161,6 +164,7 @@ function s.eqtg2(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	end
 end
 function s.eqop2(e,tp,eg,ep,ev,re,r,rp)
+	Debug.Message(eid+3)
 	local c=e:GetHandler()
 	if Duel.GetLocationCount(tp,LOCATION_SZONE)<=0 then return end
 	local tc=Duel.GetFirstTarget()
