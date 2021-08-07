@@ -42,8 +42,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
 	local sptc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	local code=sptc:GetFirst():GetCode()
-	local adtc=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,code) 
-	if sptc and adtc and #adtc>0 then
+	local adtc=Duel.GetFirstMatchingCard(s.cfilter,tp,LOCATION_DECK,0,nil,e,tp,code)
+	if sptc and adtc then
 		if Duel.SpecialSummon(sptc,0,tp,tp,true,false,POS_FACEDOWN_DEFENSE) and Duel.SendtoHand(adtc,nil,REASON_EFFECT) then
 			Duel.ConfirmCards(1-tp,adtc)
 			--Triple Tribute Fodder
