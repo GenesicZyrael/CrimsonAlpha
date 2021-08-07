@@ -5,6 +5,14 @@ function GetID()
 	return self_table,self_code
 end
 
+
+--Multi purpose token
+if not c946 then
+	c946 = {}
+	setmetatable(c946, Card)
+	rawset(c946,"__index",c946)
+	c946.initial_effect=function()end
+end
 local function cost_replace_getvalideffs(replacecode,extracon,e,tp,eg,ep,ev,re,r,rp,chk)
 	local t={}
 	for _,eff in ipairs({Duel.GetPlayerEffect(tp,replacecode)}) do
@@ -433,6 +441,7 @@ function Auxiliary.IsMaterialListSetCard(c,...)
 	end
 	return false
 end
+--Returns true if the Card "c" specifically lists any of the card IDs in "..."																			  
 function Auxiliary.IsCodeListed(c,...)
 	if not c.listed_names then return false end
 	local codes={...}
@@ -443,6 +452,40 @@ function Auxiliary.IsCodeListed(c,...)
 	end
 	return false
 end
+--Returns true if the Card "c" specifically lists the name of a card that is part of an archetype in "..."
+Auxiliary.IsArchetypeCodeListed=(function()
+	local sc=Debug.AddCard(946,0,0,0,0,0)
+	Debug.ReloadFieldBegin=(function()
+		local old=Debug.ReloadFieldBegin
+		return function(...)
+				old(...)
+				sc=Debug.AddCard(946,0,0,0,0,0)
+			end
+		end
+	)()
+	return function(c,...)
+		if not c.listed_names then return false end
+		local setcodes={...}
+		for _,ccode in ipairs(c.listed_names) do
+			sc:Recreate(ccode)
+			for _,setcode in ipairs(setcodes) do
+				if sc:IsSetCard(setcode) then return true end
+			end
+		end
+		return false
+	end
+end)()
+--Returns true if the Card "c" specifically lists any of the card types in "..."
+function Auxiliary.IsCardTypeListed(c,...)
+	if not c.listed_card_types then return false end
+	local card_types={...}
+	for _,typ in ipairs(card_types) do
+		for _,typp in ipairs(c.listed_card_types) do
+			if (typ&typp)~=0 then return true end
+		end
+	end
+	return false
+end																										  
 --"Can be negated" check for monsters
 function Auxiliary.disfilter1(c)
 	return c:IsFaceup() and not c:IsDisabled() and (not c:IsNonEffectMonster() or c:GetOriginalType()&TYPE_EFFECT~=0)
