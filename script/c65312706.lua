@@ -52,6 +52,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 				r1:SetRange(LOCATION_MZONE)
 				r1:SetCode(EFFECT_TRIPLE_TRIBUTE)
 				r1:SetTargetRange(LOCATION_MZONE,0)
+				r1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 				r1:SetValue(aux.TRUE)
 			sptc:GetFirst():RegisterEffect(r1,tp)
 		end	
