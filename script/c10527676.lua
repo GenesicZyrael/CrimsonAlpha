@@ -15,6 +15,14 @@ function s.initial_effect(c)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
+	--Banish from GY 
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,2))
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCost(s.cost)
+	e2:SetOperation(s.spope)
+	c:RegisterEffect(e2)
 end
 s.listed_series={0xbf,0x10c0}
 function s.filter1(c,e,tp)
@@ -63,4 +71,53 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		sc:RegisterEffect(e4)
 		Duel.SpecialSummonComplete()	
 	end
+end
+
+function s.cfilter1(c,e,tp)
+	local att=c:GetAttribute()
+	return c:IsType(TYPE_MONSTER) 
+		and c:IsAbleToRemoveAsCost()
+		and Duel.IsExistingMatchingCard(s.cfilter2,tp,LOCATION_GRAVE,0,1,nil,c,e,tp) 
+end
+function s.cfilter2(c,tc,e,tp)
+	return c:IsType(TYPE_MONSTER) 
+		and c:IsAbleToRemoveAsCost()
+		and c:GetOriginalAttribute()==tc:GetOriginalAttribute() 
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e,tp,c,tc)
+		and c~=tc
+end
+function s.spfilter(c,e,tp,tc1,tc2)
+	return c:IsSetCard(0x10c0) 
+		and c:IsType(TYPE_MONSTER) 
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+		and (c~=tc1 and c~=tc2)
+end
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then 
+		return c:IsAbleToRemoveAsCost()
+			and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
+	end
+	local g1=Duel.GetMatchingGroup(s.cfilter1,tp,LOCATION_GRAVE,0,nil,e,tp)
+	local g2=Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_GRAVE,0,nil,g1:GetFirst(),e,tp)
+	g1:Merge(g2)
+	local g=aux.SelectUnselectGroup(g1,e,tp,2,2,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE,nil,nil,false)	
+	g:AddCard(c)
+	Duel.Remove(g,POS_FACEUP,REASON_COST)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_DECK+LOCATION_GRAVE)
+end
+function s.filter(c,e,tp)
+	return c:IsSetCard(0x10c0) 
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+end
+function s.spope(e,tp,eg,ep,ev,re,r,rp)
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local c=e:GetHandler()
+	local fid=c:GetFieldID()
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,e,tp)
+	local tc=g:GetFirst()
+	if tc then
+		Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
+	end	
 end
