@@ -94,16 +94,19 @@ function s.spfilter(c,e,tp,tc1,tc2)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 		and (c~=tc1 and c~=tc2)
 end
+function s.rescon(sg,e,tp,mg)
+    return aux.ChkfMMZ(1)(sg,e,tp,mg) 
+		and sg:GetClassCount(Card.GetAttribute)==1
+end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then 
 		return c:IsAbleToRemoveAsCost()
 			and Duel.IsExistingMatchingCard(s.cfilter1,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
 	end
-	local g1=Duel.GetMatchingGroup(s.cfilter1,tp,LOCATION_GRAVE,0,nil,e,tp)
-	local g2=Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_GRAVE,0,nil,g1:GetFirst(),e,tp)
-	g1:Merge(g2)
-	local g=aux.SelectUnselectGroup(g1,e,tp,2,2,aux.ChkfMMZ(1),1,tp,HINTMSG_REMOVE,nil,nil,false)	
+	local rg=Duel.GetMatchingGroup(s.cfilter1,tp,LOCATION_GRAVE,0,nil,e,tp)
+	rg:Merge(Duel.GetMatchingGroup(s.cfilter2,tp,LOCATION_GRAVE,0,nil,rg:GetFirst(),e,tp))
+	local g=aux.SelectUnselectGroup(rg,e,tp,2,2,s.rescon,1,tp,HINTMSG_REMOVE)
 	g:AddCard(c)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,0,LOCATION_DECK+LOCATION_GRAVE)
