@@ -32,7 +32,7 @@ function s.initial_effect(c)
 	local e5=Effect.CreateEffect(c)
 	e5:SetType(EFFECT_TYPE_SINGLE)
 	e5:SetCode(EFFECT_TRIPLE_TRIBUTE)
-	e5:SetValue(aux.TargetBoolFunction(Card.IsSetCard,0x100a))
+	e5:SetValue(s.condition)
 	c:RegisterEffect(e5)
 	--Triple Summon
 	local e6=Effect.CreateEffect(c)
@@ -78,6 +78,9 @@ function s.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	g:DeleteGroup()	
 end
 -- {Monster Effect: Tribute Summon}
+function s.condition(e,c)
+	return c:IsSetCard(0x0a) or c:IsSetCard(0xc4)
+end
 function s.sumfilter(c)
 	return (c:IsSetCard(0x0a) or c:IsSetCard(0xc4)) and c:IsSummonable(true,nil,1)
 end
