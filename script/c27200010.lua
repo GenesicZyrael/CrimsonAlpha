@@ -1,6 +1,6 @@
 -- Gem-Knight Zefranite
 -- [ Pendulum Effect ]
--- You cannot Pendulum Summon monsters, except "Gem-Knight" and "Zefra" monsters. This effect cannot be negated. Once per turn: Fusion Summon 1 Fusion Monster from your Extra Deck using monsters from your hand or field as Fusion Materials.
+-- You cannot Pendulum Summon monsters, except "Gem-Knight" and "Zefra" monsters. This effect cannot be negated. You can Fusion Summon 1 Fusion Monster from your Extra Deck using monsters from your hand or field as Fusion Materials. You can only use this effect of "Gem-Knight Zefranite" once per turn.
 -- ----------------------------------------
 -- [ Monster Effect ]
 -- This card can be used as a substitute for any 1 Fusion Material whose name is specifically listed on the Fusion Monster Card, but the other Fusion Material(s) must be correct. You can reveal 1 monster from your Main Deck or Extra Deck; This card's name can be treated as the revealed monster's original name then, Fusion Summon 1 Fusion Monster from your Extra Deck using monsters from your hand or field as Fusion Materials, including this card. You can only use this effect of "Gem-Knight Zefranite" once per turn.
