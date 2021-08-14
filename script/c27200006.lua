@@ -3,7 +3,7 @@
 -- You cannot Pendulum Summon monsters, except "Naturia" and "Zefra" monsters. This effect cannot be negated. Your opponent cannot activate cards and effects in response to the activation of a card or effect in your Pendulum Zone, or the activation of your Pendulum Summoned monster's effects.
 -- ----------------------------------------
 -- [ Monster Effect ]
--- When this card is Normal or Pendulum Summoned: You can target 1 "Naturia" or "Zefra" card in your GY; add it to your hand. If this card on the field is sent to the Extra Deck: You can activate this effect; add this card to your hand during your next Standby Phase.You can only use each effect of "Naturia Tamer Zefrawendi" once per turn.
+-- When this card is Normal or Pendulum Summoned: You can target 1 "Naturia" or "Zefra" card in your GY; add it to your hand. If this card on the field is sent to the Extra Deck: You can activate this effect; add this card to your hand during your next Standby Phase, then place 1 card from your hand on top of your Deck. You can only use each effect of "Naturia Tamer Zefrawendi" once per turn.
 local s,id=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -104,5 +104,10 @@ function s.thrcon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetTurnPlayer()==tp and c:IsAbleToHand()
 end
 function s.throp(e,tp,eg,ep,ev,re,r,rp)
-	Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+	local c=e:GetHandler()
+	if Duel.SendtoHand(c,nil,REASON_EFFECT) then 
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TODECK)
+		local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND,0,1,1,nil)
+		Duel.SendtoDeck(g,nil,SEQ_DECKTOP,REASON_EFFECT)
+	end
 end
