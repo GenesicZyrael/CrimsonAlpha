@@ -21,6 +21,8 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_BATTLE_DESTROYED)
+	e2:SetRange(LOCATION_MZONE)
+	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCondition(s.atkcon)
 	e2:SetOperation(s.atkop)
 	c:RegisterEffect(e2)
@@ -63,9 +65,6 @@ function s.atkcon(e,tp,eg,ep,ev,re,r,rp)
 		and rc:IsStatus(STATUS_OPPO_BATTLE)
 end
 function s.atkop(e,tp,eg,ep,ev,re,r,rp)
-	local des=eg:GetFirst()
-	if des:IsRelateToBattle() then
-		Duel.ChainAttack()
-	end
+	Duel.ChainAttack()
 end
 

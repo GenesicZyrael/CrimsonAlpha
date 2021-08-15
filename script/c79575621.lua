@@ -15,7 +15,7 @@ function s.initial_effect(c)
 	e1:SetCost(s.atkcost)
 	e1:SetOperation(s.atkop)
 	c:RegisterEffect(e1)
-	--Search/Destroy
+	--Special Summon/Destroy
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
@@ -66,7 +66,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local off=1
 	local ops={}
 	local opval={}
-	if b1 and ft>-1 then
+	if b1 and ft>0 then
 		ops[off]=aux.Stringid(id,1)
 		opval[off-1]=1
 		off=off+1
@@ -97,6 +97,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject()
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)	
 	if tc:IsFacedown() or not tc:IsRelateToBattle() then return end
 	local sel=e:GetLabel()
 	if sel==1 then
