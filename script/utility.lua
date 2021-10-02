@@ -13,6 +13,7 @@ if not c946 then
 	rawset(c946,"__index",c946)
 	c946.initial_effect=function()end
 end
+
 local function cost_replace_getvalideffs(replacecode,extracon,e,tp,eg,ep,ev,re,r,rp,chk)
 	local t={}
 	for _,eff in ipairs({Duel.GetPlayerEffect(tp,replacecode)}) do
@@ -180,7 +181,6 @@ function Auxiliary.Next(g)
 			end
 end
 Group.Iter=Auxiliary.Next
-Group.__bnot=Auxiliary.Next
 
 function Auxiliary.NULL()
 end
