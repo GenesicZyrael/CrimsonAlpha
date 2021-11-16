@@ -58,7 +58,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not eg:IsContains(c) and #(aux.zptgroup(eg,nil,c))>=2
 end
 function s.ctfilter(c)
-	return c:IsType(TYPES)
+	return c:IsType(TYPES) and c:IsSetCard(0x99) 
 end
 local function getcount(tp)
 	local tottype=0
