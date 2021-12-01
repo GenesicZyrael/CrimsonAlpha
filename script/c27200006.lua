@@ -4,6 +4,9 @@
 -- ----------------------------------------
 -- [ Monster Effect ]
 -- When this card is Normal or Pendulum Summoned: You can target 1 "Naturia" or "Zefra" card in your GY; add it to your hand. If this card on the field is sent to the Extra Deck: You can activate this effect; add this card to your hand during your next Standby Phase, then place 1 card from your hand on top of your Deck. You can only use each effect of "Naturia Tamer Zefrawendi" once per turn.
+
+-- Changelogs --
+-- 12/01/2021 - Removed the effect that returns itself to the hand. Reason: Nerf
 local s,id=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -39,14 +42,14 @@ function s.initial_effect(c)
 		e5:SetCondition(s.thcon)
 	c:RegisterEffect(e5)	
 	--return to hand
-	local e6=Effect.CreateEffect(c)
-		e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-		e6:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
-		e6:SetCode(EVENT_LEAVE_FIELD)
-		e6:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
-		e6:SetCondition(s.regcon)
-		e6:SetOperation(s.regop)
-	c:RegisterEffect(e6)	
+	-- local e6=Effect.CreateEffect(c)
+		-- e6:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+		-- e6:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DAMAGE_CAL)
+		-- e6:SetCode(EVENT_LEAVE_FIELD)
+		-- e6:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+		-- e6:SetCondition(s.regcon)
+		-- e6:SetOperation(s.regop)
+	-- c:RegisterEffect(e6)	
 end
 s.listed_series={0x2a,0xc4}
 -- {Pendulum Summon Restriction: Zefra & Constellar}
