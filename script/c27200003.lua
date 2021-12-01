@@ -4,6 +4,9 @@
 -- ----------------------------------------
 -- [ Monster Effect ]
 -- If this card is sent to the GY or to the Extra Deck face-up: You can target 1 monster you control; equip this card to it, and if you do, it gains 500 ATK. While this card is equipped to a monster: You can send 1 Level 4 or lower "Dragunity" or "Zefra" monster from your hand to the GY; Special Summon this card, then reduce it's Level by the sent monster's Level in the GY. You can only use each effect of "Dragunity Knight Zefraxa" once per turn.
+
+-- Changelogs --
+-- 12/01/2021 - Removed the monster effect that Special Summons itself from the S/T Zone. Reason: Nerf
 local s,id=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -28,16 +31,16 @@ function s.initial_effect(c)
 		e3:SetOperation(s.eqop1)
 	c:RegisterEffect(e3)
 	--special summon while equipped
-	local e4=Effect.CreateEffect(c)
-		e4:SetDescription(aux.Stringid(id,3))
-		e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
-		e4:SetType(EFFECT_TYPE_IGNITION)
-		e4:SetCountLimit(1,id)
-		e4:SetRange(LOCATION_SZONE)
-		e4:SetCost(s.spcost)
-		e4:SetTarget(s.sptg)
-		e4:SetOperation(s.spop)
-	c:RegisterEffect(e4)
+	-- local e4=Effect.CreateEffect(c)
+		-- e4:SetDescription(aux.Stringid(id,3))
+		-- e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
+		-- e4:SetType(EFFECT_TYPE_IGNITION)
+		-- e4:SetCountLimit(1,id)
+		-- e4:SetRange(LOCATION_SZONE)
+		-- e4:SetCost(s.spcost)
+		-- e4:SetTarget(s.sptg)
+		-- e4:SetOperation(s.spop)
+	-- c:RegisterEffect(e4)
 	--equip itself
 	local e5=Effect.CreateEffect(c)
 		e5:SetDescription(aux.Stringid(id,2))
