@@ -66,6 +66,7 @@ function s.initial_effect(c)
 	e6:SetOperation(s.SPOpe)
 	c:RegisterEffect(e6)
 end
+s.listed_names={89943723}
 function s.EffTarg(e,c)
 	return c:IsCode(89943723) 
 		or (c:IsSetCard(0x9) and c:IsType(TYPE_FUSION))
