@@ -6,6 +6,7 @@ function s.initial_effect(c)
 	c:AddSetcodesRule(0x3008)
 	--Activate
 	local e1=Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsCode,74711057),nil,s.fextra,nil,nil,s.stage2)
+	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
 	e1:SetCountLimit(1,id,EFFECT_COUNT_CODE_OATH)
 	c:RegisterEffect(e1)
 	if not AshBlossomTable then AshBlossomTable={} end
