@@ -1016,7 +1016,7 @@ function Auxiliary.MajesticReturnCondition2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsHasEffect(27001071)
 end
 function Auxiliary.MajesticReturnSubstituteFilter(c)
-	return c:IsCode(27001073) and c:IsAbleToRemoveAsCost()
+	return c:IsCode(27001071) and c:IsAbleToRemoveAsCost()
 end
 function Auxiliary.MajesticSPFilter(c,mc,e,tp)
 	return mc.majestic_base and c:IsCode(table.unpack(mc.majestic_base)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -1038,7 +1038,7 @@ function Auxiliary.MajesticReturnOperation(c,extraop)
 		local tc=Duel.GetFirstTarget()
 		local c=e:GetHandler()
 		local sc=Duel.GetFirstMatchingCard(Auxiliary.NecroValleyFilter(Auxiliary.MajesticReturnSubstituteFilter),tp,LOCATION_GRAVE,0,nil)
-		if sc and Duel.SelectYesNo(tp,aux.Stringid(27001073,0)) then
+		if sc and Duel.SelectYesNo(tp,aux.Stringid(27001071,0)) then
 			Duel.Remove(sc,POS_FACEUP,REASON_COST)
 		else
 			if c:GetOriginalType()&0x802040~=0 and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0
