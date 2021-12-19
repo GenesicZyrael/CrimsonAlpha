@@ -984,13 +984,13 @@ end
 Drytron.TributeCost=aux.CostWithReplace(Drytron.TributeBaseCost,CARD_URSARCTIC_DRYTRON,nil,Drytron.TributeExtraCost)
 
 
-
 --- START of INSERT: CrimsonAlpha
 function Auxiliary.EnableMajesticReturn(c,extracat,extrainfo,extraop,returneff)
 	if not extracat then extracat=0 end
 	--return
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_TODECK | extracat)
+	e1:SetDescription(aux.Stringid(27001071,2))
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_TRIGGER_F)
 	e1:SetCode(EVENT_PHASE+PHASE_END)
 	e1:SetRange(LOCATION_MZONE)
@@ -1016,10 +1016,10 @@ function Auxiliary.MajesticReturnCondition2(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsHasEffect(27001071)
 end
 function Auxiliary.MajesticReturnSubstituteFilter(c)
-	return c:IsCode(27001071) and c:IsAbleToRemoveAsCost()
+	return c:IsCode(27001073) and c:IsAbleToRemoveAsCost()
 end
 function Auxiliary.MajesticSPFilter(c,mc,e,tp)
-	return mc.majestic_base and c:IsCode(table.unpack(mc.majestic_base)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return mc.material and c:IsCode(table.unpack(mc.material)) and c:IsCanBeSpecialSummoned(e,0,tp,false,false) and not c:IsCode(21159309)
 end
 function Auxiliary.MajesticReturnTarget(c,extrainfo)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
@@ -1038,7 +1038,7 @@ function Auxiliary.MajesticReturnOperation(c,extraop)
 		local tc=Duel.GetFirstTarget()
 		local c=e:GetHandler()
 		local sc=Duel.GetFirstMatchingCard(Auxiliary.NecroValleyFilter(Auxiliary.MajesticReturnSubstituteFilter),tp,LOCATION_GRAVE,0,nil)
-		if sc and Duel.SelectYesNo(tp,aux.Stringid(27001071,0)) then
+		if sc and Duel.SelectYesNo(tp,aux.Stringid(27001073,2)) then
 			Duel.Remove(sc,POS_FACEUP,REASON_COST)
 		else
 			if c:GetOriginalType()&0x802040~=0 and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0
