@@ -2,14 +2,17 @@
 -- [ Pendulum Effect ]
 -- You cannot Pendulum Summon monsters, except "Gusto" and "Zefra" monsters. This effect
 -- cannot be negated. Destroy 1 card from your hand or field, and if you do, Special Summon
--- 1 "Gusto" monster from your Deck or 1 "Zefra" monster from your face-up Extra Deck.
--- You can only use this effect of "Daigusto Zeframpilica" once per turn.
+-- 1 "Gusto" monster from your Deck or 1 "Zefra" monster from your face-up Extra Deck,
+-- then you can destroy this card. You can only use this effect of "Daigusto Zeframpilica" once per turn.
 ----------------------------------------
 -- [ Monster Effect ]
 -- When this card is Pendulum Summoned, or if this card is destroyed by battle or card 
 -- effect while in your Monster Zone: You can Special Summon 1 "Gusto" or "Zefra" monster 
 -- from your hand or from your face-up Extra Deck, except "Daigusto Zeframpilica". You 
 -- can only use this effect of "Daigusto Zeframpilica" once per turn.
+
+-- Changelogs --
+-- 12/22/2021 - Allow for destroying itself once Pendulum effect resolves. Reason: Buff
 local s,id=GetID()
 function s.initial_effect(c)
 	--pendulum summon
@@ -117,6 +120,9 @@ function s.DesOpe(e,tp,eg,ep,ev,re,r,rp)
 			local g1=Duel.SelectMatchingCard(tp,s.spfilter1,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 			if g1:GetCount()>0 then
 				Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP)
+				if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+					Duel.Destroy(e:GetHandler(),REASON_EFFECT)
+				end
 			end
 		-- else
 			-- local g2=Duel.SelectMatchingCard(tp,s.spfilter2,tp,LOCATION_EXTRA,0,1,1,nil,e,tp)
