@@ -1,5 +1,6 @@
 --セイヴァー・スター・ドラゴン
 --Majestic Star Dragon
+Duel.LoadScript ("crimson_alpha.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--synchro summon
