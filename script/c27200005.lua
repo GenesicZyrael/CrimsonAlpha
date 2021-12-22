@@ -120,7 +120,7 @@ function s.DesOpe(e,tp,eg,ep,ev,re,r,rp)
 			local g1=Duel.SelectMatchingCard(tp,s.spfilter1,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 			if g1:GetCount()>0 then
 				Duel.SpecialSummon(g1,0,tp,tp,false,false,POS_FACEUP)
-				if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+				if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 					Duel.Destroy(e:GetHandler(),REASON_EFFECT)
 				end
 			end
