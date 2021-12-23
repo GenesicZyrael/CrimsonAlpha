@@ -41,7 +41,6 @@ end
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		Debug.Message(REGISTER_FLAG_SHADDOLL)
 		local e1=Effect.CreateEffect(tc)
 		e1:SetDescription(aux.Stringid(id,2))
 		e1:SetCategory(CATEGORY_TOGRAVE)
