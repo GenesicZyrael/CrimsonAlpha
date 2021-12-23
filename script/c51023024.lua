@@ -1,6 +1,7 @@
 --影霊の翼 ウェンディ
 --Rishaddoll Wendi
 --Scripted by AlphaKretin
+Duel.LoadScript ("crimson_alpha.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--special summon (any pos)

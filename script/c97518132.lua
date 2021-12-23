@@ -1,6 +1,7 @@
 --影依の巫女 エリアル
 --Noel Shaddoll Ariel
 --Scripted by ahtelel
+Duel.LoadScript ("crimson_alpha.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--flip

@@ -1,10 +1,8 @@
 --聖なる影 ケイウス
 --Qadoshaddoll Keios
 --Logical Nonsense
-
---Substitute ID
+Duel.LoadScript ("crimson_alpha.lua")
 local s,id=GetID()
-
 function s.initial_effect(c)
 	--FLIP: Special summon "Shaddoll" monster from hand
 	local e1=Effect.CreateEffect(c)

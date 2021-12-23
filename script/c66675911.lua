@@ -1,8 +1,7 @@
 --星なる影 ゲニウス
 --Nephshaddoll Genius
 --Logical Nonsense
-
---Substitute ID
+Duel.LoadScript ("crimson_alpha.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--Targeted "Shaddoll" monster becomes unaffected by monster effects

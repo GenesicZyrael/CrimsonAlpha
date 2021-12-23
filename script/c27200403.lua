@@ -1,4 +1,5 @@
  --Renshaddoll Winda
+ Duel.LoadScript ("crimson_alpha.lua")
 local s,id=GetID()
 local params={aux.FilterBoolFunction(Card.IsSetCard,0x9d)}
 function s.initial_effect(c)
@@ -40,6 +41,7 @@ end
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+		Debug.Message(REGISTER_FLAG_SHADDOLL)
 		local e1=Effect.CreateEffect(tc)
 		e1:SetDescription(aux.Stringid(id,2))
 		e1:SetCategory(CATEGORY_TOGRAVE)
