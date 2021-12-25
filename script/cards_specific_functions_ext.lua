@@ -57,11 +57,13 @@ function Auxiliary.MajesticReturnOperation(c,extraop)
 		else
 			if Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0 and c:IsLocation(LOCATION_EXTRA) 
 			and tc and tc:IsRelateToEffect(e) then
-				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
-				if extraop then
-					extraop(e,tp,eg,ep,ev,re,r,rp)
-				end			
+				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)	
 			end
-		end					
+		end
+		if c:IsLocation(LOCATION_EXTRA) then
+			if extraop then
+				extraop(e,tp,eg,ep,ev,re,r,rp)
+			end
+		end
 	end
 end
