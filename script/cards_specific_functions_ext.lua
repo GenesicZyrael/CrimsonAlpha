@@ -55,8 +55,8 @@ function Auxiliary.MajesticReturnOperation(c,extraop)
 		if sc and Duel.SelectYesNo(tp,aux.Stringid(27001073,2)) then
 			Duel.Remove(sc,POS_FACEUP,REASON_COST)
 		else
-			if c:GetOriginalType()&0x802040~=0 and Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0
-				and c:IsLocation(LOCATION_EXTRA) and tc and tc:IsRelateToEffect(e) then
+			if Duel.SendtoDeck(c,nil,0,REASON_EFFECT)~=0 and c:IsLocation(LOCATION_EXTRA) 
+			and tc and tc:IsRelateToEffect(e) then
 				Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP)
 				if extraop then
 					extraop(e,tp,eg,ep,ev,re,r,rp)
