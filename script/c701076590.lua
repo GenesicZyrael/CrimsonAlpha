@@ -3,7 +3,7 @@ local s,id=GetID()
 local sid=300102004
 function s.initial_effect(c)
 	c:SetUniqueOnField(1,1,id)
-	Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsType,TYPE_EFFECT),2,2)
+	Link.AddProcedure(c,s.filter,2)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetRange(LOCATION_MZONE)
@@ -15,6 +15,9 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_TOSS_COIN_CHOOSE)
 	e2:SetOperation(s.operation("coin",Duel.GetCoinResult,Duel.SetCoinResult,function(tp) Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(sid,4)) return 1-Duel.AnnounceCoin(tp) end))
 	c:RegisterEffect(e2)
+end
+function s.filter(c,lc,sumtype,tp)
+	return c:IsType(TYPE_EFFECT,lc,sumtype,tp) and ( c.roll_dice or c.toss_coin )
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFlagEffect(ep,id)==0 
