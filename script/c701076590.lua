@@ -67,6 +67,7 @@ function s.operation(typ,func1,func2,func3)
 		local tab={}
 		if Duel.GetFlagEffect(ep,id)>0 then return end
 		if Duel.SelectEffectYesNo(ep,e:GetHandler()) then
+			Duel.Hint(HINT_CARD,0,id)
 			Duel.SetLP(ep,Duel.GetLP(ep)-2000)
 			Duel.RegisterFlagEffect(ep,id,RESET_PHASE+PHASE_END,0,1)
 			if ct>1 then
