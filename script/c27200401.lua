@@ -12,11 +12,14 @@ function s.initial_effect(c)
 	e1:SetOperation(s.operation(Fusion.SummonEffTG(table.unpack(params)),Fusion.SummonEffOP(table.unpack(params))))
 	c:RegisterEffect(e1)
 end
+function s.fcheck(tp,sg,fc)
+	return sg:IsExists(aux.FilterBoolFunction(Card.IsSetCard,0x9d,fc,SUMMON_TYPE_FUSION,tp),1,nil)
+end
 function s.fextra(e,tp,mg)
 	if not Duel.IsPlayerAffectedByEffect(tp,69832741) then
-		return Duel.GetMatchingGroup(Fusion.IsMonsterFilter(Card.IsAbleToRemove),tp,LOCATION_GRAVE,LOCATION_GRAVE,nil)
+		return Duel.GetMatchingGroup(Fusion.IsMonsterFilter(Card.IsAbleToRemove),tp,LOCATION_GRAVE,LOCATION_GRAVE,nil),s.fcheck
 	end
-	return nil
+	return nil,s.fcheck
 end
 function s.tgfilter(c)
 	return c:IsSetCard(0x9d) 
