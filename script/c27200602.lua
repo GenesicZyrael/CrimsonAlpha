@@ -1,5 +1,4 @@
 --Qliphort Datamiel
---Scripted by Kohana and JustPassingThru
 local s,id=GetID()
 function s.initial_effect(c)
 	Pendulum.AddProcedure(c,false)
@@ -79,7 +78,6 @@ function s.filter1(c)
 end
 function s.limitval(e,c)
 	local ct=Duel.GetMatchingGroup(s.filter1,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil):GetClassCount(Card.GetCode)
-	Debug.Message(ct)
 	if ct>0 then	
 		return 6-ct
 	else
@@ -90,7 +88,7 @@ function s.limitfilter(c)
 	return c:IsFaceup() and c:IsSetCard(0xaa) and c:IsType(TYPE_MONSTER)
 end
 function s.limcon(e,tp,eg,ep,ev,re,r,rp)
-	local ct1=Duel.GetMatchingGroup(aux.FilterFaceupFunction(Card.IsSetCard,0xaa),e:GetHandlerPlayer(),LOCATION_MZONE,0,nil):GetClassCount(Card.GetCode)
+	local ct1=Duel.GetMatchingGroup(s.filter1,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil):GetClassCount(Card.GetCode)
 	local ct2=Duel.GetFieldGroupCount(e:GetHandlerPlayer(),0,LOCATION_HAND)
 	if ct1>0 then	
 		ct1=6-ct1
