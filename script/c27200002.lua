@@ -68,7 +68,7 @@ function s.ottg(e,c)
 	local ed=Duel.GetMatchingGroup(s.rmfilter,e:GetHandlerPlayer(),LOCATION_EXTRA,0,nil):GetCount()
 	return mi>0 and ed>=mi and (c:IsSetCard(0xc4) or c:IsSetCard(0x0a))
 end
-function s.sumtg(e,tp,eg,ep,ev,re,r,rp,c)
+function s.ottgsum(e,tp,eg,ep,ev,re,r,rp,c)
 	return true
 end
 function s.otop(e,tp,eg,ep,ev,re,r,rp,c)
