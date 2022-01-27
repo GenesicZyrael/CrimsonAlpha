@@ -1,4 +1,5 @@
 --Crimson-scarfed Shinobird
+Duel.LoadScript("crimson_alpha.lua")
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
@@ -40,7 +41,8 @@ function s.spfilter(c,e,tp)
 	return c:IsType(TYPE_SPIRIT) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.thfilter(c,e,tp)
-	return c:IsAbleToHand() and (c:IsCode(9553721) or c:IsCode(73055622) or c:IsCode(276357))
+	-- return c:IsAbleToHand() and ((c:IsCode(9553721) or c:IsCode(73055622) or c:IsCode(276357)) or c:IsSetCode(SET_SHINOBIRD))
+	return c:IsAbleToHand() and c:IsShinobird()
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and (s.spfilter(chkc,e,tp) or s.spfilter2(chkc,e,tp)) end

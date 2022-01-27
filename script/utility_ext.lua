@@ -32,3 +32,4 @@ function Card.RegisterEffect(c,e,forced,...)
 	end
 	return reg_e
 end
+
