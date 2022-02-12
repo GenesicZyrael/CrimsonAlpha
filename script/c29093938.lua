@@ -17,10 +17,10 @@ function s.initial_effect(c)
 	e2:SetCode(EFFECT_INDESTRUCTABLE_EFFECT)
 	c:RegisterEffect(e2)
 	--cannot be targeted
-	local e3=e2:Clone()
-	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e3:SetValue(aux.tgoval)
-	c:RegisterEffect(e3)
+	-- local e3=e2:Clone()
+	-- e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	-- e3:SetValue(aux.tgoval)
+	-- c:RegisterEffect(e3)
 	--Set
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,0))
@@ -34,6 +34,17 @@ function s.initial_effect(c)
 	e4:SetTarget(s.negtg)
 	e4:SetOperation(s.negop)
 	c:RegisterEffect(e4)
+	--spsummon
+	local e6=Effect.CreateEffect(c)
+	e6:SetDescription(aux.Stringid(id,0))
+	e6:SetCategory(CATEGORY_REMOVE+CATEGORY_TOHAND+CATEGORY_SEARCH)
+	e6:SetType(EFFECT_TYPE_IGNITION)
+	e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCountLimit(1,{id,1})
+	e6:SetTarget(s.rmtg)
+	e6:SetOperation(s.rmop)
+	c:RegisterEffect(e6)	
 end
 function s.matcheck(g,lc,sumtype,tp)
 	return g:CheckDifferentProperty(Card.GetCode,lc,sumtype,tp)
@@ -81,5 +92,32 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
 		Duel.BreakEffect()
 		Duel.Draw(tp,1,REASON_EFFECT)
+	end
+end
+function s.thfilter(c)
+	return c:IsSetCard(0xfe) and c:IsAbleToHand()
+end
+function s.rmfilter(c,g)
+	return c:IsAbleToRemove() and g:IsContains(c)
+end
+function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local tg=e:GetHandler():GetLinkedGroup()
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.rmfilter(chkc,tg) end
+	if chk==0 then return Duel.IsExistingTarget(s.rmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil,tg) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
+	local g=Duel.SelectTarget(tp,s.rmfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil,tg)
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,1,0,0)
+end
+function s.rmop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	if tc:IsRelateToEffect(e) and Duel.Remove(tc,POS_FACEUP,REASON_EFFECT)>0
+	and	Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) 
+	and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		local tc=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
+		if tc then
+			Duel.SendtoHand(tc,nil,REASON_EFFECT)
+			Duel.ConfirmCards(1-tp,tc)
+		end
 	end
 end
