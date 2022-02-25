@@ -13,6 +13,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 						fg:AddCard(pe:GetHandler())
 					end
 					if #fg>0 then
+						location = location + LOCATION_DECK
 						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 							or Duel.IsExistingMatchingCard(Ritual.Filter,tp,LOCATION_DECK,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 					else
