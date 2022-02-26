@@ -96,5 +96,5 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.matfilter(e,c)
-	return c:IsSetCard(0xc7) and c:IsType(TYPE_PENDULUM)
+	return c:IsSetCard(0xc7)
 end
