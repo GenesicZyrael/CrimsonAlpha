@@ -91,9 +91,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	if not g then return end
 	for tc in aux.Next(g) do
 		if tc:IsLocation(LOCATION_MZONE) then
-			Duel.Release(g,REASON_COST)
+			Duel.Release(tc,REASON_COST)
 		else
-			Duel.SendtoGrave(g,REASON_COST)
+			Duel.SendtoGrave(tc,REASON_COST)
 		end
 	end
 	g:DeleteGroup()
