@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	--switch equips
 	local e3=Effect.CreateEffect(c)
 	e3:SetDescription(aux.Stringid(id,1))
-	e3:SetCategory(CATEGORY_EQUIP+CATEGORY_DRAW)
+	e3:SetCategory(CATEGORY_EQUIP)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_MZONE)
@@ -92,9 +92,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if tc==ec then tc=g:GetNext() end
 	if ec:IsFaceup() and ec:IsRelateToEffect(e) then 
 		if tc:IsFaceup() and tc:IsRelateToEffect(e) then
-			if Duel.Equip(tp,ec,tc) and Duel.IsPlayerCanDraw(tp,1) then 
-				Duel.Draw(tp,1,REASON_EFFECT) 
-			end
+			Duel.Equip(tp,ec,tc)
 		else 
 			Duel.SendtoGrave(ec,REASON_EFFECT) 
 		end
