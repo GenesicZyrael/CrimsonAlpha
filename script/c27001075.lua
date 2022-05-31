@@ -39,6 +39,7 @@ function s.initial_effect(c)
 	aux.EnableMajesticReturn(c,CATEGORY_TOHAND+CATEGORY_SEARCH,s.thtg,s.thop,nil) 
 end
 s.material={21159309,2403771}
+s.material_setcode={0xc2}
 s.listed_names={21159309,2403771}
 s.synchro_nt_required=1
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
