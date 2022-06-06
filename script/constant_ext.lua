@@ -4,6 +4,6 @@ EFFECT_RITUAL_FROM_DECK		= 27200101
 EFFECT_EASY_FINAL_COUNTDOWN = 54334643
 
 --Flags for Card.RegisterEffect
-REGISTER_FLAG_SHADDOLL    	= 10 
+REGISTER_FLAG_FLIP    	= 10
 
 Duel.LoadScript("card_counter_constants_ext.lua")

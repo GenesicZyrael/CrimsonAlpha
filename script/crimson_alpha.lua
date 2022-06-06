@@ -6,4 +6,4 @@ Duel.LoadScript ("proc_ritual_ext.lua")
 Duel.LoadScript ("custom_set_codes.lua")
 
 -- update globals
-regeff_list[REGISTER_FLAG_SHADDOLL]=27200403
+regeff_list[REGISTER_FLAG_FLIP]=TYPE_FLIP
