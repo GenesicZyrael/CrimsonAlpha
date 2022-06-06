@@ -12,7 +12,7 @@ function s.initial_effect(c)
 		e1:SetCountLimit(1,id)
 		e1:SetTarget(Fusion.SummonEffTG(table.unpack(params)))
 		e1:SetOperation(Fusion.SummonEffOP(table.unpack(params)))
-	c:RegisterEffect(e1,false,REGISTER_FLAG_SHADDOLL)	
+	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)	
 	--effect gain
 	local e2=Effect.CreateEffect(c)
 	    e2:SetDescription(aux.Stringid(id,1))
@@ -56,10 +56,10 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.filter(c,e,tp)
 	if not (c:IsSetCard(0x9d) and c:IsType(TYPE_MONSTER)
-		and c:IsHasEffect(id) and c:IsAbleToGraveAsCost()) then 
+		and c:IsHasEffect(TYPE_FLIP) and c:IsAbleToGraveAsCost()) then 
 		return false
 	end
-	local eff={c:GetCardEffect(id)}
+	local eff={c:GetCardEffect(TYPE_FLIP)}
 	for _,teh in ipairs(eff) do
 		local te=teh:GetLabelObject()
 		local con=te:GetCondition()
@@ -81,7 +81,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local tc=e:GetLabelObject():GetFirst()
 	tc:CreateEffectRelation(e)
 	if tc and tc:IsRelateToEffect(e) then
-		local eff={tc:GetCardEffect(id)}
+		local eff={tc:GetCardEffect(TYPE_FLIP)}
 		local te=nil
 		local acd={}
 		local ac={}
