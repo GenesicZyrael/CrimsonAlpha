@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
-	c:RegisterEffect(e1,false,REGISTER_FLAG_SHADDOLL)
+	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
 	--Send "Shaddoll" monster from hand to GY, and you do, all your monsters gain ATK/DEF
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)

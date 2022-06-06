@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.rmtg)
 	e1:SetOperation(s.rmop)
-	c:RegisterEffect(e1,false,REGISTER_FLAG_SHADDOLL)
+	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
 	--Send cards from top of deck to GY
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
