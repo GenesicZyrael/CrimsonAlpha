@@ -63,6 +63,10 @@ function s.spcon(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
 	local rg=Duel.GetReleaseGroup(tp)
+	if Duel.IsPlayerAffectedByEffect(tp,31830369) then
+		local rg2=Duel.GetMatchingGroup(s.filter,tp,LOCATION_EXTRA,0,nil)
+		rg:Merge(rg2)
+	end
 	local g1=rg:Filter(Card.IsSetCard,nil,0xc7)
 	local g2=rg:Filter(Card.IsSetCard,nil,0xda)
 	local g=g1:Clone()
@@ -72,6 +76,10 @@ function s.spcon(e,c)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,c)
 	local rg=Duel.GetReleaseGroup(tp)
+	if Duel.IsPlayerAffectedByEffect(tp,31830369) then
+		local rg2=Duel.GetMatchingGroup(s.filter,tp,LOCATION_EXTRA,0,nil)
+		rg:Merge(rg2)
+	end
 	local g1=rg:Filter(Card.IsSetCard,nil,0xc7)
 	local g2=rg:Filter(Card.IsSetCard,nil,0xda)
 	g1:Merge(g2)
@@ -86,7 +94,13 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	if not g then return end
-	Duel.Release(g,REASON_COST)
+	for tc in aux.Next(g) do
+		if tc:IsLocation(LOCATION_MZONE) then
+			Duel.Release(tc,REASON_COST)
+		else
+			Duel.SendtoGrave(tc,REASON_COST)
+		end
+	end
 	g:DeleteGroup()
 end
 function s.distg(e,c)

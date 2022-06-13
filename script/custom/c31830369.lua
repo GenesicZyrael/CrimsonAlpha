@@ -8,6 +8,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 	e1:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	e1:SetCondition(s.lkcon)
 	e1:SetValue(1)
 	c:RegisterEffect(e1)
 	--addtohand
@@ -18,7 +19,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
 	e2:SetCountLimit(1,id)
-	e2:SetCost(s.thcost)
+	-- e2:SetCost(s.thcost)
 	e2:SetCondition(s.thcon)
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
@@ -36,6 +37,10 @@ s.listed_series={0xc7,0xda}
 s.listed_names={34079868}
 function s.lcheck(g,lc,sumtype,tp)
 	return g:IsExists(Card.IsSetCard,1,nil,0xc7,lc,sumtype,tp)
+end
+function s.lkcon(e)
+	local c=e:GetHandler()
+	return c:IsStatus(STATUS_SPSUMMON_TURN) and c:IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
