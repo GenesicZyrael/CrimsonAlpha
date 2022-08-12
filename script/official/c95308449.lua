@@ -36,10 +36,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetCode(id)
 	e1:SetOperation(s.checkop)
 	e1:SetCountLimit(1)
-	if Duel.IsPlayerAffectedByEffect(tp,EFFECT_EASY_FINAL_COUNTDOWN) then
-		e1:SetLabel(1)
-	else
-		e1:SetLabel(0)
+	if Duel.IsPlayerAffectedByEffect(tp,EFFECT_REDUCE_FC_COUNT) then
+		e1:SetLabel(EFFECT_REDUCE_FC_COUNT)
 	end	
 	e1:SetValue(0)
 	e1:SetTargetRange(1,1)
@@ -72,10 +70,10 @@ function s.checkop(e,tp,eg,ep,ev,re,r,rp)
 	local inc=1
 	local maxct=20
 	local wineasy=e:GetLabel()
-	if wineasy==1 then
+	if wineasy==EFFECT_REDUCE_FC_COUNT then
 		maxct=15
 	end
-	if Duel.IsPlayerAffectedByEffect(tp,54334643) then
+	if Duel.IsPlayerAffectedByEffect(tp,EFFECT_DOUBLE_FC_TICK) then
 		inc=inc*2
 	end
 	ct=ct+inc
@@ -95,7 +93,7 @@ function s.winop(e,tp,eg,ep,ev,re,r,rp)
 		local ct=te:GetValue()
 		local maxct=20
 		local wineasy=te:GetLabel()
-		if wineasy==1 then
+		if wineasy==EFFECT_REDUCE_FC_COUNT then
 			maxct=15
 		end
 		if ct>=maxct then
