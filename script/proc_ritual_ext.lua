@@ -1,3 +1,8 @@
+local function WrapTableReturn(func)
+	return function(...)
+		return {func(...)}
+	end
+end
 Ritual.Target = aux.FunctionWithNamedArgs(
 function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselection,specificmatfilter,requirementfunc,sumpos,extratg)
 	location = location or LOCATION_HAND
