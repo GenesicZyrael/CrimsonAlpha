@@ -67,3 +67,31 @@ function Auxiliary.MajesticReturnOperation(c,extraop)
 		end
 	end
 end
+Auxiliary.AddFlipProc = aux.FunctionWithNamedArgs(
+function(c,desc,category,efftype,limit,cost,condition,target,operation)
+	local e1=Effect.CreateEffect(c)
+	if desc then
+		e1:SetDescription(desc)
+	end
+	if efftype then
+		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+efftype)
+	else
+		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP)
+	end
+	if limit then
+		e1:SetCountLimit(limit)
+	end
+	if cost then
+		e1:SetCost(cost)
+	end
+	if condition then
+		e1:SetCondition(condition)
+	end
+	if target then
+		e1:SetTarget(target)
+	end
+	e1:SetProperty(EFFECT_FLAG_DELAY)
+	e1:SetCategory(category)
+	e1:SetOperation(operation)
+	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
+end,"handler","desc","category","efftype","limit","condition","target","operation")
