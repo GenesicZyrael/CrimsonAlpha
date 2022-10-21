@@ -41,10 +41,11 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 					Ritual.CheckMatFilter(matfilter,e,tp,mg,mg2)
 					--- CrimsonAlpha --- 
 					if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_FROM_DECK)==nil and (location&LOCATION_DECK)==0 then
-						location = location|LOCATION_DECK
+						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,LOCATION_DECK,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
+					else
+						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 					end
 					--------------------
-					return Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 				end
 				if extratg then extratg(e,tp,eg,ep,ev,re,r,rp,chk) end
 				Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,location)
@@ -89,6 +90,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 				local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				--- CrimsonAlpha --- 
+				Debug.Message(location)
 				local prev_loc = location
 				if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_FROM_DECK)==nil and (location&LOCATION_DECK)==0
 				and Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_FROM_DECK,1)) then
