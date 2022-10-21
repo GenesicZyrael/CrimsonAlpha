@@ -42,7 +42,6 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 					Ritual.CheckMatFilter(matfilter,e,tp,mg,mg2)
 					--- CrimsonAlpha --- 
 					local extra_loc = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
-					Debug.Message('TRUE')
 					if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION) and extra_loc and (location&extra_loc)==0 then
 						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,extra_loc,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 					else
