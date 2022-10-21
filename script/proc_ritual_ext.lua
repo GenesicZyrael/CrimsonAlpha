@@ -39,15 +39,11 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 						end
 					end
 					Ritual.CheckMatFilter(matfilter,e,tp,mg,mg2)
-					--- START of INSERT: CrimsonAlpha
-					local fg=Group.CreateGroup()
-					for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,EFFECT_RITUAL_FROM_DECK)}) do
-						fg:AddCard(pe:GetHandler())
+					--- CrimsonAlpha --- 
+					if Duel.GetFlagEffectLabel(tp,EFFECT_RITUAL_FROM_DECK)==nil and (location&LOCATION_DECK)==0 then
+						location = location|LOCATION_DECK
 					end
-					if #fg>0 then
-						location = location + LOCATION_DECK
-					end
-					--- END of INSERT: CrimsonAlpha	
+					--------------------
 					return Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 				end
 				if extratg then extratg(e,tp,eg,ep,ev,re,r,rp,chk) end
@@ -92,41 +88,14 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 				Ritual.CheckMatFilter(matfilter,e,tp,mg,mg2)
 				local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				--- START of INSERT: CrimsonAlpha
-				local fg=Group.CreateGroup()
-				for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,EFFECT_RITUAL_FROM_DECK)}) do
-					fg:AddCard(pe:GetHandler())
+				--- CrimsonAlpha --- 
+				local prev_loc = location
+				if Duel.GetFlagEffectLabel(tp,EFFECT_RITUAL_FROM_DECK)==nil and (location&LOCATION_DECK)==0
+				and Duel.SelectYesNo(tp,aux.Stringid(EFFECT_RITUAL_FROM_DECK,1)) then
+					Duel.RegisterFlagEffect(tp,EFFECT_RITUAL_FROM_DECK,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
+					location = Duel.GetFlagEffectLabel(tp,EFFECT_RITUAL_FROM_DECK)
 				end
-				local g=Duel.GetMatchingGroup(Ritual.Filter,tp,location,0,nil,filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
-				if #fg>0 then
-					local g2=Duel.GetMatchingGroup(Ritual.Filter,tp,LOCATION_DECK,0,nil,filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
-					if #g>0 then
-						if #g2>0 then 
-							if (location ~= LOCATION_DECK) and Duel.SelectYesNo(tp,aux.Stringid(EFFECT_RITUAL_FROM_DECK,0)) then
-								location = LOCATION_DECK
-								local fc=nil
-								if #fg==1 then
-									fc=fg:GetFirst()
-								else
-									fc=fg:Select(tp,1,1,nil)
-								end
-								Duel.Hint(HINT_CARD,0,fc:GetCode())
-								fc:RegisterFlagEffect(EFFECT_RITUAL_FROM_DECK,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
-							end
-						end	
-					else
-						location = LOCATION_DECK
-						local fc=nil
-						if #fg==1 then
-							fc=fg:GetFirst()
-						else
-							fc=fg:Select(tp,1,1,nil)
-						end
-						Duel.Hint(HINT_CARD,0,fc:GetCode())
-						fc:RegisterFlagEffect(EFFECT_RITUAL_FROM_DECK,RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END,0,0)
-					end					
-				end
-				--- END of INSERT: CrimsonAlpha	
+				--------------------
 				local tg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(Ritual.Filter),tp,location,0,1,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 				if #tg>0 then
 					local tc=tg:GetFirst()
@@ -202,5 +171,8 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 					end
 					Ritual.SummoningLevel=nil
 				end
+				--- CrimsonAlpha ---
+				location = prev_loc
+				-------------------- 
 			end
 end,"filter","lvtype","lv","extrafil","extraop","matfilter","stage2","location","forcedselection","customoperation","specificmatfilter","requirementfunc","sumpos")
