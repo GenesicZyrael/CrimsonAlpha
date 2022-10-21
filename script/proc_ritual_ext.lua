@@ -3,7 +3,7 @@ local function WrapTableReturn(func)
 		return {func(...)}
 	end
 end
-
+Debug.Message('Test')
 Ritual.Target = aux.FunctionWithNamedArgs(
 function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselection,specificmatfilter,requirementfunc,sumpos,extratg)
 	location = location or LOCATION_HAND
@@ -40,14 +40,14 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 						end
 					end
 					Ritual.CheckMatFilter(matfilter,e,tp,mg,mg2)
-					--- CrimsonAlpha --- 
+					--- Custom ---
 					local extra_loc = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
 					if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION) and extra_loc and (location&extra_loc)==0 then
 						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,extra_loc,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 					else
 						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 					end
-					--------------------
+					--------------
 				end
 				if extratg then extratg(e,tp,eg,ep,ev,re,r,rp,chk) end
 				Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,location)
@@ -91,7 +91,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 				Ritual.CheckMatFilter(matfilter,e,tp,mg,mg2)
 				local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-				--- CrimsonAlpha --- 
+				--- Custom ---
 				local prev_loc = location
 				local extra_loc = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
 				if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION) and extra_loc and (location&extra_loc)==0 then
@@ -107,7 +107,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 						end
 					end
 				end
-				--------------------
+				--------------
 				local tg=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(Ritual.Filter),tp,location,0,1,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 				if #tg>0 then
 					local tc=tg:GetFirst()
@@ -183,8 +183,8 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 					end
 					Ritual.SummoningLevel=nil
 				end
-				--- CrimsonAlpha ---
+				--- Custom ---
 				location = prev_loc
-				-------------------- 
+				--------------
 			end
 end,"filter","lvtype","lv","extrafil","extraop","matfilter","stage2","location","forcedselection","customoperation","specificmatfilter","requirementfunc","sumpos")
