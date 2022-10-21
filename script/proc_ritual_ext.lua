@@ -90,7 +90,6 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 				local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				--- CrimsonAlpha --- 
-				Debug.Message(location)
 				local prev_loc = location
 				if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_FROM_DECK)==nil and (location&LOCATION_DECK)==0
 				and Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_FROM_DECK,1)) then
