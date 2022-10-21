@@ -3,6 +3,7 @@ local function WrapTableReturn(func)
 		return {func(...)}
 	end
 end
+
 Ritual.Target = aux.FunctionWithNamedArgs(
 function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselection,specificmatfilter,requirementfunc,sumpos,extratg)
 	location = location or LOCATION_HAND
@@ -40,8 +41,10 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 					end
 					Ritual.CheckMatFilter(matfilter,e,tp,mg,mg2)
 					--- CrimsonAlpha --- 
-					if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_FROM_DECK)==nil and (location&LOCATION_DECK)==0 then
-						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,LOCATION_DECK,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
+					local extra_loc = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+					Debug.Message('TRUE')
+					if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION) and extra_loc and (location&extra_loc)==0 then
+						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,extra_loc,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 					else
 						return Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos)
 					end
@@ -91,16 +94,17 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 				Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 				--- CrimsonAlpha --- 
 				local prev_loc = location
-				if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_FROM_DECK)==nil and (location&LOCATION_DECK)==0 then
-					if Duel.IsExistingMatchingCard(Ritual.Filter,tp,LOCATION_DECK,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos) then 
+				local extra_loc = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+				if Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION) and extra_loc and (location&extra_loc)==0 then
+					if Duel.IsExistingMatchingCard(Ritual.Filter,tp,extra_loc,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos) then 
 						if Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos) then 
-							if Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_FROM_DECK,1)) then
-								Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_FROM_DECK,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
-								location = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_FROM_DECK)
+							if Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_LOCATION,1)) then
+								Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
+								location = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
 							end
 						else
-							Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_FROM_DECK,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
-							location = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_FROM_DECK)
+							Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
+							location = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
 						end
 					end
 				end
