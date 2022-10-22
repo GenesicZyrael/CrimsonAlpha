@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	--choose coin result
 	local e3=e2:Clone()
 	e3:SetCode(EFFECT_TOSS_COIN_CHOOSE)
-	e3:SetOperation(s.operation("coin",Duel.GetCoinResult,Duel.SetCoinResult,function(tp) Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(sid,4)) return 1-Duel.AnnounceCoin(tp) end))
+	e3:SetOperation(s.operation("coin",Duel.GetCoinResult,Duel.SetCoinResult,function(tp) Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(sid,4)) return Duel.AnnounceCoin(tp) end))
 	c:RegisterEffect(e3)
 end
 function s.filter(c)
@@ -80,9 +80,9 @@ function s.operation(typ,func1,func2,func3)
 				for i=1,ct do
 					table.insert(tab,aux.Stringid(id,i))
 				end
-				for i=1,val do
-					dc[i]=math.abs(math.random(val))
-				end
+				-- for i=1,val do
+					-- dc[i]=math.abs(math.random(val))
+				-- end
 				idx=Duel.SelectOption(ep,table.unpack(tab))
 				idx=idx+1
 			end
@@ -91,11 +91,13 @@ function s.operation(typ,func1,func2,func3)
 		else
 			if typ=="dice" then
 				val=6
+				idx=0
 			end
 			for i=1,val do
-				dc[i]=math.abs(math.random(val))
+				max_val=math.abs(math.random(val))-idx
 			end
-			func2(table.unpack(dc))
+			-- -- func2(table.unpack(val))
+			func2(max_val)
 		end
 	end
 end
