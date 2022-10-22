@@ -40,6 +40,17 @@ function s.rfilter(c,mc)
 end
 function s.filter(c,e,tp)
 	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND,0,c,e,tp,c)
+	--- Custom ---
+	local location=LOCATION_HAND
+	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+	local sg_temp
+	if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 and extra_loc and (location&extra_loc)==0 then
+		sg_temp=Duel.GetMatchingGroup(s.spfilter,tp,extra_loc,0,c,e,tp,c)
+		if #sg_temp>0 then
+			sg:Merge(sg_temp)
+		end
+	end
+	--------------
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if c:IsLocation(LOCATION_MZONE) then ft=ft+1 end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
@@ -64,7 +75,11 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		end
 		return mg:IsExists(s.filter,1,nil,e,tp)
 	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND)
+	--- Custom ---
+	local location=LOCATION_HAND
+	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,location)
+	--------------
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
@@ -81,6 +96,24 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local mc=mat:GetFirst()
 	if not mc then return end
 	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND,0,mc,e,tp,mc)
+	--- Custom ---
+	local location=LOCATION_HAND
+	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+	local sg_temp=Duel.GetMatchingGroup(s.spfilter,tp,extra_loc,0,mc,e,tp,mc)
+	if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 and extra_loc and (location&extra_loc)==0 then
+		if #sg_temp>0 then
+			if #sg>0 and sg:CheckWithSumEqual(Card.GetLevel,mc:GetLevel(),1,ft) then
+				if Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_LOCATION,1)) then
+					Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
+					sg:Merge(sg_temp)
+				end
+			else
+				Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
+				sg:Merge(sg_temp)
+			end
+		end
+	end
+	--------------
 	if mc:IsLocation(LOCATION_MZONE) then ft=ft+1 end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	local b1=sg:IsExists(s.rfilter,1,nil,mc)
