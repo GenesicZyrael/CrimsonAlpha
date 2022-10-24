@@ -58,6 +58,7 @@ end
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
+		Duel.HintSelection(tc,true)
 		local e1=Effect.CreateEffect(tc)
 			e1:SetDescription(aux.Stringid(id,2))
 			e1:SetCategory(CATEGORY_TOHAND)
