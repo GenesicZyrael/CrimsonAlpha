@@ -49,7 +49,7 @@ function s.extraval(chk,summon_type,e,...)
 		if summon_type~=SUMMON_TYPE_LINK or sc~=e:GetHandler() then
 			return Group.CreateGroup()
 		else
-			return Duel.GetMatchingGroup(aux.FilterFaceupFunction(Card.IsCode,16178681),tp,LOCATION_PZONE,0,nil)
+			return Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,16178681),tp,LOCATION_PZONE,0,nil)
 		end
 	end
 end
