@@ -94,4 +94,5 @@ function(c,desc,category,efftype,limit,cost,condition,target,operation)
 	e1:SetCategory(category)
 	e1:SetOperation(operation)
 	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
+	return e1
 end,"handler","desc","category","efftype","limit","condition","target","operation")
