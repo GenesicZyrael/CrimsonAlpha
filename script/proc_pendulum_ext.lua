@@ -26,7 +26,6 @@ function Pendulum.PseudoOperation(lscale,rscale)
 		local c=e:GetHandler()
 		local fid=e:GetHandler():GetFieldID()
 		local nseq=(0xff^2)+16
-		Debug.Message(2)
 		if c:IsRelateToEffect(e) then
 			Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true,nseq)
 			-- Pendulum Summon
