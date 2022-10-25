@@ -33,6 +33,12 @@ function Card.RegisterEffect(c,e,forced,...)
 	return reg_e
 end
 
+local function CheckEffectUniqueCheck(c,tp,code)
+	if not (aux.FaceupFilter(Card.IsCode,code) and c:IsHasEffect(EFFECT_UNIQUE_CHECK)) then 
+		return false
+	end
+	return true
+end
 local function AdjustOp(self,opp,limit,code,location)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
@@ -40,24 +46,30 @@ local function AdjustOp(self,opp,limit,code,location)
 		local rm=Group.CreateGroup()
 		if (phase==PHASE_DAMAGE and not Duel.IsDamageCalculated()) or phase==PHASE_DAMAGE_CAL then return end
 		if self then
-			local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,code),tp,location,0,nil)
+			local g=Duel.GetMatchingGroup(CheckEffectUniqueCheck,tp,location,0,nil,tp,code)
 			local rg=Group.CreateGroup()
-			local ct=#g-limit
-			if #g>limit then
-				Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(code,1))
-				rg=g:Select(1-tp,ct,ct,nil):GetFirst()
-				Duel.HintSelection(rg,true)
+			if #g>0 then
+				g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,code),tp,location,0,nil)
+				local ct=#g-limit
+				if #g>limit then
+					Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(code,1))
+					rg=g:Select(1-tp,ct,ct,nil):GetFirst()
+					Duel.HintSelection(rg,true)
+				end
 			end
 			rm:Merge(rg)
 		end
 		if opp then
-			local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,code),tp,0,location,nil)
+			local g=Duel.GetMatchingGroup(CheckEffectUniqueCheck,tp,0,location,nil,tp,code)
 			local rg=Group.CreateGroup()
-			local ct=#g-limit
-			if #g>limit then
-				Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(code,1))
-				rg=g:Select(1-tp,ct,ct,nil):GetFirst()
-				Duel.HintSelection(rg,true)
+			if #g>0 then
+				g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,code),tp,0,location,nil)
+				local ct=#g-limit
+				if #g>limit then
+					Duel.Hint(HINT_SELECTMSG,tp,aux.Stringid(code,1))
+					rg=g:Select(1-tp,ct,ct,nil):GetFirst()
+					Duel.HintSelection(rg,true)
+				end
 			end
 			rm:Merge(rg)
 		end
@@ -67,17 +79,16 @@ local function AdjustOp(self,opp,limit,code,location)
 		end
 	end
 end
-local function FIDFilter(c,code)
-	return c:GetFieldID()~=code
-end
 local function SummonLimit(limit,code,location)
 	return function(e,c,sump,sumtype,sumpos,targetp)
 		if not c:IsCode(code) then return false end
-		local g=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,code),targetp or sump,location,0,1)
-		return g>limit-1
+		local g=Duel.GetMatchingGroupCount(CheckEffectUniqueCheck,targetp or sump,location,0,1,targetp or sump,code) 
+		if g>0 then
+			local g=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,code),targetp or sump,location,0,1)
+			return g>limit-1
+		end
 	end
 end
-
 function Card.SetLimitIdOnField(c,self,opp,limit,code,location)
 	if location then
 		location=location
@@ -89,9 +100,9 @@ function Card.SetLimitIdOnField(c,self,opp,limit,code,location)
 		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 		e1:SetCode(EVENT_ADJUST)
-		e1:SetRange(LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
+		e1:SetRange(LOCATION_MZONE)
 		e1:SetOperation(AdjustOp(self,opp,limit,code,location))
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_LIMIT)
 	--Cannot Normal/Flip/Special Summon
 	local e2=Effect.CreateEffect(c)
 		e2:SetType(EFFECT_TYPE_FIELD)
