@@ -38,7 +38,7 @@ s.listed_series={0xc2}
 s.listed_names={25165047}
 function s.eqfilter(c)
 	return c:IsSetCard(0xc2)
-		or (c:IsType(TYPE_SYNCHRO) and aux.IsMaterialListSetCard(c,0xc2))
+		or (c:IsType(TYPE_SYNCHRO) and c:ListsArchetypeAsMaterial(0xc2))
 end
 function s.thfilter(c)
 	return c:IsType(TYPE_EQUIP) and c:IsAbleToHand()
