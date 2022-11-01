@@ -67,32 +67,68 @@ function Auxiliary.MajesticReturnOperation(c,extraop)
 		end
 	end
 end
-Auxiliary.AddFlipProc = aux.FunctionWithNamedArgs(
-function(c,desc,category,efftype,limit,cost,condition,target,operation)
-	local e1=Effect.CreateEffect(c)
-	if desc then
-		e1:SetDescription(desc)
-	end
-	if efftype then
-		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+efftype)
-	else
-		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP)
-	end
-	if limit then
-		e1:SetCountLimit(table.unpack(limit))
-	end
-	if cost then
-		e1:SetCost(cost)
-	end
-	if condition then
-		e1:SetCondition(condition)
-	end
-	if target then
-		e1:SetTarget(target)
-	end
-	e1:SetProperty(EFFECT_FLAG_DELAY)
-	e1:SetCategory(category)
-	e1:SetOperation(operation)
-	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
-	return e1
-end,"handler","desc","category","efftype","limit","condition","target","operation")
+---
+-- Auxiliary.AddFlipProc = aux.FunctionWithNamedArgs(
+-- function(c,desc,category,efftype,limit,cost,condition,target,operation)
+	-- local e1=Effect.CreateEffect(c)
+	-- if desc then
+		-- e1:SetDescription(desc)
+	-- end
+	-- if efftype then
+		-- e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+efftype)
+	-- else
+		-- e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP)
+	-- end
+	-- if limit then
+		-- e1:SetCountLimit(table.unpack(limit))
+	-- end
+	-- if cost then
+		-- e1:SetCost(cost)
+	-- end
+	-- if condition then
+		-- e1:SetCondition(condition)
+	-- end
+	-- if target then
+		-- e1:SetTarget(target)
+	-- end
+	-- e1:SetProperty(EFFECT_FLAG_DELAY)
+	-- e1:SetCategory(category)
+	-- e1:SetOperation(operation)
+	-- c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
+	-- return e1
+-- end,"handler","desc","category","efftype","limit","condition","target","operation")
+-- ---
+-- function Auxiliary.AddOnActivate(c,extracat,limit,filter,location)
+	-- -- format: local limit={1,{id,1}} 
+	-- if location then location=LOCATION_DECK end
+	-- --Activate
+	-- local e1=Effect.CreateEffect(c)
+	-- e1:SetCategory(CATEGORY_TOHAND | extracat)
+	-- e1:SetType(EFFECT_TYPE_ACTIVATE)
+	-- e1:SetCode(EVENT_FREE_CHAIN)
+	-- if limit then
+		-- e1:SetCountLimit(table.unpack(limit))
+	-- end
+	-- if filter then
+		-- e1:SetTarget(AddTarget(filter,location))
+		-- e1:SetOperation(AddOperation(filter,location))
+	-- end
+	-- c:RegisterEffect(e1)
+-- end
+
+-- function AddTarget(c,filter,location)
+	-- return function(e,tp,eg,ep,ev,re,r,rp,chk)
+		-- if chk==0 then return Duel.IsExistingMatchingCard(filter,tp,location,0,1,nil) end
+		-- Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,location)
+	-- end
+-- end
+-- function AddOperation(c,filter,location)
+	-- return function(e,tp,eg,ep,ev,re,r,rp)
+		-- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
+		-- local g=Duel.SelectMatchingCard(tp,filter,tp,location,0,1,1,nil)
+		-- if #g>0 then
+			-- Duel.SendtoHand(g,nil,REASON_EFFECT)
+			-- Duel.ConfirmCards(1-tp,g)
+		-- end
+	-- end
+-- end
