@@ -79,7 +79,7 @@ function(c,desc,category,efftype,limit,cost,condition,target,operation)
 		e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP)
 	end
 	if limit then
-		e1:SetCountLimit(limit)
+		e1:SetCountLimit(table.unpack(limit))
 	end
 	if cost then
 		e1:SetCost(cost)
