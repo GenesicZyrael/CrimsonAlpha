@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--synchro summon
-	Synchro.AddProcedure(c,nil,1,1,Synchro.NonTunerEx(Card.IsCode,CARD_CYBER_DRAGON),1,99)
+	Synchro.AddProcedure(c,nil,1,1,aux.FilterBoolFunction(Card.IsCode,CARD_CYBER_DRAGON),1,99)
 	--Unaffected by the opponent's activated effects
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
