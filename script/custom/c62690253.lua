@@ -38,7 +38,7 @@ end
 s.listed_names={74875003,CARD_RA,10000020,10000000}
 function s.thfilter(c)
 	return (c:IsCode(CARD_RA,10000020,10000000) or c:ListsCode(CARD_RA,10000020,10000000))
-		and c:IsAbleToHand()
+		and c:IsAbleToHand() and not c:IsOriginalCode(id)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) end
