@@ -2,7 +2,7 @@
 
 Download CrimsonAlpha repo
 > Go to "./config"
-> Open the configs.txt
+> Open the configs.json
 > add the text below under the "repos":[] segment
 
 		{
