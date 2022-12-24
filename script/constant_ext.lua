@@ -7,5 +7,6 @@ EFFECT_REDUCE_FC_COUNT		= 99999999
 --Flags for Card.RegisterEffect
 REGISTER_FLAG_FLIP    		= 10
 CUSTOM_REGISTER_LIMIT  		= 20
+REGISTER_FLAG_TELLAR      = 16
 
 Duel.LoadScript("card_counter_constants_ext.lua")
