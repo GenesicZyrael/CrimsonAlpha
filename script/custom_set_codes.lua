@@ -34,6 +34,8 @@ if not CustomArchetype then
 	CustomArchetype.Guardragon={11012154,35183584,6990577,43411769,79905468,84899094,95793022,
 	59537380,13143275,86148577,40003819,87571563,50186558,47393199,11908584}
 	Card.IsGuardragon=MakeCheck({SET_GUARDRAGON},CustomArchetype.Guardragon)
-
+	
+	CustomArchetype.WNebula={90075978}
+	Card.WNebula=MakeCheck({SET_W_NEBULA},CustomArchetype.WNebula)
 end
 
