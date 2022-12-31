@@ -36,6 +36,6 @@ if not CustomArchetype then
 	Card.IsGuardragon=MakeCheck({SET_GUARDRAGON},CustomArchetype.Guardragon)
 	
 	CustomArchetype.WNebula={90075978}
-	Card.WNebula=MakeCheck({SET_W_NEBULA},CustomArchetype.WNebula)
+	Card.IsWNebula=MakeCheck({SET_W_NEBULA},CustomArchetype.WNebula)
 end
 
