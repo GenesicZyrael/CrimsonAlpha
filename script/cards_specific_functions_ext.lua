@@ -132,3 +132,49 @@ end
 		-- end
 	-- end
 -- end
+
+-- "Worm" xeno mat restriction
+local function XenoMatFilter(matfilter)
+	return function (e,c)
+		if matfilter then matfilter(e,c) end
+	end
+end
+
+-- aux.XenoMatCheckSummoned = "Cannot be used as material, except for the Special Summon of a "???" monster
+function Auxiliary.XenoMatCheckSummoned(c,matfilter)
+	local x1=Effect.CreateEffect(c)
+	x1:SetType(EFFECT_TYPE_SINGLE)
+	x1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	x1:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
+	x1:SetValue(XenoMatFilter(matfilter))
+	c:RegisterEffect(x1)	
+	local x2=x1:Clone()
+	x2:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+	c:RegisterEffect(x2)
+	local x3=x1:Clone()
+	x3:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+	c:RegisterEffect(x3)
+	local x4=x1:Clone()
+	x4:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	c:RegisterEffect(x4)
+end
+
+-- aux.XenoMatCheckOthers = "... all other materials are "???" monsters
+function Auxiliary.XenoMatCheckOthers(c,matfilter)
+	local x1=Effect.CreateEffect(c)
+	x1:SetType(EFFECT_TYPE_SINGLE)
+	x1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	x1:SetCode(EFFECT_FUSION_MAT_RESTRICTION)
+	x1:SetValue(XenoMatFilter(matfilter))
+	c:RegisterEffect(x1)
+	local x2=x1:Clone()
+	x2:SetCode(EFFECT_SYNCHRO_MAT_RESTRICTION)
+	c:RegisterEffect(x2)
+	local x3=x1:Clone()
+	x3:SetCode(EFFECT_XYZ_MAT_RESTRICTION)
+	c:RegisterEffect(x3)	
+	local x4=x1:Clone()
+	x4:SetCode(CUSTOM_LINK_MAT_RESTRICTION)
+	c:RegisterEffect(x4)
+end
+
