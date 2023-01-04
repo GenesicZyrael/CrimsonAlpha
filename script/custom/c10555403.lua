@@ -87,11 +87,11 @@ function s.efilter(e,te)
 		local lv=e:GetHandler():GetLevel()
 		local ec=te:GetOwner()
 		if ec:IsType(TYPE_LINK) then
-			return ec:GetLink()<lv
+			return ec:GetLink()<=lv
 		elseif ec:IsType(TYPE_XYZ) then
-			return ec:GetOriginalRank()<lv
+			return ec:GetOriginalRank()<=lv
 		else
-			return ec:GetOriginalLevel()<lv
+			return ec:GetOriginalLevel()<=lv
 		end
 	else
 		return false
