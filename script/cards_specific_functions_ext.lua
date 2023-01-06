@@ -67,71 +67,6 @@ function Auxiliary.MajesticReturnOperation(c,extraop)
 		end
 	end
 end
----
--- Auxiliary.AddFlipProc = aux.FunctionWithNamedArgs(
--- function(c,desc,category,efftype,limit,cost,condition,target,operation)
-	-- local e1=Effect.CreateEffect(c)
-	-- if desc then
-		-- e1:SetDescription(desc)
-	-- end
-	-- if efftype then
-		-- e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP+efftype)
-	-- else
-		-- e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_FLIP)
-	-- end
-	-- if limit then
-		-- e1:SetCountLimit(table.unpack(limit))
-	-- end
-	-- if cost then
-		-- e1:SetCost(cost)
-	-- end
-	-- if condition then
-		-- e1:SetCondition(condition)
-	-- end
-	-- if target then
-		-- e1:SetTarget(target)
-	-- end
-	-- e1:SetProperty(EFFECT_FLAG_DELAY)
-	-- e1:SetCategory(category)
-	-- e1:SetOperation(operation)
-	-- c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
-	-- return e1
--- end,"handler","desc","category","efftype","limit","condition","target","operation")
--- ---
--- function Auxiliary.AddOnActivate(c,extracat,limit,filter,location)
-	-- -- format: local limit={1,{id,1}} 
-	-- if location then location=LOCATION_DECK end
-	-- --Activate
-	-- local e1=Effect.CreateEffect(c)
-	-- e1:SetCategory(CATEGORY_TOHAND | extracat)
-	-- e1:SetType(EFFECT_TYPE_ACTIVATE)
-	-- e1:SetCode(EVENT_FREE_CHAIN)
-	-- if limit then
-		-- e1:SetCountLimit(table.unpack(limit))
-	-- end
-	-- if filter then
-		-- e1:SetTarget(AddTarget(filter,location))
-		-- e1:SetOperation(AddOperation(filter,location))
-	-- end
-	-- c:RegisterEffect(e1)
--- end
-
--- function AddTarget(c,filter,location)
-	-- return function(e,tp,eg,ep,ev,re,r,rp,chk)
-		-- if chk==0 then return Duel.IsExistingMatchingCard(filter,tp,location,0,1,nil) end
-		-- Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,location)
-	-- end
--- end
--- function AddOperation(c,filter,location)
-	-- return function(e,tp,eg,ep,ev,re,r,rp)
-		-- Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-		-- local g=Duel.SelectMatchingCard(tp,filter,tp,location,0,1,1,nil)
-		-- if #g>0 then
-			-- Duel.SendtoHand(g,nil,REASON_EFFECT)
-			-- Duel.ConfirmCards(1-tp,g)
-		-- end
-	-- end
--- end
 
 -- aux.XenoMatCheckSummoned = "Cannot be used as material, except for the Special Summon of a ..."
 --	-- matfilter: Required function 
@@ -173,4 +108,79 @@ function Auxiliary.XenoMatCheckOthers(c,matfilter)
 	local x4=x1:Clone()
 	x4:SetCode(CUSTOM_LINK_MAT_RESTRICTION)
 	c:RegisterEffect(x4)
+end
+
+-- Assault Mode Activate Summon: Made into a global function for future cards
+if not aux.AssaultModeProcedure then
+	aux.AssaultModeProcedure = {}
+	AssaultMode = aux.AssaultModeProcedure
+end
+if not AssaultMode then
+	AssaultMode = aux.AssaultModeProcedure
+end
+
+AssaultMode.CreateProc = aux.FunctionWithNamedArgs(
+function(c,location,extracat,extrainfo,extraop)
+	if not extracat then extracat=0 end
+	-- Special Summon
+	local e1=Effect.CreateEffect(c)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON | extracat)
+	e1:SetType(EFFECT_TYPE_ACTIVATE)
+	e1:SetCode(EVENT_FREE_CHAIN)
+	e1:SetCost(AssaultMode.Cost)
+	e1:SetTarget(AssaultMode.Target(c,extrainfo,location))
+	e1:SetOperation(AssaultMode.Operation(c,extraop,location))
+	return e1
+end,"handler","location","extracat","extrainfo","extraop")
+
+function AssaultMode.Cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	e:SetLabel(1)
+	return true
+end
+function AssaultMode.filter(c,tc,e,tp)
+	local code=tc:GetCode()
+	local ocode=tc:GetOriginalCode()
+	if tc.assault_mode_all then
+		return c:IsSetCard(0x104f) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	else
+		return c:IsSetCard(0x104f) and c.assault_mode 
+			and (c.assault_mode==code or c.assault_mode==ocode)
+			and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+	end
+end
+function AssaultMode.cfilter(c,e,tp,ft,location)
+	if c:IsType(TYPE_SYNCHRO) and (ft>0 or (c:GetSequence()<5 and c:IsControler(tp))) then
+		return Duel.IsExistingMatchingCard(AssaultMode.filter,tp,location,0,1,nil,c,e,tp)		
+	end
+end
+function AssaultMode.Target(c,extrainfo,location)
+	return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+		if chk==0 then
+			if e:GetLabel()~=1 then return false end
+			e:SetLabel(0)
+			return ft>-1 and Duel.CheckReleaseGroupCost(tp,AssaultMode.cfilter,1,false,nil,nil,e,tp,ft,location)
+		end
+		local rg=Duel.SelectReleaseGroupCost(tp,AssaultMode.cfilter,1,1,false,nil,nil,e,tp,ft,location)
+		Duel.SetTargetCard(rg:GetFirst())
+		Duel.Release(rg,REASON_COST)
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,location)
+		if extrainfo then extrainfo(e,tp,eg,ep,ev,re,r,rp,chk) end
+	end
+end
+function AssaultMode.Operation(c,extraop,location)
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		local c=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):GetFirst()
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tc=Duel.SelectMatchingCard(tp,AssaultMode.filter,tp,location,0,1,1,nil,c,e,tp,location):GetFirst()
+		if tc and Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)>0 then
+			tc:CompleteProcedure()
+		end
+		if c:IsLocation(LOCATION_MZONE) then
+			if extraop then
+				extraop(e,tp,eg,ep,ev,re,r,rp)
+			end
+		end
+	end
 end
