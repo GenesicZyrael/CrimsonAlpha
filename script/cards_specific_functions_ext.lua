@@ -120,18 +120,17 @@ if not AssaultMode then
 end
 
 AssaultMode.CreateProc = aux.FunctionWithNamedArgs(
-function(c,location,extracat,extrainfo,extraop)
-	if not extracat then extracat=0 end
+function(c,location)
 	-- Special Summon
 	local e1=Effect.CreateEffect(c)
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON | extracat)
+	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(AssaultMode.Cost)
-	e1:SetTarget(AssaultMode.Target(c,extrainfo,location))
-	e1:SetOperation(AssaultMode.Operation(c,extraop,location))
+	e1:SetTarget(AssaultMode.Target(c,location))
+	e1:SetOperation(AssaultMode.Operation(c,location))
 	return e1
-end,"handler","location","extracat","extrainfo","extraop")
+end,"handler","location")
 
 function AssaultMode.Cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
@@ -155,7 +154,7 @@ function AssaultMode.cfilter(c,e,tp,ft,location)
 		return Duel.IsExistingMatchingCard(AssaultMode.filter,tp,location,0,1,nil,c,e,tp)		
 	end
 end
-function AssaultMode.Target(c,extrainfo,location)
+function AssaultMode.Target(c,location)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		if chk==0 then
@@ -167,10 +166,9 @@ function AssaultMode.Target(c,extrainfo,location)
 		Duel.SetTargetCard(rg:GetFirst())
 		Duel.Release(rg,REASON_COST)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,location)
-		if extrainfo then extrainfo(e,tp,eg,ep,ev,re,r,rp,chk) end
 	end
 end
-function AssaultMode.Operation(c,extraop,location)
+function AssaultMode.Operation(c,location)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		local c=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):GetFirst()
@@ -180,11 +178,6 @@ function AssaultMode.Operation(c,extraop,location)
 		if tc:IsLocation(LOCATION_GRAVE) then nocheck=true end
 		if tc and Duel.SpecialSummon(tc,0,tp,tp,true,nocheck,POS_FACEUP)>0 then
 			tc:CompleteProcedure()
-		end
-		if c:IsLocation(LOCATION_MZONE) then
-			if extraop then
-				extraop(e,tp,eg,ep,ev,re,r,rp)
-			end
 		end
 	end
 end
