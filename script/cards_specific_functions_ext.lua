@@ -140,12 +140,14 @@ end
 function AssaultMode.filter(c,tc,e,tp)
 	local code=tc:GetCode()
 	local ocode=tc:GetOriginalCode()
+	local nocheck=false
+	if c:IsLocation(LOCATION_GRAVE) then nocheck=true end
 	if tc.assault_mode_all then
-		return c:IsSetCard(0x104f) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+		return c:IsSetCard(0x104f) and c:IsCanBeSpecialSummoned(e,0,tp,true,nocheck)
 	else
 		return c:IsSetCard(0x104f) and c.assault_mode 
 			and (c.assault_mode==code or c.assault_mode==ocode)
-			and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
+			and c:IsCanBeSpecialSummoned(e,0,tp,true,nocheck)
 	end
 end
 function AssaultMode.cfilter(c,e,tp,ft,location)
@@ -174,7 +176,9 @@ function AssaultMode.Operation(c,extraop,location)
 		local c=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tc=Duel.SelectMatchingCard(tp,AssaultMode.filter,tp,location,0,1,1,nil,c,e,tp,location):GetFirst()
-		if tc and Duel.SpecialSummon(tc,0,tp,tp,true,false,POS_FACEUP)>0 then
+		local nocheck=false
+		if tc:IsLocation(LOCATION_GRAVE) then nocheck=true end
+		if tc and Duel.SpecialSummon(tc,0,tp,tp,true,nocheck,POS_FACEUP)>0 then
 			tc:CompleteProcedure()
 		end
 		if c:IsLocation(LOCATION_MZONE) then
