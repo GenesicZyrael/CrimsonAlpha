@@ -1,14 +1,9 @@
 --Slifer's Disciple
 local s,id=GetID()
 function s.initial_effect(c)
-	c:SetLimitIdOnField(1,0,3,74875003,LOCATION_MZONE)
+	c:SetLimitIdOnField(true,false,3,74875003,LOCATION_MZONE)
 	--Change its name to "Ra's Disciple"
-	local e0=Effect.CreateEffect(c)
-	e0:SetType(EFFECT_TYPE_SINGLE)
-	e0:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
-	e0:SetCode(EFFECT_CHANGE_CODE)
-	e0:SetRange(LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK)
-	e0:SetValue(74875003)
+	local e0=aux.ChangeCode(c,74875003,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK)
 	c:RegisterEffect(e0)
 	--extra summon
 	local e1=Effect.CreateEffect(c)

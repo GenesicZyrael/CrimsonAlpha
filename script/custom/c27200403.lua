@@ -1,5 +1,5 @@
- --Renshaddoll Winda
- Duel.LoadScript ("crimson_alpha.lua")
+--Renshaddoll Winda
+--Modified for CrimsonAlpha
 local s,id=GetID()
 local params={aux.FilterBoolFunction(Card.IsSetCard,0x9d)}
 function s.initial_effect(c)
@@ -12,7 +12,7 @@ function s.initial_effect(c)
 		e1:SetCountLimit(1,id)
 		e1:SetTarget(Fusion.SummonEffTG(table.unpack(params)))
 		e1:SetOperation(Fusion.SummonEffOP(table.unpack(params)))
-	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)	
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)	
 	--effect gain
 	local e2=Effect.CreateEffect(c)
 	    e2:SetDescription(aux.Stringid(id,1))

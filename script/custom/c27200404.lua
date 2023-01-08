@@ -1,5 +1,5 @@
- --Shaddoll Spiderfang
- Duel.LoadScript ("crimson_alpha.lua")
+--Shaddoll Spiderfang
+--Modified for CrimsonAlpha
 local s,id=GetID()
 function s.initial_effect(c)
 	--flip	
@@ -11,7 +11,7 @@ function s.initial_effect(c)
 		e1:SetCountLimit(1,id)
 		e1:SetTarget(s.target)
 		e1:SetOperation(s.operation)
-	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)	
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)	
 	--effect gain
 	local e2=Effect.CreateEffect(c)
 	    e2:SetDescription(aux.Stringid(id,1))
