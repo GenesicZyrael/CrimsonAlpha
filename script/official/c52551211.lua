@@ -1,6 +1,6 @@
 --シャドール・ハウンド
 --Shaddoll Hound
-Duel.LoadScript ("crimson_alpha.lua")
+--Modified for CrimsonAlpha
 local s,id=GetID()
 function s.initial_effect(c)
 	--tohand
@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.thtg)
 	e1:SetOperation(s.thop)
-	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)
 	--pos
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))

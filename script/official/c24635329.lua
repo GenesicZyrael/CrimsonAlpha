@@ -1,7 +1,6 @@
 --聖なる影 ケイウス
 --Qadoshaddoll Keios
---Logical Nonsense
-Duel.LoadScript ("crimson_alpha.lua")
+--Modified for CrimsonAlpha
 local s,id=GetID()
 function s.initial_effect(c)
 	--FLIP: Special summon "Shaddoll" monster from hand
@@ -13,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
-	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)
 	--Send "Shaddoll" monster from hand to GY, and you do, all your monsters gain ATK/DEF
 	local e2=Effect.CreateEffect(c)
 	e2:SetCategory(CATEGORY_ATKCHANGE+CATEGORY_DEFCHANGE)

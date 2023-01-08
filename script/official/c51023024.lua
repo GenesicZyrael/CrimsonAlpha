@@ -1,7 +1,6 @@
 --影霊の翼 ウェンディ
 --Rishaddoll Wendi
---Scripted by AlphaKretin
-Duel.LoadScript ("crimson_alpha.lua")
+--Modified for CrimsonAlpha
 local s,id=GetID()
 function s.initial_effect(c)
 	--special summon (any pos)
@@ -13,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.sptg(POS_DEFENSE))
 	e1:SetOperation(s.spop(POS_DEFENSE))
-	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)
 	--special summon (face-down)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))

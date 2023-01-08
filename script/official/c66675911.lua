@@ -1,7 +1,6 @@
 --星なる影 ゲニウス
 --Nephshaddoll Genius
---Logical Nonsense
-Duel.LoadScript ("crimson_alpha.lua")
+--Modified for CrimsonAlpha
 local s,id=GetID()
 function s.initial_effect(c)
 	--Targeted "Shaddoll" monster becomes unaffected by monster effects
@@ -12,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.immtg)
 	e1:SetOperation(s.immop)
-	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)
 	--Targeted monster cannot activate its effects
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))

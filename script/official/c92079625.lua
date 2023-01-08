@@ -1,7 +1,6 @@
 --影依の炎核 ヴォイド
 --Hellshaddoll Void
---Scripted by Larry126
-Duel.LoadScript ("crimson_alpha.lua")
+--Modified for CrimsonAlpha
 local s,id=GetID()
 function s.initial_effect(c)
 	--Banish 1 of opponent's monsters
@@ -13,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.rmtg)
 	e1:SetOperation(s.rmop)
-	c:RegisterEffect(e1,false,REGISTER_FLAG_FLIP)
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)
 	--Send cards from top of deck to GY
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
