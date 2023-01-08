@@ -31,38 +31,6 @@ Card.RegisterEffect=(function()
 	end
 end)()
 
--- local regeff=Card.RegisterEffect
--- function Card.RegisterEffect(c,e,forced,...)
-	-- if c:IsStatus(STATUS_INITIALIZING) and not e then
-		-- error("Parameter 2 expected to be Effect, got nil instead.",2)
-	-- end
-	-- local reg_e = regeff(c,e,forced)
-	-- if not reg_e then
-		-- return nil
-	-- end
-	-- local reg={...}
-	-- local resetflag,resetcount=e:GetReset()
-	-- for _,val in ipairs(reg) do
-		-- local setcode=regeff_list[val]
-		-- if setcode==nil then return end
-		-- local prop=EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_IGNORE_IMMUNE+EFFECT_FLAG_SET_AVAILABLE
-		-- if e:IsHasProperty(EFFECT_FLAG_UNCOPYABLE) then prop=prop|EFFECT_FLAG_UNCOPYABLE end
-		-- local e2=Effect.CreateEffect(c)
-		-- e2:SetType(EFFECT_TYPE_SINGLE)
-		-- e2:SetProperty(prop,EFFECT_FLAG2_MAJESTIC_MUST_COPY)
-		-- e2:SetCode(setcode)
-		-- e2:SetLabelObject(e)
-		-- e2:SetLabel(c:GetOriginalCode())
-		-- if resetflag and resetcount then
-			-- e2:SetReset(resetflag,resetcount)
-		-- elseif resetflag then
-			-- e2:SetReset(resetflag)
-		-- end
-		-- c:RegisterEffect(e2)
-	-- end
-	-- return reg_e
--- end
-
 local function CheckEffectUniqueCheck(c,tp,code)
 	if not (aux.FaceupFilter(Card.IsCode,code) and c:IsHasEffect(EFFECT_UNIQUE_CHECK)) then 
 		return false
@@ -120,6 +88,7 @@ local function SummonLimit(limit,code,location)
 	end
 end
 function Card.SetLimitIdOnField(c,self,opp,limit,code,location)
+	if not limit then limit=1 end
 	if location then
 		location=location
 	else
@@ -127,26 +96,26 @@ function Card.SetLimitIdOnField(c,self,opp,limit,code,location)
 	end
 	--Adjust
 	local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-		e1:SetCode(EVENT_ADJUST)
-		e1:SetRange(LOCATION_MZONE)
-		e1:SetOperation(AdjustOp(self,opp,limit,code,location))
+	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e1:SetCode(EVENT_ADJUST)
+	e1:SetRange(location)
+	e1:SetOperation(AdjustOp(self,opp,limit,code,location))
 	c:RegisterEffect(e1,false,CUSTOM_REGISTER_LIMIT)
-	--Cannot Normal/Flip/Special Summon
+	--Cannot Normal/Flip/Special Summon from location
 	local e2=Effect.CreateEffect(c)
-		e2:SetType(EFFECT_TYPE_FIELD)
-		e2:SetRange(LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
-		e2:SetCode(EFFECT_CANNOT_SUMMON)
-		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-		e2:SetTargetRange(1,1)
-		e2:SetTarget(SummonLimit(limit,code,location))
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetRange(LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
+	e2:SetCode(EFFECT_CANNOT_SUMMON)
+	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e2:SetTargetRange(1,1)
+	e2:SetTarget(SummonLimit(limit,code,location))
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
-		e3:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
+	e3:SetCode(EFFECT_CANNOT_FLIP_SUMMON)
 	c:RegisterEffect(e3)
 	local e4=e2:Clone()
-		e4:SetCode(EFFECT_FORCE_SPSUMMON_POSITION)
-		e4:SetValue(POS_FACEDOWN)
+	e4:SetCode(EFFECT_FORCE_SPSUMMON_POSITION)
+	e4:SetValue(POS_FACEDOWN)
 	c:RegisterEffect(e4)
 end

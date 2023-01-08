@@ -72,42 +72,42 @@ end
 --	-- matfilter: Required function 
 function Auxiliary.XenoMatCheckSummoned(c,matfilter)
 	if not matfilter then return false end
-	local x1=Effect.CreateEffect(c)
-	x1:SetType(EFFECT_TYPE_SINGLE)
-	x1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-	x1:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
-	x1:SetValue(matfilter)
-	c:RegisterEffect(x1)	
-	local x2=x1:Clone()
-	x2:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
-	c:RegisterEffect(x2)
-	local x3=x1:Clone()
-	x3:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
-	c:RegisterEffect(x3)
-	local x4=x1:Clone()
-	x4:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
-	c:RegisterEffect(x4)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EFFECT_CANNOT_BE_FUSION_MATERIAL)
+	e1:SetValue(matfilter)
+	c:RegisterEffect(e1)	
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_CANNOT_BE_SYNCHRO_MATERIAL)
+	c:RegisterEffect(e2)
+	local e3=e1:Clone()
+	e3:SetCode(EFFECT_CANNOT_BE_XYZ_MATERIAL)
+	c:RegisterEffect(e3)
+	local e4=e1:Clone()
+	e4:SetCode(EFFECT_CANNOT_BE_LINK_MATERIAL)
+	c:RegisterEffect(e4)
 end
 
 -- aux.XenoMatCheckOthers = "... all other materials are ..."
 --	-- matfilter: Required function
 function Auxiliary.XenoMatCheckOthers(c,matfilter)
 	if not matfilter then return false end
-	local x1=Effect.CreateEffect(c)
-	x1:SetType(EFFECT_TYPE_SINGLE)
-	x1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
-	x1:SetCode(EFFECT_FUSION_MAT_RESTRICTION)
-	x1:SetValue(matfilter)
-	c:RegisterEffect(x1)
-	local x2=x1:Clone()
-	x2:SetCode(EFFECT_SYNCHRO_MAT_RESTRICTION)
-	c:RegisterEffect(x2)
-	local x3=x1:Clone()
-	x3:SetCode(EFFECT_XYZ_MAT_RESTRICTION)
-	c:RegisterEffect(x3)	
-	local x4=x1:Clone()
-	x4:SetCode(CUSTOM_LINK_MAT_RESTRICTION)
-	c:RegisterEffect(x4)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EFFECT_FUSION_MAT_RESTRICTION)
+	e1:SetValue(matfilter)
+	c:RegisterEffect(e1)
+	local e2=e1:Clone()
+	e2:SetCode(EFFECT_SYNCHRO_MAT_RESTRICTION)
+	c:RegisterEffect(e2)
+	local e3=e1:Clone()
+	e3:SetCode(EFFECT_XYZ_MAT_RESTRICTION)
+	c:RegisterEffect(e3)	
+	local e4=e1:Clone()
+	e4:SetCode(CUSTOM_LINK_MAT_RESTRICTION)
+	c:RegisterEffect(e4)
 end
 
 -- Assault Mode Activate Summon: Made into a global function for future cards
@@ -180,4 +180,21 @@ function AssaultMode.Operation(c,location)
 			tc:CompleteProcedure()
 		end
 	end
+end
+
+-- aux.ChangeCode = This card's name becomes "code" while in "location"
+function Auxiliary.ChangeCode(c,code,location)
+	if not code then return false end
+	if location then
+		location=location
+	else
+		location=LOCATION_ONFIELD
+	end
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e1:SetCode(EFFECT_CHANGE_CODE)
+	e1:SetRange(location)
+	e1:SetValue(code)
+	return e1
 end
