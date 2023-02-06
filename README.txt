@@ -16,3 +16,10 @@ Download CrimsonAlpha repo
 			"should_update": true,
 			"should_read": true
 		},
+
+Then, in the root folder, 
+> Create the file and name it "init.lua"
+> add the text below
+
+	-- initialize script extensions
+	Duel.LoadScript ("crimson_alpha.lua")
