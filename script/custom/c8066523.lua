@@ -92,6 +92,11 @@ function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	if c:GetOverlayCount()>0 then
 		c:RemoveOverlayCard(tp,1,1,REASON_EFFECT)
 	else
-		Duel.Destroy(c,REASON_COST)		
+		if Duel.Destroy(c,REASON_COST)>0 then 	
+			local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsType,TYPE_SPIRIT),tp,LOCATION_MZONE,LOCATION_MZONE,nil)
+			if #g>0 then
+				Duel.SendtoHand(g,nil,REASON_EFFECT)
+			end
+		end		
 	end
 end
