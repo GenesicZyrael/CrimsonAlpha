@@ -10,4 +10,4 @@ Duel.LoadScript ("custom_set_codes.lua")
 -- update globals
 regeff_list[CUSTOM_REGISTER_FLIP]=TYPE_FLIP
 regeff_list[CUSTOM_REGISTER_LIMIT]=EFFECT_UNIQUE_CHECK
---regeff_list[REGISTER_FLAG_TELLAR]=101112045
+regeff_list[REGISTER_FLAG_TELLAR]=58858807
