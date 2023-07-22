@@ -24,7 +24,7 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.tgtg)
 	e2:SetOperation(s.tgop)
-	c:RegisterEffect(e2,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e2,false,CUSTOM_REGISTER_FLIP)	
 	--Used as material
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)

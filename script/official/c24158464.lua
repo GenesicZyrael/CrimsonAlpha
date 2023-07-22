@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.thtg)
 	e2:SetOperation(s.thop)
-	c:RegisterEffect(e2,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e2,false,CUSTOM_REGISTER_FLIP)	
 end
 s.listed_names={}
 s.listed_series={0x10b}

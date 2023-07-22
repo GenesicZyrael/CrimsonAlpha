@@ -29,7 +29,7 @@ function s.initial_effect(c)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
 	e3:SetTarget(s.target)
 	e3:SetOperation(s.operation)
-	c:RegisterEffect(e3,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e3,false,CUSTOM_REGISTER_FLIP)	
 	--Change to face-down
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,2))
