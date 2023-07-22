@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,{id,1})
 	e1:SetTarget(s.tgtg)
 	e1:SetOperation(s.tgop)
-	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLIP)	
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsPreviousLocation(LOCATION_HAND+LOCATION_DECK)

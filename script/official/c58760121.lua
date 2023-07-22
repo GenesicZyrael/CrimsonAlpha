@@ -7,7 +7,7 @@ function s.initial_effect(c)
 	e1:SetCategory(CATEGORY_POSITION)
 	e1:SetTarget(s.postg)
 	e1:SetOperation(s.posop)
-	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLIP)	
 end
 s.listed_series={0x3e}
 function s.filter(c)

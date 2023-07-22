@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	e2:SetCode(EVENT_FLIP)
 	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 	e2:SetOperation(s.flipop)
-	c:RegisterEffect(e2,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e2,false,CUSTOM_REGISTER_FLIP)	
 	--negate effects
 	local e3=Effect.CreateEffect(c)
 	e3:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)

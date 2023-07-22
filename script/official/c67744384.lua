@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
-	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLIP)	
 end
 s.listed_series={0x10b}
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)

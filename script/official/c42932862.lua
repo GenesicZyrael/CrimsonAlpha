@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
-	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLIP)	
 	--Flip face-up or face-down any number of monsters.
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
