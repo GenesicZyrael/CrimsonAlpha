@@ -11,7 +11,7 @@ function s.initial_effect(c)
 	e1:SetCost(s.cost)
 	e1:SetTarget(s.target)
 	e1:SetOperation(s.operation)
-	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLIP)	
 end
 function s.rfilter(c,e,tp)
 	return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp,c)
