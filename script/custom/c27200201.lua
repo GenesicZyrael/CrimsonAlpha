@@ -47,6 +47,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)	
 end
+s.listed_series={SET_TELLARKNIGHT,SET_CONSTELLAR}
 function s.efilter(e,te)
 	return te:IsActiveType(TYPE_XYZ)
 end
@@ -84,8 +85,8 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabelObject(g:GetFirst())
 end
 function s.spfilter(c,e,tp)
-	return ( c:IsSetCard(0x9c) 
-		  or c:IsSetCard(0x53) )
+	return ( c:IsSetCard(SET_TELLARKNIGHT) 
+		  or c:IsSetCard(SET_CONSTELLAR) )
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
