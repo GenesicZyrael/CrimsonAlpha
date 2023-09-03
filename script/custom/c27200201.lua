@@ -52,6 +52,9 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)	
 end
 s.listed_series={SET_TELLARKNIGHT,SET_CONSTELLAR}
+function s.econ(e)
+	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+end
 function s.efilter(e,te)
 	return te:IsActiveType(TYPE_XYZ)
 end
