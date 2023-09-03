@@ -1,5 +1,6 @@
 --星守の騎士 プトレマイオス
 --Tellarknight Ptolemaeus
+--Modified for CrimsonAlpha
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
@@ -12,8 +13,7 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_QUICK_O)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCode(EVENT_FREE_CHAIN)
-	-- e1:SetCost(s.spcost)
-	e1:SetCost(aux.CostWithReplace(s.spcost,CARD_CONSTELLARKNIGHT_TROIVERNUM))
+	e1:SetCost(aux.CostWithReplace(s.spcost,CARD_CONSTELLARKNIGHT_TROIVERNUM,nil,aux.TRUE))
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	e1:SetHintTiming(0,TIMING_END_PHASE)
@@ -23,7 +23,6 @@ function s.initial_effect(c)
 	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
-	-- e2:SetCost(s.skipcost)
 	e2:SetCost(aux.CostWithReplace(s.skipcost,CARD_CONSTELLARKNIGHT_TROIVERNUM))
 	e2:SetTarget(s.skiptg)
 	e2:SetOperation(s.skipop)
