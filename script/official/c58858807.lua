@@ -1,7 +1,7 @@
 --星騎士 セイクリッド・カドケウス
 --Tellarknight Constellar Caduceus
 --scripted by Naim
---Modified for CrimsonAlpha
+--Modified for CrimsonAlpha 
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -25,8 +25,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,{id,1})
-	e2:SetCost(s.applycost)
-	e2:SetCost(aux.CostWithReplace(aux.AND(aux.dxmcostgen(1,1,nil),s.applycost),CARD_CONSTELLARKNIGHT_TROIVERNUM)))
+	e2:SetCost(aux.CostWithReplace((aux.dxmcostgen(1,1,nil)),CARD_CONSTELLARKNIGHT_TROIVERNUM,nil,s.applycost))
 	e2:SetTarget(s.applytg)
 	e2:SetOperation(s.applyop)
 	c:RegisterEffect(e2)

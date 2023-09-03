@@ -1,6 +1,6 @@
 --煉獄の騎士 ヴァトライムス
 --Darktellarknight Batlamyus
---Modified for CrimsonAlpha
+--Modified for CrimsonAlpha 
 local s,id=GetID()
 function s.initial_effect(c)
 	--Xyz Summon
@@ -21,7 +21,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCondition(s.spcon)
-	e2:SetCost(aux.CostWithReplace(aux.AND(aux.dxmcostgen(1,1,nil),s.spdiscost),CARD_CONSTELLARKNIGHT_TROIVERNUM)))
+	e2:SetCost(aux.CostWithReplace(aux.AND(aux.dxmcostgen(1,1,nil),s.spdiscost),CARD_CONSTELLARKNIGHT_TROIVERNUM))
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2,false,REGISTER_FLAG_DETACH_XMAT)

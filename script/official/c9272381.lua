@@ -1,6 +1,6 @@
 --星輝士 セイクリッド・ダイヤ
 --Stellarknight Constellar Diamond
---Modified for CrimsonAlpha
+--Modified for CrimsonAlpha 
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon

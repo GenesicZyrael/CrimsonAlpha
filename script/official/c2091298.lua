@@ -1,6 +1,6 @@
 --セイクリッド・ビーハイブ
 --Constellar Praespe
---Modified for CrimsonAlpha
+--Modified for CrimsonAlpha 
 local s,id=GetID()
 function s.initial_effect(c)
 	--xyz summon
@@ -17,7 +17,6 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetCondition(s.condition)
-	e1:SetCost(s.cost)
 	e1:SetCost(aux.CostWithReplace(s.cost,CARD_CONSTELLARKNIGHT_TROIVERNUM))
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1,false,REGISTER_FLAG_DETACH_XMAT)
