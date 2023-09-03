@@ -1,6 +1,7 @@
 --Cards with double names
 
 --Commonly used cards
+CARD_CONSTELLARKNIGHT_TROIVERNUM        = 27200201
 
 --Commonly used Tokens
 
