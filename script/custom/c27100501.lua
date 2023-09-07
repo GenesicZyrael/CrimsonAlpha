@@ -8,7 +8,7 @@ function s.initial_effect(c)
 		e2:SetType(EFFECT_TYPE_FIELD)
 		e2:SetRange(LOCATION_PZONE)
 		e2:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
+		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
 		e2:SetTargetRange(1,0)
 		e2:SetTarget(s.splimit)
 	c:RegisterEffect(e2)	
@@ -19,24 +19,24 @@ function s.initial_effect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 		e3:SetCode(EVENT_TO_GRAVE)
 		e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-		e3:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+		e3:SetCountLimit(1,{id,0})
 		e3:SetCondition(s.thcon)
 		e3:SetTarget(s.thtg)
 		e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)	
-	--add tuner
-	local e4=Effect.CreateEffect(c)
-		e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		e4:SetCode(EVENT_BE_MATERIAL)
-		e4:SetCondition(s.tncon)
-		e4:SetOperation(s.tnop)
-	c:RegisterEffect(e4)
+	-- --add tuner
+	-- local e4=Effect.CreateEffect(c)
+		-- e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		-- e4:SetCode(EVENT_BE_MATERIAL)
+		-- e4:SetCondition(s.tncon)
+		-- e4:SetOperation(s.tnop)
+	-- c:RegisterEffect(e4)
 end
 
-s.listed_series={0x10}
+s.listed_series={SET_GUSTO}
 -- {Pendulum Summon Restriction: Gusto}
 function s.splimit(e,c,sump,sumtype,sumpos,targetp)
-	if c:IsSetCard(0x10) then return false end
+	if c:IsSetCard(SET_GUSTO) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 
@@ -44,7 +44,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY)
 end
 function s.tgfilter(c)
-	return c:IsSetCard(0x10) 
+	return c:IsSetCard(SET_GUSTO) 
 		and not c:IsCode(id) 
 		and c:IsAbleToGrave()
 end

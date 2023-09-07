@@ -1,4 +1,4 @@
---Constellar Orionis
+--Constellar Vylon
 local s,id=GetID()
 function s.initial_effect(c)
 	--Add Pseudo-PendulumProc
@@ -19,24 +19,24 @@ function s.initial_effect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 		e3:SetCode(EVENT_TO_GRAVE)
 		e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-		e3:SetCountLimit(1,id+EFFECT_COUNT_CODE_OATH)
+		e3:SetCountLimit(1,{id,0})
 		e3:SetCondition(s.thcon)
 		e3:SetTarget(s.thtg)
 		e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)	
-	--add tuner
-	local e4=Effect.CreateEffect(c)
-		e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		e4:SetCode(EVENT_BE_MATERIAL)
-		e4:SetCondition(s.tncon)
-		e4:SetOperation(s.tnop)
-	c:RegisterEffect(e4)
+	-- --add tuner
+	-- local e4=Effect.CreateEffect(c)
+		-- e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		-- e4:SetCode(EVENT_BE_MATERIAL)
+		-- e4:SetCondition(s.tncon)
+		-- e4:SetOperation(s.tnop)
+	-- c:RegisterEffect(e4)
 end
 
-s.listed_series={0x53}
+s.listed_series={SET_CONSTELLAR}
 -- {Pendulum Summon Restriction: Constellar}
 function s.splimit(e,c,sump,sumtype,sumpos,targetp)
-	if c:IsSetCard(0x53) then return false end
+	if c:IsSetCard(SET_CONSTELLAR) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 
@@ -44,7 +44,7 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsReason(REASON_DESTROY)
 end
 function s.tgfilter(c)
-	return c:IsSetCard(0x53) 
+	return c:IsSetCard(SET_CONSTELLAR) 
 		and not c:IsCode(id) 
 		and c:IsAbleToGrave()
 end
