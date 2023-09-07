@@ -1,7 +1,7 @@
 --Sorcerer of Chaos Magic
 local s,id=GetID()
 function s.initial_effect(c)
-	-- 2 Level 2 monsters
+	-- 2 Level 9 monsters
 	Xyz.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_SPELLCASTER),9,2)
 	-- Can use "Dark Magician" monsters as Level 9 materials
 	local e0=Effect.CreateEffect(c)
