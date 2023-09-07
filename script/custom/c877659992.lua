@@ -87,7 +87,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		r1:SetRange(LOCATION_MZONE)
 		r1:SetValue(CARD_DARK_MAGICIAN)
 	c:RegisterEffect(r1)
-	--Apply the effects of a "Fusion/Polymerization" spell
+	--Apply the effects of a Dark Magician spell
 	local r2=Effect.CreateEffect(c)
 		r2:SetDescription(aux.Stringid(id,1))
 		r2:SetType(EFFECT_TYPE_IGNITION)
