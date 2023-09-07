@@ -33,6 +33,15 @@ end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsSetCard(0x53)
 end
+function s.xyzfilter(c,mg)
+	return c:IsSetCard(0x53) and c:IsXyzSummonable(nil,mg)
+end
+function s.cfilter(c)
+	return c:IsFacedown() or not c:IsSetCard(0x53)
+end
+function s.mfilter(c)
+	return c:IsSetCard(0x53) and c:IsCanBeXyzMaterial()
+end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
     local g=Duel.GetMatchingGroup(Card.IsCanBeXyzMaterial,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
@@ -43,15 +52,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.IsExistingMatchingCard(s.xyzfilter,tp,LOCATION_EXTRA,0,1,nil,g) end
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_EXTRA)
 end
-function s.xyzfilter(c,mg)
-	return c:IsSetCard(0x53) and c:IsXyzSummonable(nil,mg)
-end
-function s.cfilter(c)
-	return c:IsFacedown() or not c:IsSetCard(0x53)
-end
-function s.mfilter(c)
-	return c:IsSetCard(0x53) and c:IsCanBeXyzMaterial()
-end
+
 function s.ntcon(e,c,minc,zone)
 	if c==nil then return true end
 	local tp=c:GetControler()

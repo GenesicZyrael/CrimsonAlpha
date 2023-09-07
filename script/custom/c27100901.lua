@@ -12,18 +12,18 @@ function s.initial_effect(c)
 		e2:SetTargetRange(1,0)
 		e2:SetTarget(s.splimit)
 	c:RegisterEffect(e2)	
-	--return to hand
-	local e3=Effect.CreateEffect(c)
-		e3:SetDescription(aux.Stringid(id,1))
-		e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
-		e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
-		e3:SetCode(EVENT_TO_GRAVE)
-		e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
-		e3:SetCountLimit(1,{id,0})
-		e3:SetCondition(s.thcon)
-		e3:SetTarget(s.thtg)
-		e3:SetOperation(s.thop)
-	c:RegisterEffect(e3)	
+	-- --return to hand
+	-- local e3=Effect.CreateEffect(c)
+		-- e3:SetDescription(aux.Stringid(id,1))
+		-- e3:SetCategory(CATEGORY_SPECIAL_SUMMON)
+		-- e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+		-- e3:SetCode(EVENT_TO_GRAVE)
+		-- e3:SetProperty(EFFECT_FLAG_DELAY+EFFECT_FLAG_CARD_TARGET)
+		-- e3:SetCountLimit(1,{id,0})
+		-- e3:SetCondition(s.thcon)
+		-- e3:SetTarget(s.thtg)
+		-- e3:SetOperation(s.thop)
+	-- c:RegisterEffect(e3)	
 	-- --add tuner
 	-- local e4=Effect.CreateEffect(c)
 		-- e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
@@ -31,6 +31,16 @@ function s.initial_effect(c)
 		-- e4:SetCondition(s.tncon)
 		-- e4:SetOperation(s.tnop)
 	-- c:RegisterEffect(e4)
+	--Attach
+	local e5=Effect.CreateEffect(c)
+		e5:SetDescription(aux.Stringid(id,1))
+		e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
+		e5:SetType(EFFECT_TYPE_IGNITION)
+		e5:SetRange(LOCATION_GRAVE)
+		e5:SetCountLimit(1,{id,1})
+		e5:SetTarget(s.AttTg)
+		e5:SetOperation(s.AttOp)
+	c:RegisterEffect(e5)	
 end
 
 s.listed_series={SET_CONSTELLAR}
@@ -91,4 +101,21 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(e:GetLabelObject(),REASON_EFFECT)
+end
+-- {Graveyard Effect: Attach}
+function s.AttFilter(c)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(SET_CONSTELLAR) 
+end
+function s.AttTg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.AttFilter(chkc) end
+	if chk==0 then return Duel.IsExistingTarget(s.AttFilter,tp,LOCATION_MZONE,0,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
+	Duel.SelectTarget(tp,s.AttFilter,tp,LOCATION_MZONE,0,1,1,nil)
+end
+function s.AttOp(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local tc=Duel.GetFirstTarget()
+	if tc and tc:IsRelateToEffect(e) and tc:IsFaceup() and not tc:IsImmuneToEffect(e) and c:IsRelateToEffect(e) then
+		Duel.Overlay(tc,Group.FromCards(c))
+	end
 end
