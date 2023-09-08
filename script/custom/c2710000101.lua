@@ -24,18 +24,46 @@ function s.filter(c,e,tp)
 		and not c:IsImmuneToEffect(e)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	local location=LOCATION_HAND
+	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+	local ec=Duel.IsExistingMatchingCard(s.spfilter,tp,location,0,1,nil,e,tp)
+	local ec_extra
 	if chkc then return s.filter(chkc,e,tp) and eg:IsContains(chkc) end
-	if chk==0 then
-		return eg 
-			and	eg:IsExists(s.filter,1,nil,e,tp) 
-			and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
-			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
+	if chk==0 and eg and eg:IsExists(s.filter,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0   then
+		if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 and extra_loc and (location&extra_loc)==0 then
+			ec_extra=Duel.IsExistingMatchingCard(s.spfilter,tp,extra_loc,0,1,nil,e,tp)
+			if ec_extra and ec then
+				return ec
+					or ec_extra
+			elseif ec_extra and not ec then
+				return ec_extra
+			end
+		else 
+			return ec
+		end
 	end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,location)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+	local location=LOCATION_HAND
+	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+	local ec=Duel.IsExistingMatchingCard(s.spfilter,tp,location,0,1,nil,e,tp)
+	local ec_extra
+	if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 and extra_loc and (location&extra_loc)==0 then
+		ec_extra=Duel.IsExistingMatchingCard(s.spfilter,tp,extra_loc,0,1,nil,e,tp)
+		if ec_extra and ec then
+			if Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_LOCATION,1)) then
+				Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
+				location = extra_loc
+			end
+		elseif ec_extra and not ec then
+			Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
+			location = extra_loc
+		end
+	end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp):GetFirst()
+	local sc=Duel.SelectMatchingCard(tp,s.spfilter,tp,location,0,1,1,nil,e,tp):GetFirst()
 	if not sc then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local tg=eg:FilterSelect(tp,s.filter,1,1,nil,e,tp)
