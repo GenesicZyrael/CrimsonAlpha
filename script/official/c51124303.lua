@@ -1,5 +1,6 @@
 --影霊衣の万華鏡
 --Nekroz Kaliedoscope
+--Modified for CrimsonAlpha
 local s,id=GetID()
 function s.initial_effect(c) 
 	--Activate
