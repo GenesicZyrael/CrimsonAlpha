@@ -3,7 +3,7 @@
 local s,id=GetID()
 local params={aux.FilterBoolFunction(Card.IsSetCard,0x9d)}
 function s.initial_effect(c)
-	--flip
+	--flip 
 	local e1=Effect.CreateEffect(c)
 		e1:SetDescription(aux.Stringid(id,0))
 		e1:SetCategory(CATEGORY_SPECIAL_SUMMON+CATEGORY_FUSION_SUMMON)
@@ -12,7 +12,7 @@ function s.initial_effect(c)
 		e1:SetCountLimit(1,id)
 		e1:SetTarget(Fusion.SummonEffTG(table.unpack(params)))
 		e1:SetOperation(Fusion.SummonEffOP(table.unpack(params)))
-	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLAG)	
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLIP)	
 	--effect gain
 	local e2=Effect.CreateEffect(c)
 	    e2:SetDescription(aux.Stringid(id,1))
