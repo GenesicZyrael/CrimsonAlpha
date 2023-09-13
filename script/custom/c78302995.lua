@@ -2,19 +2,31 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
-	local e1=Fusion.CreateSummonEff(c,aux.FilterBoolFunction(aux.IsMaterialListCode,78193831),nil,s.fextra,nil,nil,s.stage2)
+	local e1=Fusion.CreateSummonEff(c,aux.FilterBoolFunction(aux.IsMaterialListCode,CARD_BUSTER_BLADER),nil,s.fextra,nil,nil,s.stage2)
 	e1:SetCountLimit(1,{id,0})
 	c:RegisterEffect(e1)
 	if not AshBlossomTable then AshBlossomTable={} end
 	table.insert(AshBlossomTable,e1)
+	--Return itself to the hand
+	local e2=Effect.CreateEffect(c)
+	e2:SetDescription(aux.Stringid(id,1))
+	e2:SetCategory(CATEGORY_TOHAND)
+	e2:SetType(EFFECT_TYPE_IGNITION)
+	e2:SetRange(LOCATION_GRAVE)
+	e2:SetCountLimit(1,{id,1})
+	e2:SetCost(s.thcost)
+	e2:SetTarget(s.thtg)
+	e2:SetOperation(s.thop)
+	c:RegisterEffect(e2)
 end
-s.listed_names={78193831}
+s.listed_names={CARD_BUSTER_BLADER}
+s.listed_series={SET_DESTRUCTION_SWORD}
 function s.cfilter(c)
 	return c:IsFaceup() and c:IsRace(RACE_DRAGON)
 end
 function s.fextra(e,tp,mg)
 	if Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) then
-		return Duel.GetMatchingGroup(Fusion.IsMonsterFilter(Card.IsCode),tp,LOCATION_DECK,0,nil,78193831)
+		return Duel.GetMatchingGroup(Fusion.IsMonsterFilter(Card.IsCode),tp,LOCATION_DECK,0,nil,CARD_BUSTER_BLADER)
 	end
 	return nil
 end
@@ -24,7 +36,7 @@ function s.stage2(e,tc,tp,mg,chk)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_ADD_CODE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
-		e1:SetValue(78193831)
+		e1:SetValue(CARD_BUSTER_BLADER)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
@@ -47,11 +59,27 @@ function s.stage2(e,tc,tp,mg,chk)
 		e3:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e3,tp)
 		--Clock Lizard check
-		aux.addTempLizardCheck(c,tp,function(_,c) return not c:IsCode(78193831) and not c.listed_names==78193831 and not aux.IsMaterialListCode(c,78193831) end)
+		aux.addTempLizardCheck(c,tp,function(_,c) return not c:IsCode(CARD_BUSTER_BLADER) and not c.listed_names==CARD_BUSTER_BLADER and not aux.IsMaterialListCode(c,CARD_BUSTER_BLADER) end)
 	end
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not c:IsCode(78193831) 
-		   and not c.listed_names==78193831
-		   and not aux.IsMaterialListCode(c,78193831)
+	return not c:IsCode(CARD_BUSTER_BLADER) 
+		   and not c.listed_names==CARD_BUSTER_BLADER
+		   and not aux.IsMaterialListCode(c,CARD_BUSTER_BLADER)
+end
+function s.cfilter(c)
+	return c:IsSetCard(SET_DESTRUCTION_SWORD) and c:IsDiscardable()
+end
+function s.thcost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_HAND,0,1,nil) end
+	Duel.DiscardHand(tp,s.cfilter,1,1,REASON_DISCARD+REASON_COST)
+end
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsAbleToHand() end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,e:GetHandler(),1,0,0)
+end
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	if e:GetHandler():IsRelateToEffect(e) then
+		Duel.SendtoHand(e:GetHandler(),nil,REASON_EFFECT)
+	end
 end
