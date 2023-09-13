@@ -4,7 +4,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,CARD_DARK_MAGICIAN,78193831)
+	Fusion.AddProcMix(c,true,true,CARD_DARK_MAGICIAN,CARD_BUSTER_BLADER)
 	--negate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -45,6 +45,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.atkop)
 	c:RegisterEffect(e4)
 end
+s.listed_series={SET_DESTRUCTION_SWORD}
 function s.val(e,c)
 	return Duel.GetMatchingGroupCount(s.filter,0,0x14,0x14,nil)*500
 end
