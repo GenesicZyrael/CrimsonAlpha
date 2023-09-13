@@ -32,30 +32,40 @@ end
 function s.cfilter(c,e,sc)
 	return c:IsFaceup() and c:IsCanBeRitualMaterial(sc) and not c:IsImmuneToEffect(e)
 end
+--- Custom ---
+function s.chkritloc(e,tp)
+	local location=LOCATION_HAND
+	local ec=Duel.IsExistingMatchingCard(s.spfilter,tp,location,0,1,nil,e,tp)
+	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+	local ec_extra
+	if extra_loc and (location&extra_loc)==0 then
+		ec_extra=Duel.IsExistingMatchingCard(s.spfilter,tp,extra_loc,0,1,nil,e,tp)
+		if ec_extra and ec then
+			location = location+extra_loc
+		elseif ec_extra and not ec then
+			location = extra_loc
+		end
+	end
+	return location
+end
+--------------
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local rparams={filter=aux.FilterBoolFunction(Card.IsSetCard,SET_GISHKI),lvtype=RITPROC_EQUAL,stage2=s.stage2}
 	local rittg=Ritual.Target(rparams)
-	if chk==0 then return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp))
-		or rittg(e,tp,eg,ep,ev,re,r,rp,chk) end
+	--- Custom ---
+	local location=s.chkritloc(e,tp)
+	--------------
+	if chk==0 then 
+		return (Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+		    and Duel.IsExistingMatchingCard(s.spfilter,tp,location,0,1,nil,e,tp))
+			 or rittg(e,tp,eg,ep,ev,re,r,rp,chk) 
+	end
 	rittg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	--- Custom ---
-	local location=LOCATION_HAND
-	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
-	local ec=Duel.IsExistingMatchingCard(s.spfilter,tp,location,0,1,nil,e,tp)
-	local ec_extra
-	if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 then
-		ec_extra=Duel.IsExistingMatchingCard(s.spfilter,tp,extra_loc,0,1,nil,e,tp)
-		if extra_loc and (location&extra_loc)==0 then
-			if ec_extra and ec then
-				location = location+extra_loc
-			elseif ec_extra and not ec then
-				location = extra_loc
-			end
-		end
-	end	
+	local location=s.chkritloc(e,tp)
 	--------------
 	local rparams={filter=aux.FilterBoolFunction(Card.IsSetCard,SET_GISHKI),lvtype=RITPROC_EQUAL,stage2=s.stage2}
 	local rittg,ritop=Ritual.Target(rparams),Ritual.Operation(rparams)
@@ -68,9 +78,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if op==1 then
 		--Tribute 1 opponent's face-up monster
 		--- Custom ---
-		location=LOCATION_HAND
-		extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
-		ec=Duel.IsExistingMatchingCard(s.spfilter,tp,location,0,1,nil,e,tp)
+		local location=LOCATION_HAND
+		local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+		local ec=Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
 		ec_extra=nil
 		if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 and extra_loc and (location&extra_loc)==0 then
 			ec_extra=Duel.IsExistingMatchingCard(s.spfilter,tp,extra_loc,0,1,nil,e,tp)
