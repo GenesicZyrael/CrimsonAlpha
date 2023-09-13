@@ -92,8 +92,9 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		r2:SetDescription(aux.Stringid(id,1))
 		r2:SetType(EFFECT_TYPE_IGNITION)
 		r2:SetRange(LOCATION_MZONE)
-		r2:SetCountLimit(1,{id,1})
-		r2:SetCost(aux.AND(aux.dxmcostgen(1,1,nil),s.copycost))
+		-- r2:SetCountLimit(1,{id,1})
+		-- r2:SetCost(aux.AND(aux.dxmcostgen(1,1,nil),s.copycost))
+		r2:SetCost(s.copycost)
 		r2:SetTarget(s.copytg)
 		r2:SetOperation(s.copyop)
 	c:RegisterEffect(r2)
@@ -102,7 +103,7 @@ function s.copfilter(c)
 	return c:IsAbleToRemoveAsCost()
 		and c:ListsCode(CARD_DARK_MAGICIAN) 
 		and c:GetType()==TYPE_SPELL 
-		and c:CheckActivateEffect(true,false,true)~=nil 
+		and c:CheckActivateEffect(false,true,true)~=nil 
 end
 
 
@@ -114,14 +115,14 @@ function s.copycost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 end
 function s.copytg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	local te=e:GetLabelObject()
 	if chkc then
-		local te=e:GetLabelObject()
 		return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc)
 	end
 	if chk==0 then return Duel.IsExistingMatchingCard(s.copfilter,tp,LOCATION_DECK,0,1,nil) end
 	local g=Duel.SelectMatchingCard(tp,s.copfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if not Duel.Remove(g,POS_FACEUP,REASON_COST) then return end
-	local te=g:GetFirst():CheckActivateEffect(true,false,true)
+	local te=g:GetFirst():CheckActivateEffect(false,true,true)
 	e:SetLabel(te:GetLabel())
 	e:SetLabelObject(te:GetLabelObject())
 	local tg=te:GetTarget()
