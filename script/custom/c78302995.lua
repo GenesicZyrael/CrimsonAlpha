@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--Activate
-	local e1=Fusion.CreateSummonEff(c,aux.FilterBoolFunction(aux.IsMaterialListCode,CARD_BUSTER_BLADER),nil,s.fextra,nil,nil,s.stage2)
+	local e1=Fusion.CreateSummonEff(c,aux.FilterBoolFunction(c.ListsCodeAsMaterial,CARD_BUSTER_BLADER),nil,s.fextra,nil,nil,s.stage2)
 	e1:SetCountLimit(1,{id,0})
 	c:RegisterEffect(e1)
 	if not AshBlossomTable then AshBlossomTable={} end
@@ -34,18 +34,18 @@ function s.stage2(e,tc,tp,mg,chk)
 	if chk==1 then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_ADD_CODE)
+		e1:SetCode(EFFECT_CHANGE_CODE)
 		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 		e1:SetValue(CARD_BUSTER_BLADER)
 		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e1)
-		local e2=Effect.CreateEffect(e:GetHandler())
-		e2:SetType(EFFECT_TYPE_SINGLE)
-		e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT+EFFECT_FLAG_OATH)
-		e2:SetDescription(aux.Stringid(id,1))
-		e2:SetTargetRange(1,1)
-		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
-		tc:RegisterEffect(e2)
+		-- local e2=Effect.CreateEffect(e:GetHandler())
+		-- e2:SetType(EFFECT_TYPE_SINGLE)
+		-- e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT+EFFECT_FLAG_OATH)
+		-- e2:SetDescription(aux.Stringid(id,1))
+		-- e2:SetTargetRange(1,1)
+		-- e2:SetReset(RESET_EVENT+RESETS_STANDARD)
+		-- tc:RegisterEffect(e2)
 		local c=e:GetHandler()
 		c:SetCardTarget(tc)
 		--Cannot Special Summon from the Extra Deck, except monsters that specifically list "Buster Blader" in its text
@@ -59,13 +59,13 @@ function s.stage2(e,tc,tp,mg,chk)
 		e3:SetReset(RESET_PHASE+PHASE_END)
 		Duel.RegisterEffect(e3,tp)
 		--Clock Lizard check
-		aux.addTempLizardCheck(c,tp,function(_,c) return not c:IsCode(CARD_BUSTER_BLADER) and not c.listed_names==CARD_BUSTER_BLADER and not aux.IsMaterialListCode(c,CARD_BUSTER_BLADER) end)
+		aux.addTempLizardCheck(c,tp,function(_,c) return not c:IsCode(CARD_BUSTER_BLADER) and not c.listed_names==CARD_BUSTER_BLADER and not c.ListsCodeAsMaterial(c,CARD_BUSTER_BLADER) end)
 	end
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsCode(CARD_BUSTER_BLADER) 
 		   and not c.listed_names==CARD_BUSTER_BLADER
-		   and not aux.IsMaterialListCode(c,CARD_BUSTER_BLADER)
+		   and not c.ListsCodeAsMaterial(c,CARD_BUSTER_BLADER)
 end
 function s.cfilter(c)
 	return c:IsSetCard(SET_DESTRUCTION_SWORD) and c:IsDiscardable()
