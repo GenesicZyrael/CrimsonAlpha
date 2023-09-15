@@ -46,10 +46,20 @@ function s.rmtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_REMOVE,g,#g,0,0)
 	Duel.SetChainLimit(aux.FALSE)
 end
+function s.rmfilter2(c)
+	return c:IsFaceup() and c:IsAbleToRemove()
+end
 function s.rmop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.GetMatchingGroup(s.rmfilter,tp,LOCATION_SZONE,LOCATION_SZONE,nil)
 	if #g>0 then
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		Duel.Remove(g,POS_FACEUP,REASON_EFFECT)
+		Duel.BreakEffect()
+		local sg=Duel.GetMatchingGroup(s.rmfilter2,tp,0,LOCATION_ONFIELD,nil)
+		local dg=sg:Select(tp,1,#g,nil)
+		if #dg>0 then
+			Duel.Remove(dg,POS_FACEUP,REASON_EFFECT)
+		end
 	end
 end
 function s.val(e,c)
