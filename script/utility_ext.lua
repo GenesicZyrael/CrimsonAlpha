@@ -37,6 +37,12 @@ local function CheckEffectUniqueCheck(c,tp,code)
 	end
 	return true
 end
+function aux.CheckEffectUniqueCheck(c,tp,code)
+	if not (aux.FaceupFilter(Card.IsCode,code) and c:IsHasEffect(EFFECT_UNIQUE_CHECK)) then 
+		return false
+	end
+	return true
+end
 local function AdjustOp(self,opp,limit,code,location)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		local c=e:GetHandler()
@@ -102,6 +108,7 @@ function Card.SetLimitIdOnField(c,self,opp,limit,code,location)
 	e1:SetRange(location)
 	e1:SetOperation(AdjustOp(self,opp,limit,code,location))
 	c:RegisterEffect(e1,false,CUSTOM_REGISTER_LIMIT)
+	c:RegisterFlagEffect(CUSTOM_REGISTER_LIMIT,RESET_DISABLE,0,1,3)
 	--Cannot Normal/Flip/Special Summon from location
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_FIELD)
@@ -118,4 +125,7 @@ function Card.SetLimitIdOnField(c,self,opp,limit,code,location)
 	e4:SetCode(EFFECT_FORCE_SPSUMMON_POSITION)
 	e4:SetValue(POS_FACEDOWN)
 	c:RegisterEffect(e4)
+end
+function Card.SetLimitIdOnField(c)
+	return c:GetFlagEffectLabel(CUSTOM_REGISTER_LIMIT)
 end
