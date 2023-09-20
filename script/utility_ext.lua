@@ -1,7 +1,7 @@
--- regeff_list is a global table that we can add additional entries to, from outside of utility.lua
-regeff_list={[REGISTER_FLAG_DETACH_XMAT]=511002571,[REGISTER_FLAG_CARDIAN]=511001692,[REGISTER_FLAG_THUNDRA]=12081875,[REGISTER_FLAG_ALLURE_LVUP]=511310036}
---for additional registers
-
+-- initialization
+	regeff_list={}
+	
+-- functions
 Card.RegisterEffect=(function()
 	local oldf=Card.RegisterEffect
 	return function(c,e,forced,...)
@@ -93,13 +93,13 @@ local function SummonLimit(limit,code,location)
 		end
 	end
 end
-function Card.SetLimitIdOnField(c,self,opp,limit,code,location)
+-- Sets the max number of copies the card(code) can have on the field
+function Card.SetLimitCardOnField(c,limit,location,code,self,opp)
 	if not limit then limit=1 end
-	if location then
-		location=location
-	else
-		location=LOCATION_ONFIELD
-	end
+	if not location then location=LOCATION_ONFIELD end	
+	if not code then code=c:GetCode() end
+	if not self then self=true end
+	if not opp then opp=false end
 	--Adjust
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
@@ -126,6 +126,38 @@ function Card.SetLimitIdOnField(c,self,opp,limit,code,location)
 	e4:SetValue(POS_FACEDOWN)
 	c:RegisterEffect(e4)
 end
-function Card.GetLimitIdOnField(c)
+function aux.CheckLimitForCard(tp,code)
+	return Duel.IsExistingMatchingCard(aux.CheckEffectUniqueCheck,tp,LOCATION_ALL,0,1,nil,tp,code)
+end
+-- Returns the max number of copies the card can have on the field
+function Card.GetMaxLimitForCard(c)
 	return c:GetFlagEffectLabel(CUSTOM_REGISTER_LIMIT)
+end
+-- Returns the max number of copies the card with code can have on the field
+function aux.GetMaxLimitForCard(tp,code,location)
+	if not location then location=LOCATION_ALL end	
+	local c=Duel.GetMatchingGroup(aux.CheckEffectUniqueCheck,tp,location,0,nil,tp,code):GetFirst()
+	if c then return c:GetMaxLimitForCard() end
+	return 99
+end
+-- Returns the number of copies the field can have of a specific card
+	-- tp 	    = Target Player
+	-- code     = current Card ID
+	-- onfield  = flag for checking LOCATION_ONFIELD or LOCATION_ALL
+	-- location = if flag for onfield is not met, it will check for the location mentioned
+function aux.GetLimitForCardCount(tp,code,onfield,location)
+	if not location then location=LOCATION_ONFIELD end	
+	if onfield then 
+		onfield=LOCATION_ONFIELD 
+	else
+		onfield=LOCATION_ALL 
+		location=LOCATION_ALL 
+	end	
+	local max=aux.GetMaxLimitForCard(tp,code,onfield)
+	local chk=Duel.IsExistingMatchingCard(aux.CheckEffectUniqueCheck,tp,location,0,1,nil,tp,code)
+	if chk then  
+		local ct=max-Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,code),tp,LOCATION_MZONE,0,nil)
+		return ct
+	end
+	return max
 end
