@@ -41,42 +41,18 @@ function s.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 s.listed_names={id,CARD_RA,10000020,10000000}
-
---- Custom ---
-function s.chkfieldlimit(e,tp,max)
-	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,id),tp,LOCATION_MZONE,0,nil)
-	local ct=#g
-	if Duel.IsExistingMatchingCard(aux.CheckEffectUniqueCheck,tp,LOCATION_MZONE,0,1,nil,tp,id) then
-		return true,ct
-	end
-	return false,ct
-end
-function s.rescon(sg,e,tp,mg)
-	return aux.ChkfMMZ(2)(sg,e,tp,mg) --and sg:IsExists(s.chk,1,nil,sg,tp)
-end
--- function s.chk(c,sg,tp)
-	-- local chkfld=s.chkfieldlimit(e,tp,3)
-	-- if chkfld~=true then return aux.TRUE end
-	-- local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,id),tp,LOCATION_MZONE,0,nil)
-	-- if #g>1 then
-		-- return sg:IsExists(Card.IsHasEffect,1,c,EFFECT_UNIQUE_CHECK) 
-			-- --and not sg:IsExists(Card.GetFlagEffect,1,c,CUSTOM_REGISTER_LIMIT)
-	-- end
-	-- return sg:IsExists(Card.IsCode,1,c,id) 
--- end
---------------
 function s.filter(c,e,tp)
 	--- Custom ---
-	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsCode,id),tp,LOCATION_MZONE,0,nil)
+	local ct=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,id),tp,LOCATION_MZONE,0,nil)
 	local cond=c:IsCode(id)
-	if #g>2 then cond=c:IsOriginalCode(id) end
+	if ct>2 then cond=c:IsOriginalCode(id) end
 	--------------
 	return cond and c:IsCanBeSpecialSummoned(e,0,tp,false,false) 
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	--- Custom ---
-	local chkfld,ct=s.chkfieldlimit(e,tp,3)
-	if chkfld==true and ct<2 then return end
+	local ct=aux.GetLimitForCardCount(tp,id,nil,LOCATION_MZONE)
+	if ct<1 then return end
 	--------------
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,nil,e,tp) end
@@ -87,26 +63,17 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if ft<=0 then return end
 	if ft>2 then ft=2 end
 	--- Custom ---
-	local chkfld,ct=s.chkfieldlimit(e,tp,3)
-	if chkfld==true and ct>=2 then 
-		ft=3-ct
-	elseif chkfld==false and ct>=2 then 
-		ft=1	-- workaround 
-	end
+	local ct=aux.GetLimitForCardCount(tp,id,nil,LOCATION_MZONE)
+	if ct>2 then ct=2 end
+	if ft>ct then ft=ct end
+	--------------
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local sg=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,ft,nil,e,tp)
-	-- if ft<2 then
-		-- sg=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,ft,nil,e,tp)
-	-- else
-		-- local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK+LOCATION_HAND,0,nil,e,tp)
-		-- sg=aux.SelectUnselectGroup(g,e,tp,1,ft,s.rescon,1,tp,HINTMSG_SPSUMMON,nil,nil,false)
-	-- end
-	if #sg>0 then
-		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,ft,nil,e,tp)
+	if #g>0 then
+		Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 		Duel.SpecialSummonComplete()
 	end
-	--------------
 end
 function s.sumval(e,c)
 	return not c:IsCode(10000000,CARD_RA,10000020)
