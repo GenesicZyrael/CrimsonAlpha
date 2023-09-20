@@ -126,6 +126,6 @@ function Card.SetLimitIdOnField(c,self,opp,limit,code,location)
 	e4:SetValue(POS_FACEDOWN)
 	c:RegisterEffect(e4)
 end
-function Card.SetLimitIdOnField(c)
+function Card.GetLimitIdOnField(c)
 	return c:GetFlagEffectLabel(CUSTOM_REGISTER_LIMIT)
 end
