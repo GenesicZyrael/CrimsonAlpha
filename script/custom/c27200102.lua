@@ -84,9 +84,9 @@ function s.initial_effect(c)
 	-- e5:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_END_PHASE)
 	-- c:RegisterEffect(e5)	
 end
-s.listed_series={0xb4}
+s.listed_series={SET_NEKROZ}
 function s.lcheck(g,lc,sumtype,tp)
-	return g:IsExists(Card.IsType,1,nil,TYPE_RITUAL,lc,sumtype,tp)
+	return g:IsExists(Card.IsSetCard,1,nil,SET_NEKROZ,lc,sumtype,tp)
 end
 function s.econ(e)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
