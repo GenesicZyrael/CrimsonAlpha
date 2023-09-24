@@ -94,16 +94,6 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 		e:SetLabel(3)
 	end
 end
-function s.count_free_pendulum_zones(tp)
-	local count = 0
-	if Duel.CheckLocation(tp,LOCATION_PZONE,0) then
-		count = count + 1
-	end
-	if Duel.CheckLocation(tp,LOCATION_PZONE,1) then
-		count = count + 1
-	end
-	return count
-end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if e:GetLabel()==1 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
@@ -126,7 +116,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		Duel.SpecialSummonComplete()	
 	elseif e:GetLabel()==3 then
 		local b3=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
-		local ct=s.count_free_pendulum_zones(tp)
+		local ct=aux.GetPendulumZoneCount(tp)
 		local g=Duel.GetMatchingGroup(s.filter3,tp,LOCATION_EXTRA,0,nil)
 		if #g<1 and ct>0 and b3 then return end
 		local sg=g:Select(tp,1,ct,nil)
@@ -135,5 +125,4 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 			Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 		end	
 	end
-
 end
