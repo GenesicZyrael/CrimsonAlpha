@@ -161,3 +161,10 @@ function aux.GetLimitForCardCount(tp,code,onfield,location)
 	end
 	return max
 end
+-- Returns Pendulum Zone Location Count for player(tp)
+function aux.GetPendulumZoneCount(tp)
+	local ct=0
+	if Duel.CheckLocation(tp,LOCATION_PZONE,0) then ct=ct + 1 end
+	if Duel.CheckLocation(tp,LOCATION_PZONE,1) then ct=ct + 1 end
+	return ct
+end
