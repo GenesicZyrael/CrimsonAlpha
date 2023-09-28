@@ -1,12 +1,4 @@
 -- Gem-Knight Zefranite
--- [ Pendulum Effect ]
--- You cannot Pendulum Summon monsters, except "Gem-Knight" and "Zefra" monsters. This effect cannot be negated. You can Fusion Summon 1 Fusion Monster from your Extra Deck using monsters from your hand or field as Fusion Materials. You can only use this effect of "Gem-Knight Zefranite" once per turn.
--- ----------------------------------------
--- [ Monster Effect ]
--- This card can be used as a substitute for any 1 Fusion Material whose name is specifically listed on the Fusion Monster Card, but the other Fusion Material(s) must be correct. You can reveal 1 monster from your Main Deck or Extra Deck; This card's name can be treated as the revealed monster's original name then, Fusion Summon 1 Fusion Monster from your Extra Deck using monsters from your hand or field as Fusion Materials, including this card. You can only use this effect of "Gem-Knight Zefranite" once per turn.
-
--- Changelogs --
--- 12/01/2021 - Removed the monster effect Fusion Summons. Reason: Nerf
 local s,id=GetID()
 local fparams = {}
 local ftparam = {nil,nil,nil,nil,Fusion.ForcedHandler}
@@ -51,10 +43,10 @@ function s.initial_effect(c)
 	e5:SetOperation(s.operation)
 	c:RegisterEffect(e5)	
 end
-s.listed_series={0x47,0xc4}
+s.listed_series={SET_GEM_KNIGHT,SET_ZEFRA}
 -- {Pendulum Summon Restriction: Zefra & Gem- Monsters}
 function s.splimit(e,c,sump,sumtype,sumpos,targetp)
-	if c:IsSetCard(0x47) or c:IsSetCard(0xc4) then return false end
+	if c:IsSetCard(SET_GEM_KNIGHT) or c:IsSetCard(SET_ZEFRA) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 -- {Monster Effect: Fusion Substitute}

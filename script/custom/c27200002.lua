@@ -42,20 +42,29 @@ function s.initial_effect(c)
 	e6:SetCode(EVENT_FREE_CHAIN)
 	e6:SetRange(LOCATION_MZONE)
 	e6:SetCountLimit(1,id)
-	-- e6:SetCost(s.cost)
 	e6:SetTarget(s.sumtg)
 	e6:SetOperation(s.sumop)
 	c:RegisterEffect(e6)	
+	--tohand
+	local e7=Effect.CreateEffect(c)
+	e7:SetDescription(aux.Stringid(id,1))
+	e7:SetCategory(CATEGORY_TOHAND)
+	e7:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e7:SetCode(EVENT_RELEASE)
+	e7:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP+EFFECT_FLAG_DELAY)
+	e7:SetTarget(s.thtg)
+	e7:SetOperation(s.thop)
+	c:RegisterEffect(e7)
 end
-s.listed_series={0x100a,0x0a,0xc4}
+s.listed_series={SET_STEELSWARM,SET_LSWARM,SET_ZEFRA}
 -- {Pendulum Summon Restriction: Zefra & lswarm}
 function s.splimit(e,c,sump,sumtype,sumpos,targetp)
-	if c:IsSetCard(0x0a) or c:IsSetCard(0xc4) then return false end
+	if c:IsSetCard(SET_LSWARM) or c:IsSetCard(SET_ZEFRA) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 -- {Pendulum Effect: Tribute Substitute}
 function s.rmfilter(c)
-	return (c:IsSetCard(0xc4) or c:IsSetCard(0x0a)) and c:IsAbleToRemoveAsCost()
+	return (c:IsSetCard(SET_LSWARM) or c:IsSetCard(SET_ZEFRA)) and c:IsAbleToRemoveAsCost()
 end
 function s.otcon(e,c,minc)
 	if c==nil then return true end
@@ -66,7 +75,7 @@ end
 function s.ottg(e,c)
 	local mi=c:GetTributeRequirement()
 	local ed=Duel.GetMatchingGroup(s.rmfilter,e:GetHandlerPlayer(),LOCATION_EXTRA,0,nil):GetCount()
-	return mi>0 and ed>=mi and (c:IsSetCard(0xc4) or c:IsSetCard(0x0a))
+	return mi>0 and ed>=mi and (c:IsSetCard(SET_ZEFRA) or c:IsSetCard(SET_LSWARM))
 end
 function s.ottgsum(e,tp,eg,ep,ev,re,r,rp,c)
 	return true
@@ -79,10 +88,10 @@ function s.otop(e,tp,eg,ep,ev,re,r,rp,c)
 end
 -- {Monster Effect: Tribute Summon}
 function s.condition(e,c)
-	return c:IsSetCard(0x0a) or c:IsSetCard(0xc4)
+	return c:IsSetCard(SET_LSWARM) or c:IsSetCard(SET_ZEFRA)
 end
 function s.sumfilter(c)
-	return (c:IsSetCard(0x0a) or c:IsSetCard(0xc4)) and c:IsSummonable(true,nil,1)
+	return (c:IsSetCard(SET_LSWARM) or c:IsSetCard(SET_ZEFRA)) and c:IsSummonable(true,nil,1)
 end
 function s.sumtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.sumfilter,tp,LOCATION_HAND,0,1,nil) 
@@ -112,4 +121,23 @@ function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.rellimit(e,c,tp,sumtp)
 	return c~=e:GetHandler()
+end
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chkc then return chkc:IsLocation(LOCATION_ONFIELD) and chkc:IsAbleToDeck() end
+	if chk==0 then return Duel.IsExistingTarget(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,1,nil) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_RTOHAND)
+	local g=Duel.SelectTarget(tp,Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD+LOCATION_GRAVE,1,1,nil)
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,g,1,0,0)
+end
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	local tc=Duel.GetFirstTarget()
+	local c=e:GetHandler()
+	if tc:IsRelateToEffect(e) then
+		Duel.SendtoDeck(tc,nil,SEQ_DECKSHUFFLE,REASON_EFFECT)
+		if not Duel.CheckLocation(tp,LOCATION_PZONE,0) and not Duel.CheckLocation(tp,LOCATION_PZONE,1) then return end
+		if Duel.SelectYesNo(tp,aux.Stringid(id,4)) then
+			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+			Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
+		end
+	end
 end
