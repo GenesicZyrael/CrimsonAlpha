@@ -24,13 +24,13 @@ function s.initial_effect(c)
 		e3:SetTarget(s.thtg)
 		e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)	
-	-- --add tuner
-	-- local e4=Effect.CreateEffect(c)
-		-- e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		-- e4:SetCode(EVENT_BE_MATERIAL)
-		-- e4:SetCondition(s.tncon)
-		-- e4:SetOperation(s.tnop)
-	-- c:RegisterEffect(e4)
+	--add tuner
+	local e4=Effect.CreateEffect(c)
+		e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+		e4:SetCode(EVENT_BE_MATERIAL)
+		e4:SetCondition(s.tncon)
+		e4:SetOperation(s.tnop)
+	c:RegisterEffect(e4)
 end
 
 s.listed_series={SET_GUSTO}

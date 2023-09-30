@@ -74,7 +74,6 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter(SET_GUSTO),tp,LOCATION_DECK,0,1,1,nil,e,tp)
 		if #g>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-			Duel.BreakEffect()
 			if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.Destroy(c,REASON_EFFECT)
 			end
