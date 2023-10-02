@@ -120,17 +120,17 @@ if not AssaultMode then
 end
 
 AssaultMode.CreateProc = aux.FunctionWithNamedArgs(
-function(c,location)
+function(c,location,stage2)
 	-- Special Summon
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCost(AssaultMode.Cost)
-	e1:SetTarget(AssaultMode.Target(c,location))
-	e1:SetOperation(AssaultMode.Operation(c,location))
+	e1:SetTarget(AssaultMode.Target(c,location,stage2))
+	e1:SetOperation(AssaultMode.Operation(c,location,stage2))
 	return e1
-end,"handler","location")
+end,"handler","location","stage2")
 
 function AssaultMode.Cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	e:SetLabel(1)
@@ -154,7 +154,7 @@ function AssaultMode.cfilter(c,e,tp,ft,location)
 		return Duel.IsExistingMatchingCard(AssaultMode.filter,tp,location,0,1,nil,c,e,tp)		
 	end
 end
-function AssaultMode.Target(c,location)
+function AssaultMode.Target(c,location,stage2)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 		if chk==0 then
@@ -162,23 +162,30 @@ function AssaultMode.Target(c,location)
 			e:SetLabel(0)
 			return ft>-1 and Duel.CheckReleaseGroupCost(tp,AssaultMode.cfilter,1,false,nil,nil,e,tp,ft,location)
 		end
+		stage2 = stage2 or aux.TRUE
 		local rg=Duel.SelectReleaseGroupCost(tp,AssaultMode.cfilter,1,1,false,nil,nil,e,tp,ft,location)
 		Duel.SetTargetCard(rg:GetFirst())
 		Duel.Release(rg,REASON_COST)
 		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,location)
 	end
 end
-function AssaultMode.Operation(c,location)
+function AssaultMode.Operation(c,location,stage2)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 		local c=Duel.GetChainInfo(0,CHAININFO_TARGET_CARDS):GetFirst()
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local tc=Duel.SelectMatchingCard(tp,AssaultMode.filter,tp,location,0,1,1,nil,c,e,tp,location):GetFirst()
 		local nocheck=false
+		stage2 = stage2 or aux.TRUE
 		if tc:IsLocation(LOCATION_GRAVE) then nocheck=true end
-		if tc and Duel.SpecialSummon(tc,0,tp,tp,true,nocheck,POS_FACEUP)>0 then
+		if tc and Duel.SpecialSummonStep(tc,0,tp,tp,true,nocheck,POS_FACEUP) then  
+			stage2(e,tc,tp,0)
+			Duel.SpecialSummonComplete()
+			stage2(e,tc,tp,3)
 			tc:CompleteProcedure()
+			stage2(e,tc,tp,1)
 		end
+		stage2(e,tc,tp,2)
 	end
 end
 
