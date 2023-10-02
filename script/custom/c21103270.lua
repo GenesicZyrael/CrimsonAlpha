@@ -25,6 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 s.listed_series={SET_ASSAULT_MODE}
+s.listed_names={CARD_ASSAULT_MODE}
 function s.thfilter(c)
 	return c:ListsArchetype(SET_ASSAULT_MODE) and c:IsAbleToHand()
 end
