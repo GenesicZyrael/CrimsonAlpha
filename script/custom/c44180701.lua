@@ -51,7 +51,7 @@ function s.initial_effect(c)
 	aux.addContinuousLizardCheck(c,LOCATION_MZONE,s.lizfilter,0xff,0xff)
 end
 s.listed_names={7815722}
-s.listed_series={0xda,0xe0}
+s.listed_series={SET_DRACOVERLORD,SET_AMORPHAGE}
 function s.rvlimit(e)
 	return not e:GetHandler():IsLocation(LOCATION_HAND)
 end
@@ -73,13 +73,13 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.sumcon(e)
-	return Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsSetCard,0xe0),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,SET_AMORPHAGE),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function s.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_GRAVE) and not c:IsType(TYPE_PENDULUM)
 end
 function s.lizfilter(e,c)
-	return not c:IsOriginalSetCard(0xe0)
+	return not c:IsOriginalSetCard(SET_AMORPHAGE)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_PZONE) and chkc:IsControler(tp) end

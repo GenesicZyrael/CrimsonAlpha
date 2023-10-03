@@ -53,7 +53,7 @@ function s.initial_effect(c)
 	aux.addContinuousLizardCheck(c,LOCATION_MZONE,s.lizfilter,0xff,0xff)
 end
 s.listed_names={7815722}
-s.listed_series={0xda,0xe0}
+s.listed_series={SET_DRACOVERLORD,SET_AMORPHAGE}
 function s.rvlimit(e)
 	return not e:GetHandler():IsLocation(LOCATION_HAND)
 end
@@ -75,13 +75,13 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.sumcon(e)
-	return Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsSetCard,0xe0),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,SET_AMORPHAGE),e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil)
 end
 function s.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_DECK) and not c:IsType(TYPE_PENDULUM)
 end
 function s.lizfilter(e,c)
-	return not c:IsOriginalSetCard(0xe0)
+	return not c:IsOriginalSetCard(SET_AMORPHAGE)
 end
 
 function s.regtg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -102,7 +102,7 @@ end
 function s.cfilter(c,tp)
 	return c:IsReason(REASON_BATTLE+REASON_EFFECT) and c:IsPreviousControler(tp) 
 		and c:IsPreviousLocation(LOCATION_ONFIELD) and c:IsPreviousPosition(POS_FACEUP)
-		and (c:IsPreviousSetCard(0xda) or c:IsPreviousSetCard(0xe0))
+		and (c:IsPreviousSetCard(SET_DRACOVERLORD) or c:IsPreviousSetCard(SET_AMORPHAGE))
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
@@ -115,16 +115,16 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
 	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	if chk==0 then return (b1 or b2)
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,b1,0xda)
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,b1,0xe0) end
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,b1,SET_DRACOVERLORD)
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,b1,SET_AMORPHAGE) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
 	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	if not b1 and not b2 then return end
-	local g1=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp,b1,0xda)
-	local g2=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp,b1,0xe0)
+	local g1=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp,b1,SET_DRACOVERLORD)
+	local g2=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp,b1,SET_AMORPHAGE)
 	if #g1==0 or #g2==0 then return end
 	g1:Merge(g2)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)

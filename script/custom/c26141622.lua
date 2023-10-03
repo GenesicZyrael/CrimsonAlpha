@@ -44,14 +44,14 @@ function s.ritcheck(e,tp,g,sc)
 	return g:FilterCount(Card.IsLocation,nil,LOCATION_DECK)<=1
 end
 function s.condition1(e,tp,eg,ep,ev,re,r,rp)
-	return not Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,55481029),tp,LOCATION_FZONE,0,1,nil)
+	return not Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,55481029),tp,LOCATION_FZONE,0,1,nil)
 end
 function s.condition2(e,tp,eg,ep,ev,re,r,rp)
 	local fg=Group.CreateGroup()
 	for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,55481029)}) do
 		fg:AddCard(pe:GetHandler())
 	end
-	return e:GetHandler():GetCode()==id and #fg>0 and Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsCode,55481029),tp,LOCATION_FZONE,0,1,nil)
+	return e:GetHandler():GetCode()==id and #fg>0 and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,55481029),tp,LOCATION_FZONE,0,1,nil)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local fg=Group.CreateGroup()
