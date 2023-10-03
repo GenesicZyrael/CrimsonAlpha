@@ -16,7 +16,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_SZONE)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetHintTiming(0,TIMING_END_PHASE+TIMING_EQUIP)
-	e2:SetCountLimit(1,id)
+	e2:SetCountLimit(1,{id,0})
 	e2:SetTarget(s.sptg)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	e3:SetOperation(s.desop)
 	c:RegisterEffect(e3)
 end
-
+s.listed_series={SET_TRUE_DRACO_KING,SET_DRACOVERLORD}
 function s.spfilter(c)
 	return c:IsFaceup() and c:IsType(TYPE_SPELL+TYPE_TRAP) and not c:IsOriginalType(TYPE_MONSTER)
 end
@@ -51,7 +51,7 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if not e:GetHandler():IsRelateToEffect(e) then return end
 	local tc=Duel.GetFirstTarget()
-	if tc and Duel.IsPlayerCanSpecialSummonMonster(tp,tc:GetCode(),nil,0x11,0,0,1,RACE_WYRM,ATTRIBUTE_DARK,POS_FACEUP_DEFENSE)
+	if tc and Duel.IsPlayerCanSpecialSummonMonster(tp,tc:GetCode(),nil,0,0,0,1,RACE_WYRM,ATTRIBUTE_DARK,POS_FACEUP_DEFENSE)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then
 		tc:AddMonsterAttribute(TYPE_NORMAL,ATTRIBUTE_DARK,RACE_WYRM,9,0,0)
 		Duel.SpecialSummonStep(tc,0,tp,tp,true,false,POS_FACEUP_DEFENSE)
@@ -60,13 +60,11 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.thfilter(c)
-	return c:IsSetCard(0xf9) and c:IsAbleToHand() and not c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(SET_TRUE_DRACO_KING) and c:IsAbleToHand() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsPreviousLocation(LOCATION_ONFIELD) 
-		-- and c:IsPreviousPosition(POS_FACEUP)
-		-- and c:IsPreviousControler(tp) 
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
@@ -80,7 +78,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsRelateToEffect(e) and Duel.Destroy(tc,REASON_EFFECT)~=0 then
-		if Duel.IsExistingMatchingCard(aux.FilterFaceupFunction(Card.IsSetCard,0xda),tp,LOCATION_ONFIELD,0,1,nil) 
+		if Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsSetCard,SET_DRACOVERLORD),tp,LOCATION_ONFIELD,0,1,nil) 
 		and Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_DECK,0,1,nil) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 			local tg=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
