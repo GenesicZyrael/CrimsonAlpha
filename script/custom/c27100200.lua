@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,0x0a),3)	
+	Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_LSWARM),2)	
 	--immunity
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -31,7 +31,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)	
 end
 
-s.listed_series={0x100a,0x65}
+s.listed_series={SET_STEELSWARM,SET_INFESTATION}
 --
 function s.matfilter(c)
 	return c:IsSummonType(SUMMON_TYPE_TRIBUTE)
@@ -97,7 +97,8 @@ function s.ope(e,tp,eg,ep,ev,re,r,rp)
 end
 ---
 function s.repfilter(c)
-	return (c:IsSetCard(0x100a) or c:IsSetCard(0x65)) and c:IsAbleToRemove() and aux.SpElimFilter(c,true)
+	return c:IsAbleToRemove() and aux.SpElimFilter(c,true)
+		-- and (c:IsSetCard(SET_STEELSWARM) or c:IsSetCard(SET_INFESTATION))
 end
 function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -105,7 +106,7 @@ function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	return not c:IsReason(REASON_REPLACE)
 		and Duel.IsExistingMatchingCard(s.repfilter,tp,LOCATION_GRAVE,0,1,c) end
 	local tg=Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,nil)
-	if Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then 
+	if tg and Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then 
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
 		local g1=Duel.SelectMatchingCard(tp,s.repfilter,tp,LOCATION_GRAVE,0,1,1,c)
 		if Duel.Remove(g1:GetFirst(),POS_FACEUP,REASON_EFFECT) and tg 
