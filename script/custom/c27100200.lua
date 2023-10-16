@@ -106,7 +106,7 @@ function s.desreptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	return not c:IsReason(REASON_REPLACE)
 		and Duel.IsExistingMatchingCard(s.repfilter,tp,LOCATION_GRAVE,0,1,c) end
 	local tg=Duel.IsExistingMatchingCard(Card.IsAbleToDeck,tp,0,LOCATION_ONFIELD,1,nil)
-	if tg and Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then 
+	if Duel.SelectEffectYesNo(tp,e:GetHandler(),96) then 
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESREPLACE)
 		local g1=Duel.SelectMatchingCard(tp,s.repfilter,tp,LOCATION_GRAVE,0,1,1,c)
 		if Duel.Remove(g1:GetFirst(),POS_FACEUP,REASON_EFFECT) and tg 
