@@ -5,7 +5,7 @@ function s.initial_effect(c)
 	--fusion material
 	c:EnableReviveLimit()
 	Fusion.AddProcMixN(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_RITUAL_BEAST),2)
-	Fusion.AddContactProc(c,s.contactfil,s.contactop,true)
+	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit)
 	--pos
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -60,6 +60,10 @@ function s.contactfil(tp)
 end
 function s.contactop(g)
 	Duel.Remove(g,POS_FACEUP,REASON_COST+REASON_MATERIAL)
+end
+function s.splimit(e,se,sp,st)
+	local c=e:GetHandler()
+	return not (c:IsLocation(LOCATION_EXTRA) and c:IsFacedown())
 end
 ---
 function s.posfilter(c,e)
