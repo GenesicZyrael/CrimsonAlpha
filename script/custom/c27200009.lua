@@ -17,7 +17,8 @@ function s.initial_effect(c)
 	e3:SetType(EFFECT_TYPE_IGNITION)
 	e3:SetRange(LOCATION_PZONE)
 	e3:SetCountLimit(1)
-	e3:SetOperation(s.xyzope)
+	e3:SetTarget(s.lvtg)
+	e3:SetOperation(s.lvop)
 	c:RegisterEffect(e3)
 	--spsummon
     local e4=Effect.CreateEffect(c)
@@ -49,7 +50,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e7)
 end
 s.listed_series={SET_CONSTELLAR,SET_ZEFRA}
---s.listed_names={id}
 -- {Pendulum Summon Restriction: Zefra & Constellar}
 function s.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(SET_CONSTELLAR) or c:IsSetCard(SET_ZEFRA) then return false end
@@ -58,34 +58,45 @@ end
 -- {Pendulum Effect: Xyz Levels}
 function s.xyztg(e,c)
     return c:HasLevel() 
-		and ( c:IsSetCard(SET_CONSTELLAR) or c:IsSetCard(SET_ZEFRA) )
+		and (c:IsSetCard(SET_CONSTELLAR) or c:IsSetCard(SET_ZEFRA))
 end
-function s.xyzcon(e,tp,eg,ep,ev,re,r,rp)	  
-	return e:GetHandler():IsHasEffect(id)
+function s.lvfilter(c)
+    return c:HasLevel() 
+		and (c:IsSetCard(SET_CONSTELLAR) or c:IsSetCard(SET_ZEFRA))
 end
-function s.xyzope(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	local tp=c:GetControler()
-	local g=Duel.GetMatchingGroup(Card.HasXyzLevel,tp,LOCATION_MZONE,LOCATION_MZONE,nil)
-	for tc in aux.Next(g) do
-		lvl=tc:GetOriginalLevel()
-		local e1=Effect.CreateEffect(e:GetHandler())
-			e1:SetType(EFFECT_TYPE_FIELD)
-			e1:SetCode(EFFECT_XYZ_LEVEL)
-			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-			e1:SetTargetRange(LOCATION_MZONE,0)
-			e1:SetTarget(s.xyztg)
-			e1:SetValue(tc:GetOriginalLevel())
-			e1:SetReset(RESET_PHASE+PHASE_END)
-		Duel.RegisterEffect(e1,tp)
+function s.lvtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then 
+		return Duel.IsExistingMatchingCard(s.lvfilter,tp,LOCATION_MZONE,0,1,nil)
 	end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_LVRANK)
+	local lv=Duel.AnnounceLevel(tp,1,6)
+	Duel.SetTargetParam(lv)
+end
+function s.lvop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local xyzlv=Duel.GetChainInfo(0,CHAININFO_TARGET_PARAM)
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetCode(EFFECT_XYZ_LEVEL)
+	e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e1:SetTargetRange(LOCATION_MZONE,0)
+	e1:SetTarget(s.xyztg)
+	e1:SetValue(xyzlv)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end
 -- {Monster Effect: Special Summon}
-function s.filter(c,tp)
-	return c:IsFaceup() and c:IsLocation(LOCATION_MZONE) and c:IsSummonPlayer(tp)
+function s.spcon(e,tp,eg,ep,ev,re,r,rp)
+    return ep==tp 
+		and eg:GetFirst():IsSetCard(SET_CONSTELLAR) 
+			or eg:GetFirst():IsSetCard(SET_ZEFRA)
+end
+function s.cfilter(c,tp)
+	return c:IsFaceup() and c:IsControler(tp) and c:IsSummonPlayer(tp)
+		and (c:IsSetCard(SET_CONSTELLAR) or c:IsSetCard(SET_ZEFRA))
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
-    return ep==tp and eg:GetFirst():IsSetCard(SET_CONSTELLAR) or eg:GetFirst():IsSetCard(SET_ZEFRA)
+	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
     if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -97,12 +108,32 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local tc=eg:GetFirst()
     if not c:IsRelateToEffect(e) then return end
     if Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
-		local e1=Effect.CreateEffect(c)
+		local g=Duel.GetMatchingGroup(s.lvfilter,tp,LOCATION_MZONE,0,nil)
+		for tc in g:Iter() do
+			--Change Xyz Level
+			local e1=Effect.CreateEffect(c)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetCode(EFFECT_XYZ_LEVEL)
-			e1:SetValue(tc:GetOriginalLevel())
-			e1:SetReset(RESET_EVENT+RESETS_STANDARD_DISABLE)
-		c:RegisterEffect(e1)
+			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+			e1:SetValue(1)
+			e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+			tc:RegisterEffect(e1)
+			local e2=e1:Clone()
+			e2:SetValue(2)
+			tc:RegisterEffect(e2)
+			local e3=e1:Clone()
+			e3:SetValue(3)
+			tc:RegisterEffect(e3)
+			local e4=e1:Clone()
+			e4:SetValue(4)
+			tc:RegisterEffect(e4)
+			local e5=e1:Clone()
+			e5:SetValue(5)
+			tc:RegisterEffect(e5)
+			local e6=e1:Clone()
+			e6:SetValue(3)
+			tc:RegisterEffect(e6)
+		end
     end
     Duel.SpecialSummonComplete()
 end
