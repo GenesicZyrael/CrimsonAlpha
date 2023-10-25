@@ -99,11 +99,19 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-    if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-        and e:GetHandler():IsCanBeSpecialSummoned(e,0,tp,false,false) end
-    Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,e:GetHandler(),1,0,0)
+	local c=e:GetHandler()
+	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,0)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	end
+end
+-- {Monster Effect: Xyz Levels}
+function s.xyzope(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
 	local tc=eg:GetFirst()
     if not c:IsRelateToEffect(e) then return end
@@ -116,7 +124,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_XYZ_LEVEL)
 			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 			e1:SetValue(1)
-			e1:SetReset(RESET_EVENT|RESETS_STANDARD)
+			e1:SetReset(RESET_PHASE|PHASE_END)
 			tc:RegisterEffect(e1)
 			local e2=e1:Clone()
 			e2:SetValue(2)
@@ -131,9 +139,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			e5:SetValue(5)
 			tc:RegisterEffect(e5)
 			local e6=e1:Clone()
-			e6:SetValue(3)
+			e6:SetValue(6)
 			tc:RegisterEffect(e6)
 		end
     end
-    Duel.SpecialSummonComplete()
 end
