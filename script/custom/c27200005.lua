@@ -47,18 +47,17 @@ function s.splimit(e,c,sump,sumtype,sumpos,targetp)
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
 end
 -- {Pendulum Effect: Special Summon}
-function s.spfilter(set)
-	return function(c,e,tp)
-		return c:IsSetCard(set) 
-			and not c:IsCode(id) 
-			and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
-	end
+function s.spfilter(c,e,tp)
+	return (c:IsSetCard(SET_GUSTO) or c:IsSetCard(SET_ZEFRA))
+		and c:IsLevelBelow(6)
+		and not c:IsCode(id) 
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then 
 		return Duel.IsExistingMatchingCard(nil,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,c)
-			and Duel.IsExistingMatchingCard(s.spfilter(SET_GUSTO),tp,LOCATION_DECK,0,1,nil,e,tp) end
+			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
 	local g=Duel.GetMatchingGroup(nil,tp,LOCATION_HAND+LOCATION_ONFIELD,0,c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
@@ -71,7 +70,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,c)
 	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		local g=Duel.SelectMatchingCard(tp,s.spfilter(SET_GUSTO),tp,LOCATION_DECK,0,1,1,nil,e,tp)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 		if #g>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
 			if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
