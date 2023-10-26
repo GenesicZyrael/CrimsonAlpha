@@ -113,33 +113,30 @@ end
 -- {Monster Effect: Xyz Levels}
 function s.xyzope(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-    if not c:IsRelateToEffect(e) then return end
-    if Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
-		local g=Duel.GetMatchingGroup(s.lvfilter,tp,LOCATION_MZONE,0,nil)
-		for tc in g:Iter() do
-			--Change Xyz Level
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_XYZ_LEVEL)
-			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-			e1:SetValue(1)
-			e1:SetReset(RESET_PHASE|PHASE_END)
-			tc:RegisterEffect(e1)
-			local e2=e1:Clone()
-			e2:SetValue(2)
-			tc:RegisterEffect(e2)
-			local e3=e1:Clone()
-			e3:SetValue(3)
-			tc:RegisterEffect(e3)
-			local e4=e1:Clone()
-			e4:SetValue(4)
-			tc:RegisterEffect(e4)
-			local e5=e1:Clone()
-			e5:SetValue(5)
-			tc:RegisterEffect(e5)
-			local e6=e1:Clone()
-			e6:SetValue(6)
-			tc:RegisterEffect(e6)
-		end
-    end
+	local g=Duel.GetMatchingGroup(s.lvfilter,tp,LOCATION_MZONE,0,nil)
+	for tc in g:Iter() do
+		--Change Xyz Level
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_XYZ_LEVEL)
+		e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+		e1:SetValue(1)
+		e1:SetReset(RESET_PHASE|PHASE_END)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetValue(2)
+		tc:RegisterEffect(e2)
+		local e3=e1:Clone()
+		e3:SetValue(3)
+		tc:RegisterEffect(e3)
+		local e4=e1:Clone()
+		e4:SetValue(4)
+		tc:RegisterEffect(e4)
+		local e5=e1:Clone()
+		e5:SetValue(5)
+		tc:RegisterEffect(e5)
+		local e6=e1:Clone()
+		e6:SetValue(6)
+		tc:RegisterEffect(e6)
+	end
 end

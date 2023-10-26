@@ -34,13 +34,13 @@ function s.filter(c,e,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND+LOCATION_PZONE+LOCATION_EXTRA,0,1,nil,e,tp) end
+		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND+LOCATION_PZONE,0,1,nil,e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_PZONE)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_PZONE+LOCATION_EXTRA,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_PZONE,0,1,1,nil,e,tp)
 	if #g>0 then
 		Duel.SpecialSummon(g,SUMMON_TYPE_PENDULUM,tp,tp,true,true,POS_FACEUP)
 	end
@@ -48,7 +48,6 @@ end
 function s.mtfilter(c)
 	return c:IsSetCard(SET_ZEFRA) 
 		and c:IsType(TYPE_MONSTER)
-		and ((c:IsLocation(LOCATION_HAND) or c:IsLocation(LOCATION_HAND)) or c:IsFaceup())
 end
 function s.getmats(c,tp)
 	return c:GetMaterial():IsExists(s.mtfilter,1,nil) and c:GetControler()==tp
