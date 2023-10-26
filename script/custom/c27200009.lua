@@ -113,7 +113,6 @@ end
 -- {Monster Effect: Xyz Levels}
 function s.xyzope(e,tp,eg,ep,ev,re,r,rp)
     local c=e:GetHandler()
-	local tc=eg:GetFirst()
     if not c:IsRelateToEffect(e) then return end
     if Duel.SpecialSummonStep(c,0,tp,tp,false,false,POS_FACEUP) then
 		local g=Duel.GetMatchingGroup(s.lvfilter,tp,LOCATION_MZONE,0,nil)
