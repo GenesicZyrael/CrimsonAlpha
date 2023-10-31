@@ -2,8 +2,8 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Fusion.AddProcMixRep(c,false,false,aux.FilterBoolFunctionEx(Card.IsSetCard,0x3e),4,99,{10026986,81254059})
-	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit,aux.TRUE,1)
+	Fusion.AddProcMixRep(c,false,false,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_WORM),4,99,{10026986,81254059})
+	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.contactlim,aux.TRUE,s.contactzone)
 	--Increase ATK/DEF
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE)
@@ -39,13 +39,16 @@ function s.initial_effect(c)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 s.listed_names={10026986,81254059}
-function s.splimit(e,se,sp,st)
-	return not e:GetHandler():IsLocation(LOCATION_EXTRA)
+function s.contactzone()
+	return SUMMON_TYPE_SPECIAL,0xff&0x60
+end
+function s.contactlim(e)
+	return e:GetHandler():IsLocation(LOCATION_EXTRA)
 end
 function s.matfil(c,tp)
-	return c:IsAbleToRemoveAsCost() and (c:IsLocation(LOCATION_SZONE) or aux.SpElimFilter(c,false,true))
+	return c:IsAbleToRemoveAsCost() and c:IsMonster()
 end
 function s.contactfil(tp)
 	return Duel.GetMatchingGroup(s.matfil,tp,LOCATION_MZONE+LOCATION_GRAVE,0,nil,tp)
@@ -54,14 +57,14 @@ function s.contactop(g)
 	Duel.Remove(g,POS_FACEUP,REASON_COST+REASON_MATERIAL)
 end
 function s.atkfilter(c)
-	return c:IsFaceup() and c:IsRace(RACE_REPTILE) and c:IsSetCard(0x3e)
+	return c:IsFaceup() and c:IsRace(RACE_REPTILE) and c:IsSetCard(SET_WORM)
 end
 function s.atkval(e,c)
 	return Duel.GetMatchingGroupCount(s.atkfilter,0,LOCATION_REMOVED+LOCATION_GRAVE,0,nil)*300
 end
 
 function s.cfilter(c,e,tp)
-	if not (c:IsSetCard(0x3e) and c:IsMonster() and c:IsRace(RACE_REPTILE)
+	if not (c:IsSetCard(SET_WORM) and c:IsMonster() and c:IsRace(RACE_REPTILE)
 		and (c:IsFaceup() or not c:IsLocation(LOCATION_REMOVED))
 		and c:IsHasEffect(TYPE_FLIP) and c:IsCanBeEffectTarget(e) and c:IsAbleToDeck()) then 
 		return false

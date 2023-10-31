@@ -1,4 +1,4 @@
---Worm Zero
+--Worm Ugly
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
@@ -26,26 +26,26 @@ function s.initial_effect(c)
 	--material limit
 	aux.XenoMatCheckOthers(c,s.matfilter)	
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 function s.matfilter(e,c)
-	return c:IsSetCard(0x3e)
+	return c:IsSetCard(SET_WORM)
 end
 function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return c:IsSetCard(0x3e,fc,sumtype,tp) 
+	return c:IsSetCard(SET_WORM,fc,sumtype,tp) 
 end
 function s.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_MZONE,0,nil)
 end
 function s.contactop(g)
-	Duel.SendtoGrave(g,REASON_COST+REASON_MATERIAL)
+	Duel.Release(g,REASON_COST+REASON_MATERIAL)
 end
 function s.matval(c,sc)
 	local b
 	local sumty=SUMMON_TYPE_SPECIAL+1
 	if Card.IsOriginalSetCard then
-		b=c:IsOriginalSetCard(0x3e)
+		b=c:IsOriginalSetCard(SET_WORM)
 	else
-		b=c:IsSetCard(0x3e)
+		b=c:IsSetCard(SET_WORM)
 	end
 	if b and c:IsType(TYPE_MONSTER,sc,sumty) then
 		return c:GetOriginalLevel()
@@ -60,7 +60,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
 end
 function s.filter(c,e,tp)
-	return c:IsLevelBelow(e:GetLabel()) and c:IsSetCard(0x3e) and c:IsRace(RACE_REPTILE)
+	return c:IsLevelBelow(e:GetLabel()) and c:IsSetCard(SET_WORM) and c:IsRace(RACE_REPTILE)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)

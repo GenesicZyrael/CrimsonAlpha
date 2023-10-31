@@ -19,9 +19,9 @@ function s.initial_effect(c)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return c:IsSetCard(0x3e,fc,sumtype,tp) and (not sg or not sg:IsExists(s.fusfilter,1,c,c:GetLevel()))
+	return c:IsSetCard(SET_WORM,fc,sumtype,tp) and (not sg or not sg:IsExists(s.fusfilter,1,c,c:GetLevel()))
 end
 function s.fusfilter(c,lv)
 	return c:IsLevel(lv)
@@ -30,7 +30,7 @@ function s.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_MZONE,0,nil)
 end
 function s.contactop(g)
-	Duel.SendtoGrave(g,REASON_COST+REASON_MATERIAL)
+	Duel.Release(g,REASON_COST+REASON_MATERIAL)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsReleasable() end
@@ -40,7 +40,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():GetSummonType()==SUMMON_TYPE_SPECIAL+1
 end
 function s.spfilter1(c,e,tp)
-	return c:IsSetCard(0x3e) and c:IsRace(RACE_REPTILE)
+	return c:IsSetCard(SET_WORM) and c:IsRace(RACE_REPTILE)
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.spfilter2(c,g)
@@ -60,7 +60,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
     Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_DECK)
 end
 function s.matfilter(e,c)
-	return c:IsSetCard(0x3e)
+	return c:IsSetCard(SET_WORM)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) or Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end

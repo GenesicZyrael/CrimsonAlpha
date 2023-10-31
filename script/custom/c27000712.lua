@@ -28,15 +28,16 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)	
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 function s.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	if chk==0 then return c:IsReleasable() end
 	Duel.Release(c,REASON_COST)
 end
 function s.spfilter(c,e,tp,pos)
-	return (c:IsSetCard(0x3e) and c:IsRace(RACE_REPTILE))
+	return (c:IsSetCard(SET_WORM) and c:IsRace(RACE_REPTILE))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP) 
+		and not c:IsCode(id)
 end
 function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
@@ -60,7 +61,7 @@ end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	local c=eg:GetFirst()
-	return (c:IsSetCard(0x3e) and c:IsRace(RACE_REPTILE))
+	return (c:IsSetCard(SET_WORM) and c:IsRace(RACE_REPTILE))
 		and eg:IsExists(Card.IsSummonLocation,1,nil,LOCATION_EXTRA)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -70,12 +71,13 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
-	if c:IsRelateToEffect(e) then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
+	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 then
+		--Banish it if it leaves the field
 		local e1=Effect.CreateEffect(c)
+		e1:SetDescription(3300)
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(EFFECT_LEAVE_FIELD_REDIRECT)
-		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
+		e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CLIENT_HINT)
 		e1:SetReset(RESET_EVENT+RESETS_REDIRECT)
 		e1:SetValue(LOCATION_REMOVED)
 		c:RegisterEffect(e1,true)

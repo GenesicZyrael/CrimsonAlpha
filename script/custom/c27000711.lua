@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Fusion.AddProcMixRep(c,false,false,aux.FilterBoolFunctionEx(Card.IsSetCard,0x3e),2,2,54860010)
+	Fusion.AddProcMixRep(c,false,false,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_WORM),2,2,54860010)
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,nil,aux.TRUE,1)
 	--destroy 
 	local e1=Effect.CreateEffect(c)
@@ -30,16 +30,16 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 s.listed_names={54860010}
 function s.contactfil(tp)
 	return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_MZONE,0,nil)
 end
 function s.contactop(g)
-	Duel.SendtoGrave(g,REASON_COST+REASON_MATERIAL)
+	Duel.Release(g,REASON_COST+REASON_MATERIAL)
 end
 function s.cfilter(c)
-	return c:IsSetCard(0x3e) and c:IsRace(RACE_REPTILE) and c:IsMonster()
+	return c:IsSetCard(SET_WORM) and c:IsRace(RACE_REPTILE) and c:IsMonster()
 		and c:IsAbleToRemoveAsCost() and aux.SpElimFilter(c,true,false)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
