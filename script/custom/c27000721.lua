@@ -34,7 +34,7 @@ function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
 	return c:IsSetCard(SET_WORM,fc,sumtype,tp) 
 end
 function s.contactfil(tp)
-	return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_MZONE,0,nil)
+	return Duel.GetReleaseGroup(tp)
 end
 function s.contactop(g)
 	Duel.Release(g,REASON_COST+REASON_MATERIAL)

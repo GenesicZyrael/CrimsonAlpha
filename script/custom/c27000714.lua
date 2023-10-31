@@ -17,7 +17,7 @@ function s.initial_effect(c)
 end
 s.listed_names={11159464}
 function s.contactfil(tp)
-	return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_MZONE,0,nil)
+	return Duel.GetReleaseGroup(tp)
 end
 function s.contactop(g)
 	Duel.Release(g,REASON_COST+REASON_MATERIAL)

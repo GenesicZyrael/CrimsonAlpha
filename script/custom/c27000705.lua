@@ -27,7 +27,7 @@ function s.fusfilter(c,lv)
 	return c:IsLevel(lv)
 end
 function s.contactfil(tp)
-	return Duel.GetMatchingGroup(Card.IsAbleToGraveAsCost,tp,LOCATION_MZONE,0,nil)
+	return Duel.GetReleaseGroup(tp)
 end
 function s.contactop(g)
 	Duel.Release(g,REASON_COST+REASON_MATERIAL)
