@@ -1,6 +1,7 @@
 --Worm Illidan
 local s,id=GetID()
 function s.initial_effect(c)
+	c:SetSPSummonOnce(id)
 	--spsummon
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -31,12 +32,12 @@ function s.initial_effect(c)
 	--material limit
 	aux.XenoMatCheckOthers(c,s.matfilter)	
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 function s.matfilter(e,c)
-	return c:IsSetCard(0x3e)
+	return c:IsSetCard(SET_WORM)
 end
 function s.cfilter(c,tp)
-	return (c:IsSetCard(0x3e) and c:IsRace(RACE_REPTILE))
+	return (c:IsSetCard(SET_WORM) and c:IsRace(RACE_REPTILE))
 		and c:IsControler(tp)
 end
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
@@ -53,7 +54,8 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function s.filter(c)
-	return (c:IsSetCard(0x3e) or c:IsWNebula()) and c:IsAbleToHand() and not c:IsCode(57543573)
+	return (c:IsSetCard(SET_WORM) or c:IsWNebula()) 
+		and c:IsAbleToHand() and not c:IsCode(57543573)
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end

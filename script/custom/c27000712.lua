@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	Link.AddProcedure(c,aux.FilterBoolFunctionEx(Card.IsRace,RACE_REPTILE),2,2)
-	--Shuffle 1 card from your hand or field, and if you do, Special Summon 1 "Worm" from your GY
+	--Special Summon 1 "Worm" from your GY
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_TODECK+CATEGORY_SPECIAL_SUMMON)
@@ -46,17 +46,27 @@ function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_HAND+LOCATION_ONFIELD)
 end
 function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	-- local g=Duel.SelectMatchingCard(tp,Card.IsAbleToDeck,tp,LOCATION_HAND+LOCATION_ONFIELD,0,1,1,nil)
-	-- if #g>0 and Duel.SendtoDeck(g,nil,1,REASON_EFFECT)~=0 then
-		if Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE,0,1,nil,e,tp) 
-		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then 
-			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-			local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE,0,1,1,nil,e,tp)
-			if #g>0 then
-				Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
-			end
+	local c=e:GetHandler()
+	if Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,nil,e,tp) 
+	and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then 
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,1,1,nil,e,tp)
+		if #g>0 and Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)>0 then
+			local c1=Effect.CreateEffect(c)
+			c1:SetDescription(id,1)
+			c1:SetType(EFFECT_TYPE_FIELD)
+			c1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+			c1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+			c1:SetDescription(aux.Stringid(id,2))
+			c1:SetTargetRange(1,0)
+			c1:SetTarget(s.splimit)
+			c1:SetReset(RESET_PHASE+PHASE_END)
+			Duel.RegisterEffect(c1,tp)
 		end
-	-- end
+	end
+end
+function s.splimit(e,c,sump,sumtype,sumpos,targetp)
+	return not c:IsSetCard(SET_WORM)
 end
 
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
