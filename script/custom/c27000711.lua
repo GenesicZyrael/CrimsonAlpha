@@ -1,9 +1,10 @@
 --Worm King
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableReviveLimit()
+	--contact fusion
 	Fusion.AddProcMixRep(c,false,false,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_WORM),2,2,54860010)
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,nil,aux.TRUE,1)
+	c:EnableReviveLimit()
 	--destroy 
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DISABLE+CATEGORY_DESTROY)
@@ -71,7 +72,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetValue(RESET_TURN_SET)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 		tc:RegisterEffect(e2)
-		Duel.BreakEffect()
+		Duel.AdjustInstantly(tc)
 		Duel.Destroy(tc,REASON_EFFECT)
 	end
 end

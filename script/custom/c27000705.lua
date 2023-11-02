@@ -21,7 +21,8 @@ function s.initial_effect(c)
 end
 s.listed_series={SET_WORM}
 function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return c:IsSetCard(SET_WORM,fc,sumtype,tp) and (not sg or not sg:IsExists(s.fusfilter,1,c,c:GetLevel()))
+	return c:IsSetCard(SET_WORM,fc,sumtype,tp) 
+		and (not sg or not sg:IsExists(s.fusfilter,1,c,c:GetLevel()))
 end
 function s.fusfilter(c,lv)
 	return c:IsLevel(lv)

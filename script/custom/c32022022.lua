@@ -61,10 +61,9 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		e2:SetReset(RESET_EVENT+RESETS_STANDARD)
 		tc:RegisterEffect(e2)
 	end	
-	Duel.BreakEffect()
+	Duel.AdjustInstantly(tc)
 	local ct=Duel.Destroy(g,REASON_EFFECT)
 	if ct>0 then
-		Duel.BreakEffect()
 		Duel.Damage(1-tp,ct*500,REASON_EFFECT)
 	end
 end
