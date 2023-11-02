@@ -14,9 +14,9 @@ function s.initial_effect(c)
 	--material limit
 	aux.XenoMatCheckOthers(c,s.matfilter)	
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 function s.matfilter(e,c)
-	return c:IsSetCard(0x3e)
+	return c:IsSetCard(SET_WORM)
 end
 
 function s.posfilter(c)

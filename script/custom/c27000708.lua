@@ -26,17 +26,17 @@ function s.initial_effect(c)
 	--material limit
 	aux.XenoMatCheckSummoned(c,s.matfilter)
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 function s.matfilter(e,c)
 	if not c then return false end
-	return not c:IsSetCard(0x3e) or not c:IsRace(RACE_REPTILE)
+	return not c:IsSetCard(SET_WORM) or not c:IsRace(RACE_REPTILE)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.spfilter(c,e,tp,pos)
-	return (c:IsSetCard(0x3e) and c:IsRace(RACE_REPTILE))
+	return (c:IsSetCard(SET_WORM) and c:IsRace(RACE_REPTILE))
 		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,pos) 
 		and not c:IsCode(11159464)
 end
@@ -53,7 +53,6 @@ function s.spop(pos)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp,pos)
 		if #g>0 then
 			Duel.SpecialSummon(g,0,tp,tp,false,false,pos)
-			Duel.ConfirmCards(1-tp,g)
 		end
 	end
 end

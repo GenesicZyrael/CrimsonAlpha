@@ -45,16 +45,16 @@ function s.initial_effect(c)
 	e5:SetOperation(s.penop)
 	c:RegisterEffect(e5)
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 s.listed_names={17649753}
 function s.splimit(e,c)
-	return not (c:IsSetCard(0x3e) and c:IsRace(RACE_REPTILE))
+	return not (c:IsSetCard(SET_WORM) and c:IsRace(RACE_REPTILE))
 end
 function s.posfilter(c)
 	return c:IsCanChangePosition()
 end
 function s.postg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chk==0 then return Duel.IsExistingTarget(aux.TRUE,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_POSCHANGE)
 	local g=Duel.SelectTarget(tp,s.posfilter,tp,LOCATION_MZONE,LOCATION_MZONE,1,1,nil)
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,1,0,0)
