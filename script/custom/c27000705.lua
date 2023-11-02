@@ -97,6 +97,6 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			e8:SetCode(CUSTOM_LINK_MAT_RESTRICTION)
 			tc:RegisterEffect(e8)	
 		end
-		Duel.SpecialSummonComplete()
 	end
+	Duel.SpecialSummonComplete()
 end
