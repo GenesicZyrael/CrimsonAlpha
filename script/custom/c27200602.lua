@@ -64,7 +64,6 @@ function s.contactfil(tp)
 	return Duel.GetMatchingGroup(function(c) return c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost() end,tp,LOCATION_ONFIELD,0,nil)
 end
 function s.contactop(g,tp)
-	Duel.ConfirmCards(1-tp,g)
 	Duel.Release(g,REASON_COST+REASON_MATERIAL)
 end
 function s.splimit(e,se,sp,st)
