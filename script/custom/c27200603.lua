@@ -57,7 +57,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if spct>2 then spct=2 end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then spct=1 end
 	
-	local pct=s.count_free_pendulum_zones(tp)
+	local pct=aux.GetPendulumZoneCount(tp)
 	
 	if chk==0 then return (b1 or b2 or b3) end
 	local off=1
