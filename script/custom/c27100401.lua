@@ -19,10 +19,10 @@ function s.initial_effect(c)
 		e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
 		e2:SetValue(s.synlimit)
 	c:RegisterEffect(e2)
-	--Can be treated as level 4 for a Synchro Summon
+	--Can be treated as level 3 for a Synchro Summon
 	local e3=Effect.CreateEffect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE)
-		e3:SetRange(LOCATION_MZONE)
+		e3:SetRange(LOCATION_ONFIELD)
 		e3:SetCode(EFFECT_SYNCHRO_LEVEL)
 		e3:SetValue(s.slevel)
 	c:RegisterEffect(e3)
