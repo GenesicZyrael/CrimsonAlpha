@@ -1,5 +1,6 @@
 --Effect Flags
 CUSTOM_LINK_MAT_RESTRICTION          	= 73941492+TYPE_LINK
+CUSTOM_ST_SYNCHRO                 		= EFFECT_HAND_SYNCHRO
 
 --Commonly used hardcoded effects
 EFFECT_ELEMENTAL_CONFLUX    			= 55481029
