@@ -23,9 +23,9 @@ function s.initial_effect(c)
 	e2:SetOperation(s.sumop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0xb4}
+s.listed_series={SET_NEKROZ}
 function s.lcheck(g,lc,sumtype,tp)
-	return g:IsExists(Card.IsSetCard,1,nil,0xb4,lc,sumtype,tp)
+	return g:IsExists(Card.IsSetCard,1,nil,SET_NEKROZ,lc,sumtype,tp) or g:IsExists(Card.IsType,1,nil,TYPE_RITUAL,lc,sumtype,tp)
 end
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
@@ -69,5 +69,5 @@ function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 end
 	--Cannot special summon from extra deck
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not c:IsSetCard(0xb4) and c:IsLocation(LOCATION_EXTRA)
+	return not c:IsSetCard(SET_NEKROZ) and c:IsLocation(LOCATION_EXTRA)
 end
