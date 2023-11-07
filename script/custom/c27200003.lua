@@ -86,7 +86,7 @@ function s.eftg(e,c)
 		and (c:IsSetCard(SET_DRAGUNITY) or c:IsSetCard(SET_ZEFRA)) 
 end
 function s.synval(e,c,sc)
-	if c:IsLocation(LOCATION_STZONE) and sc:IsSetCard(SET_DRAGUNITY) then
+	if c:IsLocation(LOCATION_STZONE) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(CUSTOM_ST_SYNCHRO+EFFECT_SYNCHRO_CHECK)
