@@ -1,10 +1,9 @@
 --Qliphort Datamiel
 local s,id=GetID()
 function s.initial_effect(c)
-	Pendulum.AddProcedure(c,false)
 	c:EnableReviveLimit()
-	-- c:EnableUnsummonable()
-	Fusion.AddProcMixN(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,0xaa),2)
+	Pendulum.AddProcedure(c,false)
+	Fusion.AddProcMixN(c,true,true,aux.FilterBoolFunctionEx(Card.IsSetCard,SET_QLI),2)
 	Fusion.AddContactProc(c,s.contactfil,s.contactop,s.splimit)
 	--splimit
 	local e1=Effect.CreateEffect(c)
@@ -59,21 +58,22 @@ function s.initial_effect(c)
 	e6:SetOperation(s.disop)
 	c:RegisterEffect(e6)
 end
-s.listed_series={0xaa}
+s.listed_series={SET_QLI}
 function s.contactfil(tp)
-	return Duel.GetMatchingGroup(function(c) return c:IsType(TYPE_MONSTER) and c:IsAbleToDeckOrExtraAsCost() end,tp,LOCATION_ONFIELD,0,nil)
+	return Duel.GetReleaseGroup(tp)
 end
-function s.contactop(g,tp)
+function s.contactop(g)
 	Duel.Release(g,REASON_COST+REASON_MATERIAL)
 end
 function s.splimit(e,se,sp,st)
-	return e:GetHandler():GetLocation()~=LOCATION_EXTRA
+	local c=e:GetHandler()
+	return not (c:IsLocation(LOCATION_EXTRA) and c:IsFacedown())
 end
 function s.qlimit(e,c)
-	return not c:IsSetCard(0xaa) 
+	return not c:IsSetCard(SET_QLI) 
 end
 function s.filter1(c)
-	return c:IsFaceup() and c:IsSetCard(0xaa) and c:IsType(TYPE_MONSTER) and c:IsSummonType(SUMMON_TYPE_TRIBUTE)
+	return c:IsFaceup() and c:IsSetCard(SET_QLI) and c:IsType(TYPE_MONSTER) and c:IsSummonType(SUMMON_TYPE_TRIBUTE)
 end
 function s.limitval(e,c)
 	local ct=Duel.GetMatchingGroup(s.filter1,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil):GetClassCount(Card.GetCode)
@@ -84,7 +84,7 @@ function s.limitval(e,c)
 	end
 end
 function s.limitfilter(c)
-	return c:IsFaceup() and c:IsSetCard(0xaa) and c:IsType(TYPE_MONSTER)
+	return c:IsFaceup() and c:IsSetCard(SET_QLI) and c:IsType(TYPE_MONSTER)
 end
 function s.limcon(e,tp,eg,ep,ev,re,r,rp)
 	local ct1=Duel.GetMatchingGroup(s.filter1,e:GetHandlerPlayer(),LOCATION_MZONE,0,nil):GetClassCount(Card.GetCode)
