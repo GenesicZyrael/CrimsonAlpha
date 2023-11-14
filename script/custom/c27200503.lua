@@ -27,13 +27,13 @@ function s.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--Can be treated as level 3 for a Synchro Summon
-	local e4=Effect.CreateEffect(c)
-		e4:SetType(EFFECT_TYPE_SINGLE)
-		e4:SetRange(LOCATION_ONFIELD)
-		e4:SetCode(EFFECT_SYNCHRO_LEVEL)
-		e4:SetValue(s.slevel)
-	c:RegisterEffect(e4)
+	-- --Can be treated as level 3 for a Synchro Summon
+	-- local e4=Effect.CreateEffect(c)
+		-- e4:SetType(EFFECT_TYPE_SINGLE)
+		-- e4:SetRange(LOCATION_ONFIELD)
+		-- e4:SetCode(EFFECT_SYNCHRO_LEVEL)
+		-- e4:SetValue(s.slevel)
+	-- c:RegisterEffect(e4)
 end
 s.listed_series={SET_RITUAL_BEAST,SET_RITUAL_BEAST_TAMER}
 function s.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -87,9 +87,9 @@ function s.tknop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.SpecialSummonComplete()
 	end
 end
-function s.slevel(e,c)
-	return 3<<16|e:GetHandler():GetLevel()
-end
+-- function s.slevel(e,c)
+	-- return 3<<16|e:GetHandler():GetLevel()
+-- end
 function s.matlimit(e,c)
 	if not c then return false end
 	return not c:IsSetCard(SET_RITUAL_BEAST)
