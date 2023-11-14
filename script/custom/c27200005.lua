@@ -51,7 +51,7 @@ function s.spfilter(c,e,tp)
 	return (c:IsSetCard(SET_GUSTO) or c:IsSetCard(SET_ZEFRA))
 		and c:IsLevelBelow(6)
 		and not c:IsCode(id) 
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
@@ -72,7 +72,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
 		if #g>0 then
-			Duel.SpecialSummon(g,0,tp,tp,false,false,POS_FACEUP)
+			Duel.SpecialSummon(g,SUMMON_TYPE_PENDULUM,tp,tp,false,false,POS_FACEUP)
 			if Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 				Duel.Destroy(c,REASON_EFFECT)
 			end
