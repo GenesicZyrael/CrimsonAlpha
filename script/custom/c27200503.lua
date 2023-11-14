@@ -13,15 +13,6 @@ function s.initial_effect(c)
 	e1:SetTarget(s.sumtarg)
 	e1:SetOperation(s.sumope)
 	c:RegisterEffect(e1)
-	-- --Special Summon
-	-- -- local e1=Effect.CreateEffect(c)
-	-- -- e1:SetType(EFFECT_TYPE_FIELD)
-	-- -- e1:SetCode(EFFECT_SPSUMMON_PROC)
-	-- -- e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_SPSUM_PARAM)
-	-- -- e1:SetRange(LOCATION_HAND)
-	-- -- e1:SetTargetRange(POS_FACEUP_DEFENSE,0)
-	-- -- e1:SetCondition(s.spcon)
-	-- -- c:RegisterEffect(e1)
 	--token
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
@@ -29,13 +20,20 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
 	e2:SetProperty(EFFECT_FLAG_DELAY)
-	-- e2:SetCondition(s.tkncon)
+	e2:SetCountLimit(1,{id,1})
 	e2:SetTarget(s.tkntg)
 	e2:SetOperation(s.tknop)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SUMMON_SUCCESS)
 	c:RegisterEffect(e3)
+	--Can be treated as level 3 for a Synchro Summon
+	local e4=Effect.CreateEffect(c)
+		e4:SetType(EFFECT_TYPE_SINGLE)
+		e4:SetRange(LOCATION_ONFIELD)
+		e4:SetCode(EFFECT_SYNCHRO_LEVEL)
+		e4:SetValue(s.slevel)
+	c:RegisterEffect(e4)
 end
 s.listed_series={SET_RITUAL_BEAST,SET_RITUAL_BEAST_TAMER}
 function s.sumcost(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -52,14 +50,6 @@ function s.sumope(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	Duel.Summon(tp,c,true,nil)
-end
-function s.spcon(e,c)
-	if c==nil then return true end
-	return Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)==0
-		and Duel.GetLocationCount(c:GetControler(),LOCATION_MZONE)>0
-end
-function s.tkncon(e,tp,eg,ep,ev,re,r,rp)
-	return e:GetHandler():IsPreviousLocation(LOCATION_HAND)
 end
 function s.tkntg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -96,6 +86,9 @@ function s.tknop(e,tp,eg,ep,ev,re,r,rp)
 			token:RegisterEffect(e6,true)			
 			Duel.SpecialSummonComplete()
 	end
+end
+function s.slevel(e,c)
+	return 3<<16|e:GetHandler():GetLevel()
 end
 function s.matlimit(e,c)
 	if not c then return false end
