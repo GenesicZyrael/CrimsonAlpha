@@ -82,7 +82,7 @@ function s.eqcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SendtoGrave(e:GetHandler(),REASON_COST)
 end
 function s.eqfilter(c,ec,ign_ct)
-	return c:IsLevelBelow(4) and c:IsSetCard(SET_DESTRUCTION_SWORD) and not c:IsCode(id)
+	return c:IsType(TYPE_MONSTER) and c:IsSetCard(SET_DESTRUCTION_SWORD) and not c:IsCode(id)
 end
 function s.eqtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.eqfilter,tp,LOCATION_DECK,0,1,nil,e:GetHandler():GetEquipTarget(),1) end
