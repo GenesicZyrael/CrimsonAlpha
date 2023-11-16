@@ -8,20 +8,34 @@ function s.initial_effect(c)
 	e1:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 	e1:SetProperty(EFFECT_FLAG_DAMAGE_STEP)
 	e1:SetCode(EVENT_SUMMON_SUCCESS)
+	e1:SetCountLimit(1,{id,0})
 	e1:SetTarget(s.sptg)
 	e1:SetOperation(s.spop)
 	c:RegisterEffect(e1)
 	local e2=e1:Clone()
 	e2:SetCode(EVENT_SPSUMMON_SUCCESS)
-	c:RegisterEffect(e2)	
-	--cannot be target
+	c:RegisterEffect(e2)
+	--send 1 "Destruction Sword" from deck to GY
 	local e3=Effect.CreateEffect(c)
-	e3:SetType(EFFECT_TYPE_EQUIP)
-	e3:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
-	e3:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
-	e3:SetValue(aux.tgoval)
-	c:RegisterEffect(e3)
+	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetCategory(CATEGORY_SEARCH)
+	e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e3:SetProperty(EFFECT_FLAG_DELAY)
+	e3:SetCode(EVENT_TO_GRAVE)
+	e3:SetCountLimit(1,{id,1})
+	e3:SetCondition(s.tgcon)
+	e3:SetTarget(s.tgtg)
+	e3:SetOperation(s.tgop)
+	c:RegisterEffect(e3)	
+	--cannot be target
+	local e4=Effect.CreateEffect(c)
+	e4:SetType(EFFECT_TYPE_EQUIP)
+	e4:SetCode(EFFECT_CANNOT_BE_EFFECT_TARGET)
+	e4:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
+	e4:SetValue(aux.tgoval)
+	c:RegisterEffect(e4)
 end
+s.listed_series={SET_DESTRUCTION_SWORD}
 function s.filter(c,e,tp)
 	return c:IsCode(CARD_BUSTER_BLADER) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
@@ -63,4 +77,22 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.eqlimit(e,c)
 	return c==e:GetLabelObject()
+end
+function s.tgfilter(c)
+	return c:IsSetCard(SET_DESTRUCTION_SWORD) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave() and not c:IsCode(id)
+end
+function s.tgcon(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsPreviousLocation(LOCATION_ONFIELD)
+		and e:GetHandler():IsPreviousPosition(POS_FACEUP)
+end
+function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_DECK,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
+end
+function s.tgop(e,tp,eg,ep,ev,re,r,rp)
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
+	local g=Duel.SelectMatchingCard(tp,s.tgfilter,tp,LOCATION_DECK,0,1,1,nil)
+	if #g>0 then
+		Duel.SendtoGrave(g,REASON_EFFECT)
+	end
 end
