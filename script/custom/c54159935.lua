@@ -74,7 +74,7 @@ end
 function s.tgfilter(c,e,tp,chk)
 	return (c:IsCode(CARD_BUSTER_BLADER) or c:ListsCodeAsMaterial(CARD_BUSTER_BLADER))
 		and c:IsLocation(LOCATION_MZONE) and c:IsFaceup() and c:IsControler(tp) and c:IsCanBeEffectTarget(e)
-		and (chk or Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil,c))
+		and (chk or Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,nil,c))
 end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	local tg=eg:Filter(s.tgfilter,nil,e,tp,false)
@@ -115,7 +115,7 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	local ec=Duel.GetFirstTarget()
 	if c:IsRelateToEffect(e) and ec:IsFaceup() then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_EQUIP)
-		local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_GRAVE,0,1,1,nil,ec)
+		local g=Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_DECK+LOCATION_GRAVE,0,1,1,nil,ec)
 		local tc=g:GetFirst()
 		if not tc or not Duel.Equip(tp,tc,ec,true) then return end
 		local e1=Effect.CreateEffect(c)
