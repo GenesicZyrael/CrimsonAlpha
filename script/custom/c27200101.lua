@@ -55,19 +55,39 @@ end
 function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)~=0 then return end
 	Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
-	local ge1=Effect.CreateEffect(e:GetHandler())
-	ge1:SetType(EFFECT_TYPE_FIELD)
-	ge1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	ge1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-	ge1:SetTargetRange(1,0)
-	ge1:SetTarget(s.splimit)
-	ge1:SetReset(RESET_PHASE+PHASE_END)
-	Duel.RegisterEffect(ge1,tp)
-	aux.RegisterClientHint(e:GetHandler(),EFFECT_FLAG_OATH,tp,1,0,aux.Stringid(id,2),nil)
+	local c=e:GetHandler()
+	-- Cannot activate monster effects
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(s.splimit)
+	e1:SetReset(RESET_PHASE+PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+	aux.RegisterClientHint(c,EFFECT_FLAG_OATH,tp,1,0,aux.Stringid(id,2),nil)
 	--lizard check
-	aux.addTempLizardCheck(e:GetHandler(),tp)
+	-- aux.addTempLizardCheck(c,tp)
+	-- Remove restrictions on Pendulum Summon
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	e0:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e0:SetLabelObject({e1})
+	e0:SetOperation(s.checkop)
+	e0:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e0,tp)
 end
-	--Cannot special summon from extra deck
+function s.ritfilter(c,tp)
+	return c:IsSummonPlayer(tp) and c:IsSummonType(SUMMON_TYPE_RITUAL)
+end
+function s.checkop(e,tp,eg,ep,ev,re,r,rp)
+	local ef=e:GetLabelObject()
+	if ef and eg and eg:IsExists(s.ritfilter,1,nil,tp) then
+		ef[1]:Reset()
+		e:Reset()
+	end
+end
+--Cannot special summon from extra deck
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return not c:IsSetCard(SET_NEKROZ) and c:IsLocation(LOCATION_EXTRA)
 end
