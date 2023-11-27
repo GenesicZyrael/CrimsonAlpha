@@ -92,7 +92,7 @@ function s.spcon_destroyed(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.filter(c,e,tp)
 	return (c:IsSetCard(SET_GUSTO) or c:IsSetCard(SET_ZEFRA))
-		and (c:IsLocation(LOCATION_HAND)) --or c:IsFaceup())
+		and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false)
 		and not c:IsCode(id) 
 end
