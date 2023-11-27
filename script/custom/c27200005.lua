@@ -92,17 +92,17 @@ function s.spcon_destroyed(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.filter(c,e,tp)
 	return (c:IsSetCard(SET_GUSTO) or c:IsSetCard(SET_ZEFRA))
-		and (c:IsLocation(LOCATION_HAND) or c:IsFaceup())
+		and (c:IsLocation(LOCATION_HAND)) --or c:IsFaceup())
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false)
 		and not c:IsCode(id) 
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local loc=0
-	if Duel.GetLocationCount(tp,LOCATION_MMZONE)>0 then loc=loc+LOCATION_HAND end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND end
 	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
 	if chk==0 and loc~=0 then 
 		return ( Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND,0,1,nil,e,tp) 
-				and Duel.GetLocationCount(tp,LOCATION_MMZONE)>0 )
+				and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 )
 			or ( Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) 
 				and Duel.GetLocationCountFromEx(tp)>0 )
 	end
@@ -110,7 +110,7 @@ function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	local loc=0
-	if Duel.GetLocationCount(tp,LOCATION_MMZONE)>0 then loc=loc+LOCATION_HAND end
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND end
 	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
 	if loc==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
