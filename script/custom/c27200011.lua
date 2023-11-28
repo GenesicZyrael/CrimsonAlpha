@@ -30,17 +30,29 @@ function s.initial_effect(c)
 end
 s.listed_series={SET_ZEFRA}
 function s.filter(c,e,tp)
-	return c:IsSetCard(SET_ZEFRA) and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,true,true) and c:IsOriginalType(TYPE_MONSTER) 
+	return c:IsSetCard(SET_ZEFRA) 
+		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,true,true) 
+		and c:IsOriginalType(TYPE_MONSTER) 
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND+LOCATION_PZONE,0,1,nil,e,tp) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_PZONE)
+	local loc=0
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_PZONE end
+	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
+	if chk==0 then 
+		return ( Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND+LOCATION_PZONE,0,1,nil,e,tp) 
+				and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 )
+			or ( Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,e,tp) 
+				and Duel.GetLocationCountFromEx(tp)>0 )
+	end
+	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,loc)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+	local loc=0
+	if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then loc=loc+LOCATION_HAND+LOCATION_PZONE end
+	if Duel.GetLocationCountFromEx(tp)>0 then loc=loc+LOCATION_EXTRA end
+	if loc==0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_HAND+LOCATION_PZONE,0,1,1,nil,e,tp)
+	local g=Duel.SelectMatchingCard(tp,s.filter,tp,loc,0,1,1,nil,e,tp)
 	if #g>0 then
 		Duel.SpecialSummon(g,SUMMON_TYPE_PENDULUM,tp,tp,true,true,POS_FACEUP)
 	end

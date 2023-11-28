@@ -57,7 +57,6 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
 	local loc=LOCATION_HAND+LOCATION_ONFIELD
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then loc=LOCATION_ONFIELD end
-	Debug.Message(Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp))
 	if chk==0 then 
 		return Duel.IsExistingMatchingCard(nil,tp,loc,0,1,nil)
 			and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end

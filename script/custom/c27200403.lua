@@ -53,6 +53,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCountLimit(1,{id,1})
 			e1:SetCost(s.cost)
 			e1:SetOperation(s.operation)
+			e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 	end
 end
