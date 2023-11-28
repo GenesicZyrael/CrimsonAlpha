@@ -103,7 +103,7 @@ function s.ritcon(e)
 	return e:GetHandler():GetFlagEffect(id)==0
 end
 function s.cfilter(c)
-	return c:IsRitualSpell() and c:IsAbleToRemoveAsCost()
+	return c:IsAbleToRemoveAsCost()
 end
 function s.ritcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_GRAVE,0,1,nil) end
