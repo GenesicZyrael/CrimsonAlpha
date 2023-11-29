@@ -126,8 +126,8 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 		local ct=aux.GetPendulumZoneCount(tp)
 		local g=Duel.GetMatchingGroup(s.filter3,tp,LOCATION_EXTRA,0,nil)
 		if #g<1 and ct>0 and b3 then return end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 		local sg=g:Select(tp,1,ct,nil)
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
 		for tc in aux.Next(sg) do
 			Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 		end	
