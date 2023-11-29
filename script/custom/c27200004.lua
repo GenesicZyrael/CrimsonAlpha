@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	e3a:SetCode(CUSTOM_ST_SYNCHRO)
 	e3a:SetLabel(id)
 	e3a:SetValue(s.synval)
-	c:RegisterEffect(e3a)
+	-- c:RegisterEffect(e3a)
 	--s/t synchro: effect gain
 	local e3b=Effect.CreateEffect(c)
 	e3b:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_GRANT)
@@ -86,7 +86,7 @@ function s.eftg(e,c)
 		and (c:IsSetCard(SET_DRAGUNITY) or c:IsSetCard(SET_ZEFRA)) 
 end
 function s.synval(e,c,sc)
-	if c:IsLocation(LOCATION_STZONE) then
+	if c:IsLocation(LOCATION_SZONE) then
 		local e1=Effect.CreateEffect(e:GetHandler())
 		e1:SetType(EFFECT_TYPE_SINGLE)
 		e1:SetCode(CUSTOM_ST_SYNCHRO+EFFECT_SYNCHRO_CHECK)
