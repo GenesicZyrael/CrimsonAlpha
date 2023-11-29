@@ -18,12 +18,18 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
 end
-s.listed_series={0xaa}
+s.listed_series={SET_QLI}
 function s.counterfilter(c)
-	return c:IsSetCard(0xaa)
+	return c:IsSetCard(SET_QLI)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
+	local b1=Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_GRAVE,0,1,nil)
+	local b2=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_PZONE,0,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local b3=Duel.IsExistingMatchingCard(s.filter3,tp,LOCATION_EXTRA,0,1,nil) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
+	if chk==0 then 
+		return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,e:GetHandler()) and Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 
+			and (b1 or b2 or b3)  
+	end
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
@@ -37,22 +43,23 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	aux.RegisterClientHint(e:GetHandler(),nil,tp,1,0,aux.Stringid(id,1),nil)
 end
 function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
-	return not c:IsSetCard(0xaa)
+	return not c:IsSetCard(SET_QLI)
 end
 function s.filter1(c)
-	return c:IsSetCard(0xaa) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(SET_QLI) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.filter2(c,e,tp)
-	return c:IsFaceup() and c:GetLevel()>0 and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(SET_QLI) and c:IsFaceup() and c:GetLevel()>0 
+		and c:IsCanBeEffectTarget(e) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.filter3(c)
-	return c:IsSetCard(0xaa) and c:IsType(TYPE_PENDULUM) and c:IsFaceup() and not c:IsForbidden()
+	return c:IsSetCard(SET_QLI) and c:IsType(TYPE_PENDULUM) 
+		and c:IsFaceup() and not c:IsForbidden()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_GRAVE,0,1,nil)
-	local b2=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_PZONE,0,1,nil,e,tp)
+	local b2=Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_PZONE,0,1,nil,e,tp) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	local b3=Duel.IsExistingMatchingCard(s.filter3,tp,LOCATION_EXTRA,0,1,nil) and (Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1))
-	
 	local spct=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if spct>2 then spct=2 end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then spct=1 end

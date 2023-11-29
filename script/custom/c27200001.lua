@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e3:SetCountLimit(1,{id,0})
 	e3:SetValue(1)
 	e3:SetTarget(s.mttg)
-	-- e3:SetLabelObject({s.forced_replacement})
+	e3:SetLabelObject({s.forced_replacement})
 	c:RegisterEffect(e3)
 	--pendulum set
 	local e4=Effect.CreateEffect(c)
