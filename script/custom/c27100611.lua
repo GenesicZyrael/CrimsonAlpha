@@ -46,7 +46,7 @@ function s.filter1(c)
 	return c:IsSetCard(0x2a) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.filter2(c)
-	return c:IsSetCard(0x2a) and not c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return (c:IsSetCard(0x2a) or c:ListsArchetype(0x2a)) and not c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if re:IsHasType(EFFECT_TYPE_ACTIVATE) then 
