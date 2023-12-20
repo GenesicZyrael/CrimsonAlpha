@@ -32,7 +32,7 @@ function s.fextra(e,tp,mg)
 	return nil
 end
 function s.exfilter(c)
-	return c:IsMonster() and c:IsCode(CARD_BUSTER_BLADER) and c:IsAbleToGrave()
+	return c:IsMonster() and c:IsAbleToGrave()
 end
 function s.extratg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
