@@ -65,10 +65,25 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(1-tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local tc=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
-	if tc then
-		-- Duel.SSet(1-tp,tc)
-		Duel.MoveToField(tc,tp,1-tp,LOCATION_PZONE,POS_FACEDOWN,true)
+	if tc and Duel.MoveToField(tc,tp,1-tp,LOCATION_PZONE,POS_FACEDOWN,true) then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+		e1:SetDescription(aux.Stringid(id,1))
+		e1:SetTargetRange(1,0)
+		e1:SetTarget(s.splimit)
+		e1:SetReset(RESET_PHASE|PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+		--lizard check
+		aux.addTempLizardCheck(e:GetHandler(),tp,s.lizfilter)
 	end
+end
+function s.splimit(e,c)
+	return not c:IsLinkMonster() and c:IsLocation(LOCATION_EXTRA)
+end
+function s.lizfilter(e,c)
+	return not c:IsOriginalType(TYPE_LINK)
 end
 
 function s.cfilter(c)
