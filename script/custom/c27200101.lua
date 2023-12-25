@@ -51,10 +51,6 @@ end
 function s.sumop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)~=0 then return end
 	Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
-end
-function s.sumop(e,tp,eg,ep,ev,re,r,rp)
-	if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)~=0 then return end
-	Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
 	local c=e:GetHandler()
 	-- Cannot activate monster effects
 	local e1=Effect.CreateEffect(c)
