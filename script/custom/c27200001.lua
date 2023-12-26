@@ -1,7 +1,7 @@
 -- Gishki Zefravance
 local s,id=GetID()
 function s.initial_effect(c)
-	local rparams={handler=c,lvtype=RITPROC_EQUAL,desc=aux.Stringid(id,3)}
+	local rparams={handler=c,lvtype=RITPROC_EQUAL,desc=aux.Stringid(id,3),matfilter=s.mfilter}
 	local rittg,ritop=Ritual.Target(rparams),Ritual.Operation(rparams)
 	--pendulum summon
 	Pendulum.AddProcedure(c)
@@ -27,19 +27,24 @@ function s.initial_effect(c)
 	e3:SetTarget(s.mttg)
 	e3:SetLabelObject({s.forced_replacement})
 	c:RegisterEffect(e3)
-	--pendulum set
+	--Pendulum Set
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,2))
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetRange(LOCATION_HAND+LOCATION_MZONE)
+	e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
+	e4:SetCode(EVENT_SUMMON_SUCCESS)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetCountLimit(1,{id,1})
-	e4:SetTarget(s.pctg)
-	e4:SetOperation(s.pcop(rittg,ritop))
+	e4:SetTarget(s.target)
+	e4:SetOperation(s.operation(rittg,ritop))
 	c:RegisterEffect(e4)
+	local e5=e4:Clone()
+	e5:SetCode(EVENT_SPSUMMON_SUCCESS)
+	e5:SetCondition(s.condition)
+	c:RegisterEffect(e5)
 end
 s.listed_series={SET_GISHKI,SET_ZEFRA}
+function s.mfilter(c)
+	return c:IsSetCard(SET_GISHKI) or c:IsSetCard(SET_ZEFRA)
+end
 -- {Pendulum Summon Restriction: Zefra & Gishki}
 function s.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(SET_GISHKI) or c:IsSetCard(SET_ZEFRA) then return false end
@@ -47,8 +52,7 @@ function s.splimit(e,c,sump,sumtype,sumpos,targetp)
 end
 -- {Pendulum Effect: Use Deck and Extra Deck for Materials}
 function s.mtfil(c)
-	return c:IsSetCard(SET_ZEFRA) 
-		or c:IsSetCard(SET_GISHKI) 
+	return c:IsSetCard(SET_ZEFRA) or c:IsSetCard(SET_GISHKI) 
 end
 function s.mttg(e,c)
 	local tp=e:GetHandlerPlayer()
@@ -60,13 +64,16 @@ function s.forced_replacement(e,tp,sg,rc)
 	return ct<=1,ct>1
 end
 -- {Monster Effect: Place in Pendulum Zone, then Ritual Summon if possible}
-function s.pctg(e,tp,eg,ep,ev,re,r,rp,chk)
+function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_PENDULUM)
+end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
 		return (Duel.CheckLocation(tp,LOCATION_PZONE,0) 
 			or Duel.CheckLocation(tp,LOCATION_PZONE,1)) 
 	end	
 end
-function s.pcop(rittg,ritop)
+function s.operation(rittg,ritop)
 	return function(e,tp,eg,ep,ev,re,r,rp)
 		local rit=rittg(e,tp,eg,ep,ev,re,r,rp,0)
 		local c=e:GetHandler()
