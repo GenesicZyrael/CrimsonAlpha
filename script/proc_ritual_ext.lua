@@ -96,12 +96,23 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 				local extra_loc = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
 				if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 and extra_loc and (location&extra_loc)==0 then
 					if Duel.IsExistingMatchingCard(Ritual.Filter,tp,extra_loc,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos) then 
+						local fg=Group.CreateGroup()
+						for i,pe in ipairs({Duel.IsPlayerAffectedByEffect(tp,CUSTOM_RITUAL_LOCATION)}) do
+							fg:AddCard(pe:GetHandler())
+						end
+						if #fg==1 then
+							fc=fg:GetFirst()
+						else
+							fc=fg:Select(tp,1,1,nil)
+						end
 						if Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,forcedselection,specificmatfilter,lv,requirementfunc,sumpos) then 
 							if Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_LOCATION,1)) then
+								Duel.Hint(HINT_CARD,0,fc:GetCode())
 								Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
 								location = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
 							end
 						else
+							Duel.Hint(HINT_CARD,0,fc:GetCode())
 							Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
 							location = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
 						end
