@@ -171,6 +171,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 							local _,max_count_limit=eff:GetCountLimit()
 							if max_count_limit>0 and not mg2:IsContains(tmp_c) then
 								eff:UseCountLimit(tp,1)
+								Duel.Hint(HINT_CARD,0,eff:GetHandler():GetCode())
 								Duel.RegisterFlagEffect(tp,eff:GetHandler():GetCode(),RESET_PHASE+PHASE_END,0,1)
 							end
 						end
