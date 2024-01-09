@@ -37,5 +37,11 @@ if not CustomArchetype then
 	
 	CustomArchetype.WNebula={90075978,27000727}
 	Card.IsWNebula=MakeCheck({SET_W_NEBULA},CustomArchetype.WNebula)
+	
+	CustomArchetype.Pikeru={81383947,75917088,58015506,74270067}
+	Card.IsPikeru=MakeCheck({SET_PIKERU},CustomArchetype.Pikeru)
+	
+	CustomArchetype.Curran={46128076,2316186}
+	Card.IsCurran=MakeCheck({SET_Curran},CustomArchetype.Curran)
 end
 
