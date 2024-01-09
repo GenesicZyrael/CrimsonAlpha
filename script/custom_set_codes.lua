@@ -26,22 +26,22 @@ if not CustomArchetype then
 
 	CustomArchetype.Shinobird={66815913,92200612,39817919,73055622,9553721,276357,8066523
 	}
-	Card.IsShinobird=MakeCheck({SET_SHINOBIRD},CustomArchetype.Shinobird)
+	Card.IsSetShinobird=MakeCheck({SET_SHINOBIRD},CustomArchetype.Shinobird)
 
 	CustomArchetype.Metalmorph={68540059,504700111,12503902,504700017,511006005}
-	Card.IsMetalmorph=MakeCheck({SET_METALMORPH},CustomArchetype.Metalmorph)
+	Card.IsSetMetalmorph=MakeCheck({SET_METALMORPH},CustomArchetype.Metalmorph)
 
 	CustomArchetype.Guardragon={11012154,35183584,6990577,43411769,79905468,84899094,95793022,
 	59537380,13143275,86148577,40003819,87571563,50186558,47393199,11908584}
-	Card.IsGuardragon=MakeCheck({SET_GUARDRAGON},CustomArchetype.Guardragon)
+	Card.IsSetGuardragon=MakeCheck({SET_GUARDRAGON},CustomArchetype.Guardragon)
 	
 	CustomArchetype.WNebula={90075978,27000727}
-	Card.IsWNebula=MakeCheck({SET_W_NEBULA},CustomArchetype.WNebula)
+	Card.IsSetWNebula=MakeCheck({SET_W_NEBULA},CustomArchetype.WNebula)
 	
 	CustomArchetype.Pikeru={81383947,75917088,58015506,74270067}
-	Card.IsPikeru=MakeCheck({SET_PIKERU},CustomArchetype.Pikeru)
+	Card.IsSetPikeru=MakeCheck({SET_PIKERU},CustomArchetype.Pikeru)
 	
 	CustomArchetype.Curran={46128076,2316186}
-	Card.IsCurran=MakeCheck({SET_Curran},CustomArchetype.Curran)
+	Card.IsSetCurran=MakeCheck({SET_Curran},CustomArchetype.Curran)
 end
 
