@@ -34,6 +34,7 @@ function s.initial_effect(c)
 	e3:SetOperation(s.rmop)
 	c:RegisterEffect(e3)	
 end
+s.listed_series={SET_SHINOBIRD}
 function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_XYZ)
 end
@@ -41,7 +42,7 @@ function s.spfilter(c,e,tp)
 	return c:IsType(TYPE_SPIRIT) and c:IsLevelBelow(4) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.thfilter(c,e,tp)
-	return c:IsAbleToHand() and c:IsShinobird() and c:IsType(TYPE_SPELL+TYPE_TRAP)
+	return c:IsAbleToHand() and c:IsSetShinobird() and c:IsType(TYPE_SPELL+TYPE_TRAP)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsControler(tp) and chkc:IsLocation(LOCATION_GRAVE) and (s.spfilter(chkc,e,tp) or s.spfilter2(chkc,e,tp)) end
