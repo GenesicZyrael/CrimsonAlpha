@@ -54,7 +54,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function s.filter(c)
-	return (c:IsSetCard(SET_WORM) or c:IsWNebula()) 
+	return (c:IsSetCard(SET_WORM) or c:IsSetWNebula()) 
 		and c:IsAbleToHand() and not c:IsCode(57543573)
 end
 function s.tg(e,tp,eg,ep,ev,re,r,rp,chk)

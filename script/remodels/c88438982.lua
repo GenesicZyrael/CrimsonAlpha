@@ -13,14 +13,14 @@ function s.initial_effect(c)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLIP)
 end
-s.listed_series={0x3e}
+s.listed_series={SET_WORM}
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
 	Duel.Hint(HINT_OPSELECTED,1-tp,e:GetDescription())
 end
 function s.filter(c)
-	return (c:IsSetCard(0x3e) and c:IsRace(RACE_REPTILE) and c:IsType(TYPE_MONSTER) and not c:IsCode(88438982))
-		or c:IsWNebula()
+	return (c:IsSetCard(SET_WORM) and c:IsRace(RACE_REPTILE) and c:IsType(TYPE_MONSTER) and not c:IsCode(88438982))
+		or c:IsSetWNebula()
 		and c:IsAbleToGrave()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
