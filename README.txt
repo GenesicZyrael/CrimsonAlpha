@@ -7,6 +7,17 @@ Download CrimsonAlpha repo
 {
 	"repos": [
 		{
+			"url": "https://github.com/ProjectIgnis/DeltaPuppetOfStrings",
+			"repo_name": "Project Ignis updates",
+			"repo_path": "./repositories/delta-puppet",
+			"has_core": true,
+			"core_path": "bin",
+			"data_path": "",
+			"script_path": "script",
+			"should_update": true,
+			"should_read": true
+		},
+		{
 			"url": "https://github.com/GenesicZyrael/CrimsonAlpha",
 			"repo_name": "Crimson Alpha updates",
 			"repo_path": "./repositories/crimson-alpha",
