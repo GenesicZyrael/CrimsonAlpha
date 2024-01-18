@@ -32,7 +32,7 @@ s.listed_series={SET_ZEFRA}
 function s.filter(c,e,tp)
 	return (c:IsSetCard(SET_ZEFRA) 
 		and c:IsCanBeSpecialSummoned(e,SUMMON_TYPE_PENDULUM,tp,false,false) 
-		and c:IsOriginalType(TYPE_MONSTER))
+		and c:IsOriginalType(TYPE_MONSTER) and c:IsType(TYPE_PENDULUM))
 		or (c:IsCode(29432356)
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,true))
 end
