@@ -168,3 +168,9 @@ function aux.GetPendulumZoneCount(tp)
 	if Duel.CheckLocation(tp,LOCATION_PZONE,1) then ct=ct + 1 end
 	return ct
 end
+-- Return summon type of e
+function aux.IsSummonType(sumtype)
+	return function(e)
+		return e:GetHandler():IsSummonType(sumtype)
+	end
+end
