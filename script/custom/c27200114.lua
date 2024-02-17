@@ -44,13 +44,11 @@ function s.initial_effect(c)
 	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e4:SetHintTiming(0,TIMING_END_PHASE)
 	e4:SetCountLimit(1,{id,2})
-	-- e4:SetCost(s.tdcost)
 	e4:SetTarget(s.tdtg)
 	e4:SetOperation(s.tdop)
 	c:RegisterEffect(e4)
 end
 s.listed_series={SET_ZEFRA}
-s.listed_names={29432356}
 function s.spfilter(c,e,tp)
 	return c:IsSetCard(SET_ZEFRA)
 		and c:IsLevelBelow(6)
@@ -187,6 +185,8 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if tc and tc:IsRelateToEffect(e) and Duel.SendtoDeck(tc,nil,2,REASON_EFFECT)>0 then
 		Duel.BreakEffect()
-		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true) 
+		if aux.GetPendulumZoneCount(tp)>0 then 
+			Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true) 
+		end
 	end
 end
