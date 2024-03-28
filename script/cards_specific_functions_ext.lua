@@ -207,38 +207,32 @@ function Auxiliary.ChangeCode(c,code,location)
 end
 
 --Amorphage Maintenance Cost
-local function AmorphCon(e,tp,eg,ep,ev,re,r,rp)
-	return Duel.GetTurnPlayer()==tp 
-end
 local function AmorphOp(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local id=c:GetCode()
-	if c:IsHasEffect(4161732) and Duel.SelectYesNo(tp,aux.Stringid(4161732,0)) then
-		if Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+	local b1=Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c)
+	local b2=true
+	if not (c:IsHasEffect(4161732) and Duel.SelectYesNo(tp,aux.Stringid(4161732,0))) then
+		--Tribute 1 monster or destroy this card
+		local op=b1 and Duel.SelectEffect(tp,
+			{b1,aux.Stringid(id,0)},
+			{b2,aux.Stringid(id,1)}) or 2
+		if op==1 then
 			local g=Duel.SelectReleaseGroup(tp,Card.IsReleasableByEffect,1,1,c)
 			Duel.Release(g,REASON_COST)
-		else
-			--do nothing
-		end
-	else
-		if Duel.CheckReleaseGroup(tp,Card.IsReleasableByEffect,1,c) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-			local g=Duel.SelectReleaseGroup(tp,Card.IsReleasableByEffect,1,1,c)
-			Duel.Release(g,REASON_COST)
-		else
+		elseif op==2 then
 			Duel.Destroy(c,REASON_COST)
 		end
 	end 
-	Duel.HintSelection(Group.FromCards(c),true)
 end
 function Auxiliary.AmorphageMCost(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
 	e1:SetProperty(EFFECT_FLAG_UNCOPYABLE+EFFECT_FLAG_CANNOT_DISABLE)
+	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
 	e1:SetRange(LOCATION_PZONE)
 	e1:SetCountLimit(1)
-	e1:SetCode(EVENT_PHASE+PHASE_STANDBY)
-	e1:SetCondition(AmorphCon)
+	e1:SetCondition(function(e,tp) return Duel.IsTurnPlayer(tp) end)
 	e1:SetOperation(AmorphOp)
 	c:RegisterEffect(e1)
 end
-
