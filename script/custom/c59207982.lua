@@ -56,29 +56,29 @@ end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)
 end
-function s.spfilter(c,e,tp,b1)
+function s.filter(c,e,tp,b1)
 	return c:IsLevelBelow(4) 
 		and (c:IsSetCard(SET_AMORPHAGE) or c:IsSetCard(SET_DRACOVERLORD))
 		and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
 		and (b1 or c:IsCanBeSpecialSummoned(e,0,tp,false,false))
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	local b1=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
-	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local b2=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
 	if chk==0 then return (b1 or b2)
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_DECK,0,1,nil,e,tp,b1) end
+		and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil,e,tp,b1) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local b1=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
-	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local b1=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+	local b2=Duel.CheckLocation(tp,LOCATION_PZONE,0) or Duel.CheckLocation(tp,LOCATION_PZONE,1)
 	if not b1 and not b2 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_CONFIRM)
-	local tc=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_DECK,0,nil,e,tp,b1):Select(tp,1,1,nil):GetFirst()
+	local tc=Duel.GetMatchingGroup(s.filter,tp,LOCATION_DECK,0,nil,e,tp,b1):Select(tp,1,1,nil):GetFirst()
 	Duel.ConfirmCards(1-tp,tc)
 	Duel.ShuffleDeck(tp)
-	if not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) then b2=nil end
-	local op=b1 and Duel.SelectEffect(tp,
+	if not tc:IsCanBeSpecialSummoned(e,0,tp,false,false) then b1=nil end
+	local op=Duel.SelectEffect(tp,
 		{b1,aux.Stringid(id,2)},
 		{b2,aux.Stringid(id,3)})
 	if op==1 then
