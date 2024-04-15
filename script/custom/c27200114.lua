@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	--Apply the effect of 1 "Zefra" monster
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,2))
+	e3:SetDescription(aux.Stringid(id,3))
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetCode(EVENT_FREE_CHAIN)
 	e3:SetRange(LOCATION_MZONE)
@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	--to deck
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,3))
+	e4:SetDescription(aux.Stringid(id,4))
 	e4:SetCategory(CATEGORY_TODECK)
 	e4:SetType(EFFECT_TYPE_QUICK_O)
 	e4:SetRange(LOCATION_MZONE)
@@ -77,7 +77,12 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
 		if (tc:IsCode(29432356) and Duel.SpecialSummon(tc,0,tp,tp,true,true,POS_FACEUP)>0)
 		or (tc and Duel.SpecialSummon(tc,SUMMON_TYPE_PENDULUM,tp,tp,false,false,POS_FACEUP)>0)	then
-			if c:IsLocation(LOCATION_PZONE) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			if c:IsLocation(LOCATION_PZONE) and 
+			-- Duel.SelectYesNo(tp,aux.Stringid(id,1)) 
+			Duel.SelectEffect(tp,
+				{b1,aux.Stringid(id,1)},
+				{b2,aux.Stringid(id,2)})
+			then
 				scale=7
 			else
 				scale=1
