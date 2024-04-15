@@ -69,6 +69,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) then return end
 	local loc=LOCATION_HAND+LOCATION_ONFIELD
+	local op=nil
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then loc=LOCATION_ONFIELD end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
 	local g=Duel.SelectMatchingCard(tp,nil,tp,loc,0,1,1,nil)
@@ -77,26 +78,26 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		local tc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
 		if (tc:IsCode(29432356) and Duel.SpecialSummon(tc,0,tp,tp,true,true,POS_FACEUP)>0)
 		or (tc and Duel.SpecialSummon(tc,SUMMON_TYPE_PENDULUM,tp,tp,false,false,POS_FACEUP)>0)	then
-			if c:IsLocation(LOCATION_PZONE) and 
-			-- Duel.SelectYesNo(tp,aux.Stringid(id,1)) 
-			Duel.SelectEffect(tp,
-				{b1,aux.Stringid(id,1)},
-				{b2,aux.Stringid(id,2)})
-			then
-				scale=7
-			else
-				scale=1
+			if c:IsLocation(LOCATION_PZONE) then
+				op=Duel.SelectEffect(tp,
+					{aux.TRUE,aux.Stringid(id,1)},
+					{aux.TRUE,aux.Stringid(id,2)})
+				if op==1 then
+					scale=1
+				elseif op==2 then
+					scale=7
+				end
+				local e1=Effect.CreateEffect(c)
+				e1:SetType(EFFECT_TYPE_SINGLE)
+				e1:SetCode(EFFECT_CHANGE_LSCALE)
+				e1:SetValue(scale)
+				e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
+				c:RegisterEffect(e1)
+				local e2=e1:Clone()
+				e2:SetCode(EFFECT_CHANGE_RSCALE)
+				e2:SetValue(scale)
+				c:RegisterEffect(e2)
 			end
-			local e1=Effect.CreateEffect(c)
-			e1:SetType(EFFECT_TYPE_SINGLE)
-			e1:SetCode(EFFECT_CHANGE_LSCALE)
-			e1:SetValue(scale)
-			e1:SetReset(RESET_EVENT+0x1fe0000+RESET_PHASE+PHASE_END)
-			c:RegisterEffect(e1)
-			local e2=e1:Clone()
-			e2:SetCode(EFFECT_CHANGE_RSCALE)
-			e2:SetValue(scale)
-			c:RegisterEffect(e2)
 		end
 	end
 end
