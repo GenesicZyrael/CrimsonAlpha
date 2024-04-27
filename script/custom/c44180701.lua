@@ -36,7 +36,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)	
 end
 s.listed_names={7815722}
-s.listed_series={SET_DRACOVERLORD,SET_AMORPHAGE}
+s.listed_series={SET_DRACOVERLORD,SET_AMORPHAGE,SET_DRACOSLAYER}
 function s.splimit(e,se,sp,st)
 	return (st&SUMMON_TYPE_RITUAL)==SUMMON_TYPE_RITUAL 
 		or (st&SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
@@ -50,7 +50,8 @@ end
 function s.cfilter(c,tp)
 	return c:IsFacedown() 
 		or not (c:IsSetCard(SET_AMORPHAGE)
-			or c:IsSetCard(SET_DRACOVERLORD))
+			or c:IsSetCard(SET_DRACOVERLORD)
+			or c:IsSetCard(SET_DRACOSLAYER))
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp 
@@ -58,8 +59,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 		or not Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_MZONE,0,1,nil))
 end
 function s.filter1(c,e,tp)
-	return c:IsLevelBelow(4) 
-		and (c:IsSetCard(SET_AMORPHAGE) or c:IsSetCard(SET_DRACOVERLORD))
+	return (c:IsSetCard(SET_AMORPHAGE) or c:IsSetCard(SET_DRACOVERLORD))
 		and c:IsType(TYPE_PENDULUM) and not c:IsForbidden()
 end
 function s.filter2(c,e,tp)
@@ -82,7 +82,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	if b1 and tc then 
 		Duel.MoveToField(tc,tp,tp,LOCATION_PZONE,POS_FACEUP,true) 
 		Duel.ShuffleDeck(tp)
-		if b2 and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
+		if b2 and Duel.IsExistingMatchingCard(s.filter2,tp,LOCATION_HAND,0,1,nil,e,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 			tc=Duel.GetMatchingGroup(s.filter2,tp,LOCATION_HAND,0,nil,e,tp):Select(tp,1,1,nil):GetFirst()
 			if tc then Duel.SpecialSummon(tc,0,tp,tp,false,false,POS_FACEUP) end
 		end

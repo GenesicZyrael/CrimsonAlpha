@@ -67,6 +67,7 @@ end
 function s.cfilter(c,tp)
 	return c:IsPreviousLocation(LOCATION_ALL) 
 		and c:IsPreviousControler(tp)
+		and c:IsSetCard(SET_AMORPHAGE)
 end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return eg:IsExists(s.cfilter,1,nil,tp)

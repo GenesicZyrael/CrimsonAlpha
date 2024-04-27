@@ -37,6 +37,7 @@ s.listed_series={0xc7,0xda}
 s.listed_names={34079868}
 function s.lcheck(g,lc,sumtype,tp)
 	return g:IsExists(Card.IsSetCard,1,nil,0xc7,lc,sumtype,tp)
+		or g:IsExists(Card.IsSetCard,1,nil,0xda,lc,sumtype,tp)
 end
 function s.lkcon(e)
 	local c=e:GetHandler()
