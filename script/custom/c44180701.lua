@@ -27,9 +27,9 @@ function s.initial_effect(c)
 	e2:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_CHAINING)
-	e2:SetRange(LOCATION_HAND)
+	e2:SetRange(LOCATION_HAND+LOCATION_MZONE)
 	e2:SetCountLimit(1,id)
-	-- e2:SetCost(s.cost)
+	e2:SetCost(s.cost)
 	e2:SetCondition(s.condition)
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
@@ -46,6 +46,10 @@ function s.sumcon(e)
 end
 function s.sumlimit(e,c,sump,sumtype,sumpos,targetp,se)
 	return c:IsLocation(LOCATION_GRAVE) and not c:IsType(TYPE_PENDULUM)
+end
+function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return e:GetHandler():IsReleasable() end
+	Duel.Release(e:GetHandler(),REASON_COST)
 end
 function s.cfilter(c,tp)
 	return c:IsFacedown() 
@@ -69,10 +73,10 @@ function s.filter2(c,e,tp)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local b1=Duel.CheckPendulumZones(tp)
-	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	if chk==0 then return b1
 		and Duel.IsExistingMatchingCard(s.filter1,tp,LOCATION_DECK,0,1,nil,e,tp) end
-	Duel.SendtoExtraP(e:GetHandler(),tp,REASON_COST)
+	-- Duel.SendtoExtraP(e:GetHandler(),tp,REASON_COST)
+	local b2=Duel.GetLocationCount(tp,LOCATION_MZONE)>0
 	if b2 then Duel.SetPossibleOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,0,tp,LOCATION_DECK) end
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
