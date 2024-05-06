@@ -5,6 +5,7 @@ function s.initial_effect(c)
 								   filter=aux.FilterBoolFunction(Card.IsCode,167574890),
 								   extrafil=s.extrafil,
 								   extraop=s.extraop,
+								   location=LOCATION_HAND|LOCATION_GRAVE,
 								   extratg=s.extratg}
 	--lv change
 	local e2=Effect.CreateEffect(c)

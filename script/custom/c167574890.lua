@@ -94,12 +94,12 @@ function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,2,0,LOCATION_MZONE|LOCATION_HAND)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
-	local b1=Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE|LOCATION_HAND)>0 
-	local b2=Duel.GetFieldGroupCount(1-tp,0,LOCATION_MZONE|LOCATION_HAND)>0
+	local b1=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD|LOCATION_HAND)>0 
+	local b2=Duel.GetFieldGroupCount(1-tp,0,LOCATION_ONFIELD|LOCATION_HAND)>0
 	local b3=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_GRAVE,0,1,nil)
 	if b1 and b2 then
-		local g1=Duel.GetMatchingGroup(Card.IsMonster,tp,LOCATION_MZONE|LOCATION_HAND,0,e:GetHandler())
-		local g2=Duel.GetMatchingGroup(Card.IsMonster,1-tp,LOCATION_MZONE|LOCATION_HAND,0,nil)
+		local g1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD|LOCATION_HAND,0,e:GetHandler())
+		local g2=Duel.GetMatchingGroup(aux.TRUE,1-tp,LOCATION_ONFIELD|LOCATION_HAND,0,nil)
 		local g3=g1
 		g3:Merge(g2)
 		if #g3>1 then
