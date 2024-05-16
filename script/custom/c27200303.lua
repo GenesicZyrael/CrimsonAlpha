@@ -62,7 +62,7 @@ end
 function s.filter(c,e,tp)
 	return c:IsSetCard(SET_YANG_ZING) 
 		and not c:IsType(TYPE_TUNER) 
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
+		and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
@@ -78,7 +78,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ct=1 end
 	local sg=aux.SelectUnselectGroup(g,e,tp,1,ct,aux.dpcheck(Card.GetAttribute),1,tp,HINTMSG_SPSUMMON)
 	if #sg>0 then
-		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
+		Duel.SpecialSummon(sg,0,tp,tp,false,false,POS_FACEUP)
 		for tc in aux.Next(sg) do
 			--synchro level
 			local e2=Effect.CreateEffect(tc)
