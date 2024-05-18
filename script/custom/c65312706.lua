@@ -26,7 +26,7 @@ function s.spfilter(c,e,tp)
 		and c:IsSummonableCard()
 		and not c:IsSummonable(false,se)
 		and c:IsCanBeSpecialSummoned(e,0,tp,true,false,POS_FACEDOWN_DEFENSE)
-		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK,0,1,nil,e,tp,c:GetCode())
+		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,1,nil,e,tp,c:GetCode())
 end
 function s.cfilter(c,e,tp,code)
 	return c:IsCode(code) and c:IsAbleToHand() 
@@ -42,7 +42,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<0 then return end
 	local sptc=Duel.SelectMatchingCard(tp,s.spfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
 	local code=sptc:GetFirst():GetCode()
-	local adtc=Duel.GetFirstMatchingCard(s.cfilter,tp,LOCATION_DECK,0,nil,e,tp,code)
+	local adtc=Duel.GetFirstMatchingCard(s.cfilter,tp,LOCATION_DECK|LOCATION_GRAVE,0,nil,e,tp,code)
 	if sptc and adtc then
 		if Duel.SpecialSummon(sptc,0,tp,tp,true,false,POS_FACEDOWN_DEFENSE) and Duel.SendtoHand(adtc,nil,REASON_EFFECT) then
 			Duel.ConfirmCards(1-tp,adtc)
