@@ -57,7 +57,8 @@ end
 function s.regop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local rc=c:GetReasonCard()
-	if rc:IsSummonType(SUMMON_TYPE_TRIBUTE) and rc:IsAttribute(ATTRIBUTE_DIVINE) then
+	if rc:IsSummonType(SUMMON_TYPE_TRIBUTE) and rc:IsAttribute(ATTRIBUTE_DIVINE) 
+	and Duel.SelectYesNo(tp,aux.Stringid(id,2)) then
 		local g=rc:GetMaterial()
 		local atk=0
 		local def=0
