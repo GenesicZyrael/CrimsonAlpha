@@ -4,7 +4,8 @@ function s.initial_effect(c)
 	local e1=Ritual.AddProcGreater{handler=c,
 								   filter=aux.FilterBoolFunction(Card.IsCode,167574890),
 								   extrafil=s.extrafil,
-								   extraop=s.extraop,
+								   -- extraop=s.extraop,
+								   forcedselection=s.rcheck,
 								   location=LOCATION_HAND|LOCATION_GRAVE,
 								   extratg=s.extratg}
 	--lv change
@@ -45,7 +46,10 @@ function s.extratg(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetPossibleOperationInfo(0,CATEGORY_TOGRAVE,nil,1,tp,LOCATION_DECK)
 end
 function s.fexfilter(c)
-	return c:IsSetCard(SET_FORBIDDEN_ONE) and c:IsAbleToGrave() and c:IsType(TYPE_MONSTER)
+	return c:IsSetCard(SET_FORBIDDEN_ONE) and c:IsAbleToGrave() 
+end
+function s.rcheck(e,tp,sg,fc)
+	return sg:FilterCount(Card.IsLocation,nil,LOCATION_DECK)<=2
 end
 function s.extrafil(e,tp,mg)
 	local sg=Duel.GetMatchingGroup(s.fexfilter,tp,LOCATION_DECK,0,nil)

@@ -59,6 +59,21 @@ function s.initial_effect(c)
 	e8:SetCondition(function(e,tp) return Duel.IsTurnPlayer(tp) end)
 	e8:SetOperation(s.tgop)
 	c:RegisterEffect(e8)
+	--tribute check
+	local e9=Effect.CreateEffect(c)
+	e9:SetType(EFFECT_TYPE_SINGLE)
+	e9:SetCode(EFFECT_MATERIAL_CHECK)
+	e9:SetValue(s.valcheck)
+	c:RegisterEffect(e9)
+	--atk continuous effect
+	local e10=Effect.CreateEffect(c)
+	e10:SetType(EFFECT_TYPE_SINGLE)
+	e10:SetCode(EFFECT_SET_BASE_ATTACK)
+	e10:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
+	e10:SetRange(LOCATION_MZONE)
+	e10:SetValue(s.atkop)
+	e10:SetReset(RESET_EVENT+(RESET_EVENT|RESETS_STANDARD_DISABLE)&~RESET_TOFIELD)
+	c:RegisterEffect(e10)
 end
 s.listed_names={83240708}
 s.listed_series={SET_FORBIDDEN_ONE}
@@ -114,4 +129,22 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	elseif not b3 then
 		Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST,tp)
 	end
+end
+function s.valcheck(e,c)
+	local g=c:GetMaterial()
+	if g:IsExists(Card.IsOriginalSetCard,1,nil,SET_FORBIDDEN_ONE) then
+		c:RegisterFlagEffect(id,RESET_EVENT|RESETS_STANDARD&~(RESET_TOFIELD|RESET_LEAVE|RESET_TEMP_REMOVE),0,1)
+	end
+end
+function s.atkop(e)
+	local c=e:GetHandler()
+	local g=c:GetMaterial():Filter(Card.IsOriginalSetCard,nil,SET_FORBIDDEN_ONE)
+	local atk=0
+	for tc in aux.Next(g) do
+		local catk=tc:GetTextAttack()
+		-- local cdef=tc:GetTextDefense()
+		atk=atk+(catk>=0 and catk or 0)
+			   -- +(cdef>=0 and cdef or 0)
+	end
+	return atk
 end
