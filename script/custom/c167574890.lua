@@ -102,14 +102,14 @@ function s.tgfilter(c,tp)
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
-		return Duel.GetFieldGroupCount(tp,0,LOCATION_MZONE|LOCATION_HAND)>0 
-			and Duel.GetFieldGroupCount(1-tp,0,LOCATION_MZONE|LOCATION_HAND)>0
+		return Duel.IsExistingMatchingCard(aux.TRUE,tp,LOCATION_ONFIELD|LOCATION_HAND,0,1,e:GetHandler())
+			and Duel.IsExistingMatchingCard(aux.TRUE,1-tp,LOCATION_ONFIELD|LOCATION_HAND,0,1)
 	end
-	Duel.SetOperationInfo(0,CATEGORY_TOGRAVE,nil,2,0,LOCATION_MZONE|LOCATION_HAND)
+	Duel.SetPossibleOperationInfo(0,CATEGORY_TOGRAVE,nil,1,PLAYER_ALL,LOCATION_MZONE|LOCATION_HAND)
 end
 function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 	local b1=Duel.GetFieldGroupCount(tp,0,LOCATION_ONFIELD|LOCATION_HAND)>0 
-	local b2=Duel.GetFieldGroupCount(1-tp,0,LOCATION_ONFIELD|LOCATION_HAND)>0
+ 	local b2=Duel.GetFieldGroupCount(1-tp,0,LOCATION_ONFIELD|LOCATION_HAND)>0
 	local b3=Duel.IsExistingMatchingCard(s.tgfilter,tp,LOCATION_GRAVE,0,1,nil)
 	if b1 and b2 then
 		local g1=Duel.GetMatchingGroup(aux.TRUE,tp,LOCATION_ONFIELD|LOCATION_HAND,0,e:GetHandler())
@@ -118,13 +118,11 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 		g3:Merge(g2)
 		if #g3>1 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-			local sg=g1:Select(tp,1,1,nil)
-			Duel.HintSelection(sg)
-			Duel.SendtoGrave(sg,REASON_RULE,PLAYER_NONE,tp)
+			local g1=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD|LOCATION_HAND,0,1,1,nil)
 			Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TOGRAVE)
-			sg=g2:Select(1-tp,1,1,nil)
-			Duel.HintSelection(sg)
-			Duel.SendtoGrave(sg,REASON_RULE,PLAYER_NONE,1-tp)
+			local g2=Duel.SelectMatchingCard(1-tp,aux.TRUE,1-tp,LOCATION_ONFIELD|LOCATION_HAND,0,1,1,nil)
+			g1:Merge(g2)
+			Duel.SendtoGrave(g1,REASON_EFFECT)
 		end
 	elseif not b3 then
 		Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST,tp)
@@ -136,8 +134,13 @@ function s.valcheck(e,c)
 		c:RegisterFlagEffect(id,RESET_EVENT|RESETS_STANDARD&~(RESET_TOFIELD|RESET_LEAVE|RESET_TEMP_REMOVE),0,1)
 	end
 end
+function s.atkfilter(c)
+	return c:IsMonster() and c:IsOriginalSetCard(SET_FORBIDDEN_ONE)
+end
 function s.atkop(e)
 	local c=e:GetHandler()
+	local tp=e:GetHandlerPlayer()
+	-- local g=Duel.GetMatchingGroup(s.atkfilter,tp,LOCATION_GRAVE,0,nil)
 	local g=c:GetMaterial():Filter(Card.IsOriginalSetCard,nil,SET_FORBIDDEN_ONE)
 	local atk=0
 	for tc in aux.Next(g) do
