@@ -35,7 +35,6 @@ end
 function s.rcheck(e,tp,sg,fc)
 	local c=e:GetHandler()
 	local i=Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE,nil)
-	Debug.Message(i)
 	if Duel.GetFieldGroupCount(c:GetControler(),0,LOCATION_MZONE,nil)-Duel.GetFieldGroupCount(c:GetControler(),LOCATION_MZONE,0,nil)>=2 then
 		return sg:FilterCount(Card.IsLocation,nil,LOCATION_DECK)<=i
 	end

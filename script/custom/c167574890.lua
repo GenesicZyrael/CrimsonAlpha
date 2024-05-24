@@ -118,7 +118,7 @@ function s.tgop(e,tp,eg,ep,ev,re,r,rp)
 		g3:Merge(g2)
 		if #g3>1 then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-			local g1=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD|LOCATION_HAND,0,1,1,nil)
+			local g1=Duel.SelectMatchingCard(tp,aux.TRUE,tp,LOCATION_ONFIELD|LOCATION_HAND,0,1,1,nil,e:GetHandler())
 			Duel.Hint(HINT_SELECTMSG,1-tp,HINTMSG_TOGRAVE)
 			local g2=Duel.SelectMatchingCard(1-tp,aux.TRUE,1-tp,LOCATION_ONFIELD|LOCATION_HAND,0,1,1,nil)
 			g1:Merge(g2)
