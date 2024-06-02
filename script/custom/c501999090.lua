@@ -21,6 +21,7 @@ function s.initial_effect(c)
 	e2:SetType(EFFECT_TYPE_QUICK_O)
 	e2:SetCode(EVENT_FREE_CHAIN)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DAMAGE_STEP)
+	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCost(s.cost)
 	e2:SetCondition(s.condition)
@@ -58,7 +59,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.eftg(e,c)
-	return c:IsType(TYPE_EFFECT) and c:IsSetCard(SET_WAR_ROCK) 
+	return c:IsType(TYPE_EFFECT) and c:IsSetCard(SET_WAR_ROCK) and c:IsAttackPos()
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
@@ -69,6 +70,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return not c:IsStatus(STATUS_BATTLE_DESTROYED) 
 		and not c:IsStatus(STATUS_CHAINING) 
 		and c:GetFlagEffect(id)==0
+		and Duel.IsMainPhase()
 end
 function s.filter(c)
 	return c:IsMonster()
@@ -79,15 +81,15 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 			and chkc:IsLocation(LOCATION_MZONE) 
 			and s.filter(chkc) 
 	end
-	if chk==0 then return Duel.IsExistingTarget(s.filter,tp,0,LOCATION_MZONE,1,nil) end
+	if chk==0 then return Duel.IsExistingTarget(nil,tp,0,LOCATION_MZONE,1,nil) end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TARGET)
-	local g=Duel.SelectTarget(tp,s.filter,tp,0,LOCATION_MZONE,1,1,nil)
+	Duel.SelectTarget(tp,nil,tp,0,LOCATION_MZONE,1,1,nil)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
-	if tc and tc:IsRelateToEffect(e) then
-		-- Duel.ForceAttack(c,tc)
+	if c:IsRelateToEffect(e) and c:IsAttackPos() and tc and tc:IsRelateToEffect(e)
+		and c:CanAttack() and not c:IsImmuneToEffect(e) and not tc:IsImmuneToEffect(e) then
 		Duel.CalculateDamage(c,tc)
 		c:RegisterFlagEffect(id,RESET_PHASE+PHASE_END,0,1)
 	end
