@@ -126,7 +126,9 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetReleaseGroup(tp)
 	local sg=aux.SelectUnselectGroup(g,e,tp,3,3,s.rescon,1,tp,HINTMSG_RELEASE)
 	Duel.Release(sg,REASON_COST)
-	e:GetHandler():SetMaterial(sg)
+	if e:GetHandler():IsLocation(LOCATION_EXTRA) then
+		e:GetHandler():SetMaterial(g)
+	end
 	g:DeleteGroup()
 end
 
