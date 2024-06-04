@@ -101,7 +101,10 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=Duel.GetReleaseGroup(tp)
 	Duel.Release(g,REASON_COST)
-	e:GetHandler():SetMaterial(g)
+	if e:GetHandler():IsLocation(LOCATION_EXTRA) then
+		e:GetHandler():SetMaterial(g)
+	end
+	g:DeleteGroup()
 end
 function s.cacon(e,tp,eg,ep,ev,re,r,rp)
 	local at=Duel.GetAttacker()

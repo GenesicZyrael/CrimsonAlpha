@@ -117,7 +117,9 @@ end
 function s.spop(e,tp,eg,ep,ev,re,r,rp,c)
 	local g=e:GetLabelObject()
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
-	e:GetHandler():SetMaterial(g)
+	if e:GetHandler():IsLocation(LOCATION_EXTRA) then
+		e:GetHandler():SetMaterial(g)
+	end
 	g:DeleteGroup()
 end
 function s.gycost(e,tp,eg,ep,ev,re,r,rp,chk)
