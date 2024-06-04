@@ -164,8 +164,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 end
 function s.aclimit(e,re,tp)
 	local rc=re:GetHandler()
-	return re:IsActiveType(TYPE_MONSTER) 
-		and rc:IsType(TYPE_PENDULUM)
+	return rc:IsType(TYPE_PENDULUM)
 		and not rc:IsSetCard(SET_ZEFRA)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
