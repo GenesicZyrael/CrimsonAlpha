@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetCondition(s.effcon)
 	e1:SetTarget(s.efftg)
 	e1:SetOperation(s.effop)
-	c:RegisterEffect(e1)
+	c:RegisterEffect(e1)
 	--Change Player Target
 	-- local e2=e1:Clone()
 	-- e2:SetCondition(s.plyrcon)

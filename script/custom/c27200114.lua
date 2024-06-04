@@ -98,6 +98,15 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 				e2:SetValue(scale)
 				c:RegisterEffect(e2)
 			end
+			local e3=Effect.CreateEffect(c)
+			e3:SetDescription(aux.Stringid(id,5))
+			e3:SetType(EFFECT_TYPE_FIELD)
+			e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+			e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+			e3:SetTargetRange(1,0)
+			e3:SetTarget(function(e,c) return c:IsType(TYPE_PENDULUM) and not c:IsSetCard(SET_ZEFRA) end)
+			e3:SetReset(RESET_PHASE|PHASE_END)
+			Duel.RegisterEffect(e3,tp)
 		end
 	end
 end
@@ -153,6 +162,12 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	e:SetLabelObject(te)
 	Duel.ClearOperationInfo(0)
 end
+function s.aclimit(e,re,tp)
+	local rc=re:GetHandler()
+	return re:IsActiveType(TYPE_MONSTER) 
+		and rc:IsType(TYPE_PENDULUM)
+		and not rc:IsSetCard(SET_ZEFRA)
+end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local te=e:GetLabelObject()
 	if not te then return end
@@ -170,8 +185,18 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	end
 	e:SetLabel(0)
 	e:SetLabelObject(nil)
+	local c=e:GetHandler()
+	-- Cannot activate monster effects
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,6))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e1:SetTargetRange(1,0)
+	e1:SetValue(s.aclimit)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end
-
 function s.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if not Duel.CheckLocation(1-tp,LOCATION_PZONE,0) and not Duel.CheckLocation(1-tp,LOCATION_PZONE,1) then return end
 end
@@ -195,4 +220,14 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true) 
 		end
 	end
+	-- Cannot activate monster effects
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,6))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
+	e1:SetTargetRange(1,0)
+	e1:SetValue(s.aclimit)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
 end
