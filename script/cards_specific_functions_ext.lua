@@ -236,3 +236,74 @@ function Auxiliary.AmorphageMCost(c)
 	e1:SetOperation(AmorphOp)
 	c:RegisterEffect(e1)
 end
+
+-- SpecialSummon: Made into a global function for future cards
+if not aux.Toon then
+	aux.Toon = {}
+	Toon = aux.Toon
+end
+if not Toon then
+	Toon = aux.Toon
+end
+Toon.CreateProc = aux.FunctionWithNamedArgs(
+function(c)
+	-- Special Summon 
+	local sumproc=Effect.CreateEffect(c)
+	sumproc:SetType(EFFECT_TYPE_FIELD)
+	sumproc:SetCode(EFFECT_SPSUMMON_PROC)
+	sumproc:SetProperty(EFFECT_FLAG_UNCOPYABLE)
+	sumproc:SetRange(LOCATION_HAND)
+	sumproc:SetCondition(Toon.SummonCondition)
+	sumproc:SetTarget(Toon.SummonTarget)
+	sumproc:SetOperation(Toon.SummonOperation)
+	c:RegisterEffect(sumproc)
+	--cannot attack
+	Toon.SummoningSickness(c)
+end,"handler")
+function Toon.SummonCondition(e,c)
+	if c==nil then return true end
+	local tp=c:GetControler()
+	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_TOON_WORLD),c:GetControler(),LOCATION_ONFIELD,0,1,nil)
+end
+function Toon.SummonTarget(e,tp,eg,ep,ev,re,r,rp,c)
+	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
+	local ctr=e:GetHandler():GetTributeRequirement()
+	if ctr and ctr~=0 then
+		local g=Duel.SelectReleaseGroup(tp,aux.TRUE,ctr,ctr,false,true,true,c,nil,nil,false,nil)
+		if g then
+			g:KeepAlive()
+			e:SetLabelObject(g)
+			return true
+		end
+	elseif ctr and ctr==0 then
+		return true
+	end
+	return false
+end
+function Toon.SummonOperation(e,tp,eg,ep,ev,re,r,rp,c)
+	local g=e:GetLabelObject()
+	if not g then return end
+	Duel.Release(g,REASON_COST)
+	g:DeleteGroup()
+end
+function Toon.SummoningSickness(c)
+	local sumsick=Effect.CreateEffect(c)
+	sumsick:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
+	sumsick:SetCode(EVENT_SPSUMMON_SUCCESS)
+	sumsick:SetOperation(Toon.AttackLimit)
+	c:RegisterEffect(sumsick)
+end
+function Toon.AttackLimit(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
+	local e1=Effect.CreateEffect(c)
+	e1:SetType(EFFECT_TYPE_SINGLE)
+	e1:SetCode(EFFECT_CANNOT_ATTACK)
+	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+	e1:SetCondition(aux.NOT(aux.IsToonWorldUp))
+	c:RegisterEffect(e1)
+end
+function aux.IsToonWorldUp(e)
+	local c=e:GetHandler()
+	return Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_TOON_WORLD),c:GetControler(),LOCATION_ONFIELD,0,1,nil)
+end 
