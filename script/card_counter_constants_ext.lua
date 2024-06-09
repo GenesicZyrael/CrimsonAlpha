@@ -2,6 +2,7 @@
 
 --Commonly used cards
 CARD_CONSTELLARKNIGHT_TROIVERNUM        = 27200201
+CARD_TOON_WORLD							= 15259703
 
 --Commonly used Tokens
 
