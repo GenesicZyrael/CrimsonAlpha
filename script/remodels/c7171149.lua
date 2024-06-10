@@ -27,3 +27,9 @@ function s.atklimit(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
 	e:GetHandler():RegisterEffect(e1)
 end
+function s.aclimit(e,re,tp)
+	return re:IsHasType(EFFECT_TYPE_ACTIVATE)
+end
+function s.actcon(e)
+	return Duel.GetAttacker()==e:GetHandler()
+end
