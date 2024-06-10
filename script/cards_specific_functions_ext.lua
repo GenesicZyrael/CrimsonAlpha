@@ -263,8 +263,13 @@ end,"handler")
 function Toon.SummonCondition(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
-	return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_TOON_WORLD),c:GetControler(),LOCATION_ONFIELD,0,1,nil)
+	local ctr=e:GetHandler():GetTributeRequirement()
+	local g=Duel.GetFieldGroup(tp,LOCATION_MZONE,0)
+	if ctr==0 or (ctr>0 and g:FilterCount(Card.IsReleasable,nil)>=ctr) then 
+		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+			and Duel.IsExistingMatchingCard(aux.FaceupFilter(Card.IsCode,CARD_TOON_WORLD),tp,LOCATION_ONFIELD,0,1,nil)
+	end 
+	return false
 end
 function Toon.SummonTarget(e,tp,eg,ep,ev,re,r,rp,c)
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
