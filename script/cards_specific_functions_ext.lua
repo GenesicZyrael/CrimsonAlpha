@@ -246,20 +246,21 @@ if not Toon then
 	Toon = aux.Toon
 end
 Toon.CreateProc = aux.FunctionWithNamedArgs(
-function(c)
+function(c,location)
+	if not location then location = LOCATION_HAND end
 	-- Special Summon 
 	local sumproc=Effect.CreateEffect(c)
 	sumproc:SetType(EFFECT_TYPE_FIELD)
 	sumproc:SetCode(EFFECT_SPSUMMON_PROC)
 	sumproc:SetProperty(EFFECT_FLAG_UNCOPYABLE)
-	sumproc:SetRange(LOCATION_HAND)
+	sumproc:SetRange(location)
 	sumproc:SetCondition(Toon.SummonCondition)
 	sumproc:SetTarget(Toon.SummonTarget)
 	sumproc:SetOperation(Toon.SummonOperation)
 	c:RegisterEffect(sumproc)
 	--cannot attack
 	Toon.SummoningSickness(c)
-end,"handler")
+end,"handler","location")
 function Toon.SummonCondition(e,c)
 	if c==nil then return true end
 	local tp=c:GetControler()
