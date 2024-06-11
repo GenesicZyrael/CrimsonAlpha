@@ -237,7 +237,9 @@ function Auxiliary.AmorphageMCost(c)
 	c:RegisterEffect(e1)
 end
 
--- SpecialSummon: Made into a global function for future cards
+-- New Toon Ability: 
+	-- + Includes the new Summoning proc
+	-- + Includes Summoning Sickness in Summoning Proc
 if not aux.Toon then
 	aux.Toon = {}
 	Toon = aux.Toon
@@ -245,8 +247,10 @@ end
 if not Toon then
 	Toon = aux.Toon
 end
+
 Toon.CreateProc = aux.FunctionWithNamedArgs(
 function(c,location)
+	local id=c:GetCode()
 	if not location then location = LOCATION_HAND end
 	-- Special Summon 
 	local sumproc=Effect.CreateEffect(c)
@@ -260,6 +264,7 @@ function(c,location)
 	c:RegisterEffect(sumproc)
 	--cannot attack
 	Toon.SummoningSickness(c)
+	return sumproc
 end,"handler","location")
 function Toon.SummonCondition(e,c)
 	if c==nil then return true end
