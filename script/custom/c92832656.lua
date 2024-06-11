@@ -2,7 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Fusion.AddProcMix(c,true,true,21296502,{31733941,s.ffilter})
+	Fusion.AddProcMix(c,true,true,21296502,31733941)
 	Toon.SummoningSickness(c)
 	local e1=Effect.CreateEffect(c)
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_DAMAGE)
@@ -47,7 +47,7 @@ function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return false
 end
 function s.ffilter(c,fc,sumtype,tp)
-	return c:IsType(TYPE_TOON,fc,sumtype,tp) 
+	return c:IsRace(RACE_DRAGON,fc,sumtype,tp) 
 		and c:IsType(TYPE_EFFECT,fc,sumtype,tp)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
