@@ -3,7 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
 	--Fusion summon procedure
-	Fusion.AddProcMixN(c,true,true,aux.FilterBoolFunctionEx(Card.IsRace,RACE_DRAGON),3)
+	Fusion.AddProcMixN(c,true,true,s.ffilter,3)
 	Toon.SummoningSickness(c)
 	--Destroy up to 3 of opponent's cards
 	local e1=Effect.CreateEffect(c)
@@ -34,6 +34,14 @@ function s.initial_effect(c)
 end
 s.material_setcode=SET_TOON
 s.listed_names={CARD_TOON_WORLD}
+function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
+	return c:IsRace(RACE_DRAGON,fc,sumtype,tp) 
+		and (not sg or sg:FilterCount(aux.TRUE,c)==0 or sg:IsExists(s.fusfilter,1,c,c:GetCode(fc,sumtype,tp),fc,tp))
+end
+function s.fusfilter(c,code,fc,tp)
+	return c:IsSummonCode(fc,SUMMON_TYPE_FUSION,tp,code) or c:IsHasEffect(511002961)
+end
+
 function s.valcheck(e,c)
 	if c:GetMaterial():IsExists(Card.IsOriginalCode,1,nil,53183600) then
 		c:RegisterFlagEffect(id,RESET_EVENT|RESETS_STANDARD&~(RESET_TOFIELD|RESET_TEMP_REMOVE|RESET_LEAVE),EFFECT_FLAG_CLIENT_HINT,1,0,aux.Stringid(id,1))
