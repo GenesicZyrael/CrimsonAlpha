@@ -16,10 +16,10 @@ function s.initial_effect(c)
 end
 s.listed_names={CARD_TOON_WORLD}
 function s.filter(c,atk)
-	return c:IsFaceup() and c:IsDefenseBelow(atk-1)
+	return c:IsFaceup() and c:IsAttackBelow(atk-1)
 end
 function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local atk=e:GetHandler():GetAttack()
+	local atk=e:GetHandler():GetDefense()
 	local g=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil,atk)
 	if chk==0 then return #g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,#g,0,0)
@@ -27,7 +27,7 @@ end
 function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	if not c:IsRelateToEffect(e) or c:IsFacedown() then return end
-	local atk=c:GetAttack()
+	local atk=c:GetDefense()
 	local g=Duel.GetMatchingGroup(s.filter,tp,0,LOCATION_MZONE,nil,atk)
 	if #g>0 then
 		Duel.Destroy(g,REASON_EFFECT)
