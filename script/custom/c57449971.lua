@@ -35,7 +35,7 @@ end
 s.material_setcode=SET_TOON
 s.listed_names={CARD_TOON_WORLD}
 function s.ffilter(c,fc,sumtype,tp,sub,mg,sg)
-	return c:IsRace(RACE_DRAGON,fc,sumtype,tp) 
+	return c:IsType(TYPE_TOON,fc,sumtype,tp) 
 		and (not sg or sg:FilterCount(aux.TRUE,c)==0 or sg:IsExists(s.fusfilter,1,c,c:GetCode(fc,sumtype,tp),fc,tp))
 end
 function s.fusfilter(c,code,fc,tp)
