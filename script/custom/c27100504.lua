@@ -40,9 +40,9 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local loc=LOCATION_ONFIELD
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then loc=LOCATION_MZONE end
 	if chk==0 then 
-		return Duel.IsExistingMatchingCard(nil,tp,loc,0,1,nil)
+		return Duel.IsExistingMatchingCard(nil,tp,loc,0,1,c)
 			and Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_DECK,0,1,nil,e,tp) end
-	local g=Duel.GetMatchingGroup(nil,tp,loc,0,nil)
+	local g=Duel.GetMatchingGroup(nil,tp,loc,0,c)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
@@ -52,7 +52,7 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 	local loc=LOCATION_ONFIELD
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then loc=LOCATION_MZONE end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectMatchingCard(tp,nil,tp,loc,0,1,1,nil)
+	local g=Duel.SelectMatchingCard(tp,nil,tp,loc,0,1,1,c)
 	if g:GetCount()>0 and Duel.Destroy(g,REASON_EFFECT)~=0 then
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 		local g=Duel.SelectMatchingCard(tp,s.desfilter,tp,LOCATION_DECK,0,1,1,nil,e,tp)
