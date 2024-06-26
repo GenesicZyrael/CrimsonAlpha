@@ -149,15 +149,15 @@ function s.filter(c)
 		and c:IsAbleToDeckOrExtraAsCost()
 end
 function s.rescon(sg)
-	return #sg==1 
+	return #sg==2 
 		or (sg:IsExists(Card.IsSetCard,1,nil,SET_GUSTO) 
 			and sg:IsExists(Card.IsSetCard,1,nil,SET_RITUAL_BEAST))
 end
 function s.NegCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
 	if chk==0 then return #g>0 end
-	local tg=aux.SelectUnselectGroup(g,e,tp,1,2,s.rescon,1,tp,HINTMSG_TODECK)
-	Duel.SendtoDeck(tg,nil,1,REASON_COST)
+	local tg=aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon,1,tp,HINTMSG_TODECK)
+	Duel.SendtoDeck(tg,nil,2,REASON_COST)
 end
 function s.NegTarg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
