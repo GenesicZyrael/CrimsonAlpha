@@ -144,20 +144,14 @@ end
 function s.NegCon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCurrentChain()==0
 end
-function s.filter(c)
+function s.costfilter(c)
 	return c:IsSetCard({SET_GUSTO,SET_RITUAL_BEAST}) 
 		and c:IsAbleToDeckOrExtraAsCost()
 end
-function s.rescon(sg)
-	return #sg==2 
-		or (sg:IsExists(Card.IsSetCard,1,nil,SET_GUSTO) 
-			and sg:IsExists(Card.IsSetCard,1,nil,SET_RITUAL_BEAST))
-end
 function s.NegCost(e,tp,eg,ep,ev,re,r,rp,chk)
-	local g=Duel.GetMatchingGroup(s.filter,tp,LOCATION_GRAVE+LOCATION_REMOVED,0,nil)
-	if chk==0 then return #g>0 end
-	local tg=aux.SelectUnselectGroup(g,e,tp,2,2,s.rescon,1,tp,HINTMSG_TODECK)
-	Duel.SendtoDeck(tg,nil,2,REASON_COST)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_GRAVE|LOCATION_REMOVED,0,2,nil) end
+	local g=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_GRAVE|LOCATION_GRAVE|LOCATION_REMOVED,0,2,2,nil)
+	Duel.SendtoDeck(g,nil,SEQ_DECKSHUFFLE,REASON_COST)
 end
 function s.NegTarg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return true end
