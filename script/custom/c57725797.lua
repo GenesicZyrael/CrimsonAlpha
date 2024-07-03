@@ -1,8 +1,9 @@
 --Descend! Elemental HERO Terra Firma!
---(This card's name is always treated as "Polymerization".)
---Fusion Summon 1 "Elemental HERO Terra Firma" from your Extra Deck, using monsters from your hand, field or Deck as Fusion Materials, and if you do, it cannot be targeted or be destroyed by your opponent's card effects. Neither player can activate cards or effects in response to this card's activation. You cannot Special Summon monsters from the Extra Deck, except Fusion Monsters, during the turn you activate this card. You can only activate 1 "Descend! Elemental HERO Terra Firma!" once per turn.
 local s,id=GetID()
 function s.initial_effect(c)
+	--Change its name to "Polymerization"
+	local e0=aux.ChangeCode(c,CARD_POLYMERIZATION,LOCATION_GY+LOCATION_HAND+LOCATION_DECK)
+	c:RegisterEffect(e0)
 	--Activate
 	local e1=Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsCode,74711057),nil,s.fextra,nil,nil,s.stage2)
 	e1:SetHintTiming(0,TIMINGS_CHECK_MONSTER_E)

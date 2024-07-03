@@ -32,7 +32,8 @@ s.listed_series={0x3008}
 function s.thfilter(c,tc)
 	return c:IsType(TYPE_SPELL+TYPE_TRAP) 
 		and c:IsAbleToHand()
-		and aux.IsCodeListed(c,tc:GetCode())
+		and c:ListsCode(tc:GetCode())
+		-- and aux.IsCodeListed(c,tc:GetCode())
 end
 function s.tgfilter(c,tp)
 	return c:IsType(TYPE_MONSTER) 
