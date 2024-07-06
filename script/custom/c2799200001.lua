@@ -65,18 +65,8 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(1-tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local tc=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
-	if tc and Duel.MoveToField(tc,tp,1-tp,LOCATION_PZONE,POS_FACEDOWN,true) then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-		e1:SetDescription(aux.Stringid(id,1))
-		e1:SetTargetRange(1,0)
-		e1:SetTarget(s.splimit)
-		e1:SetReset(RESET_PHASE|PHASE_END)
-		Duel.RegisterEffect(e1,tp)
-		--lizard check
-		aux.addTempLizardCheck(e:GetHandler(),tp,s.lizfilter)
+	if tc then 
+		Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,true)
 	end
 end
 function s.splimit(e,c)
@@ -109,8 +99,18 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 	for tc in aux.Next(lg) do
 		zone=(zone|tc:GetColumnZone(LOCATION_MZONE,0,0,tp))&ZONES_MMZ
 	end
-	if c:IsRelateToEffect(e) and zone~=0 then
-		Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP,zone)
+	if c:IsRelateToEffect(e) and zone~=0 and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP,zone)~=0 then
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+		e1:SetDescription(aux.Stringid(id,1))
+		e1:SetTargetRange(1,0)
+		e1:SetTarget(s.splimit)
+		e1:SetReset(RESET_PHASE|PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+		--lizard check
+		aux.addTempLizardCheck(e:GetHandler(),tp,s.lizfilter)
 	end
 end
 
