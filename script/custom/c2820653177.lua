@@ -34,6 +34,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.spop)
 	c:RegisterEffect(e2)
 end
+s.listed_card_types={TYPE_GEMINI}
 function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local g=Duel.GetMatchingGroup(aux.FaceupFilter(Card.IsType,TYPE_GEMINI),tp,LOCATION_MZONE,0,nil)
