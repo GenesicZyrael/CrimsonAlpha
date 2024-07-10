@@ -2,13 +2,12 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	c:EnableReviveLimit()
-	Xyz.AddProcedure(c,nil,10,2,s.ovfilter,aux.Stringid(id,0),2,s.xyzop)
+	Xyz.AddProcedure(c,nil,10,2,s.ovfilter,aux.Stringid(id,0),99,s.xyzop)
 	--Unaffected by activated effects
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetType(EFFECT_TYPE_SINGLE)
 	e1:SetCode(EFFECT_IMMUNE_EFFECT)
-	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetProperty(EFFECT_FLAG_SINGLE_RANGE)
 	e1:SetRange(LOCATION_MZONE)
 	e1:SetValue(s.immval)
 	c:RegisterEffect(e1)	
@@ -21,6 +20,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id)
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER+TIMING_MAIN_END)
+	e2:SetCost(aux.dxmcostgen(1,1,nil))
 	e2:SetTarget(s.target)
 	e2:SetOperation(s.operation)
 	c:RegisterEffect(e2)	
@@ -34,27 +34,22 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)	
 end
 
-s.listed_series={SET_STEELSWARM}
+s.listed_series={SET_LSWARM}
 function s.ovfilter(c,tp,lc)
 	return c:IsSetCard(SET_LSWARM,lc,SUMMON_TYPE_XYZ,tp) 
 		and c:IsFaceup()
 		and c:IsSummonType(SUMMON_TYPE_TRIBUTE)
 end
 function s.xyzop(e,tp,chk)
-	if chk==0 then return not Duel.HasFlagEffect(tp,id) end
-	Duel.RegisterFlagEffect(tp,id,RESET_PHASE|PHASE_END,EFFECT_FLAG_OATH,1)
+	if chk==0 then return Duel.GetFlagEffect(tp,id)==0 end
+	Duel.RegisterFlagEffect(tp,id,RESET_PHASE+PHASE_END,0,1)
 	return true
 end
--- --
--- function s.matfilter(c)
-	-- return c:IsSummonType(SUMMON_TYPE_TRIBUTE)
--- end
--- function s.matcheck(e,c)
-	-- local g=c:GetMaterial()
-	-- if g:IsExists(s.matfilter,1,nil) then
-	
-	-- end
--- end
+--
+function s.immval(e,te)
+	return te:GetOwner()~=e:GetHandler() and te:IsActiveType(TYPE_MONSTER) and e:GetHandlerPlayer() ~= te:GetHandlerPlayer()
+		and te:IsActivated() and te:GetHandler():IsSummonType(SUMMON_TYPE_SPECIAL)
+end
 --
 function s.posfilter(c)
 	return c:IsFaceup() and c:IsCanTurnSet()
@@ -63,43 +58,31 @@ function s.filter(c)
 	return not c:IsPublic()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsAbleToGrave,tp,LOCATION_HAND+LOCATION_MZONE,0,1,nil)
-		and Duel.IsExistingMatchingCard(s.posfilter,tp,0,LOCATION_MZONE,1,nil) end
-	local dg=Duel.GetMatchingGroup(Card.IsAbleToGrave,tp,LOCATION_HAND+LOCATION_MZONE,0,nil)
 	local g=Duel.GetMatchingGroup(s.posfilter,tp,0,LOCATION_MZONE,nil)
-	if not Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_HAND,0,1,nil) then
-		Duel.SetOperationInfo(0,CATEGORY_HANDES,dg,1,tp,LOCATION_HAND+LOCATION_MZONE)
-	else
-		Duel.SetOperationInfo(0,CATEGORY_HANDES,nil,1,tp,LOCATION_HAND+LOCATION_MZONE)
-	end
+	if chk==0 then return #g>0 end
 	Duel.SetOperationInfo(0,CATEGORY_POSITION,g,#g,0,0)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOGRAVE)
-	local g1=Duel.SelectMatchingCard(tp,Card.IsAbleToGrave,tp,LOCATION_HAND+LOCATION_MZONE,0,1,1,nil)
-	if #g1>0 and Duel.SendtoGrave(g1,REASON_EFFECT+REASON_DISCARD)~=0 then
-		local g2=Duel.GetMatchingGroup(s.posfilter,tp,0,LOCATION_MZONE,nil)
-		if #g2>0 then
-			Duel.ChangePosition(g2,POS_FACEDOWN_DEFENSE)
-			local og=Duel.GetOperatedGroup()
-			local tc=og:GetFirst()
-			for tc in aux.Next(og) do
-				--Cannot change their battle positions
-				local e1=Effect.CreateEffect(e:GetHandler())
-				e1:SetDescription(3313)
-				e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-				tc:RegisterEffect(e1)
-			end
+	local g=Duel.GetMatchingGroup(s.posfilter,tp,0,LOCATION_MZONE,nil)
+	if #g>0 then
+		Duel.ChangePosition(g,POS_FACEDOWN_DEFENSE)
+		-- local og=Duel.GetOperatedGroup()
+		local tc=g:GetFirst()
+		for tc in aux.Next(g) do
+			--Cannot change their battle positions
+			local e1=Effect.CreateEffect(e:GetHandler())
+			e1:SetDescription(3313)
+			e1:SetProperty(EFFECT_FLAG_CLIENT_HINT)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_CANNOT_CHANGE_POSITION)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+			tc:RegisterEffect(e1)
 		end
 	end
 end
 ---
 function s.repfilter(c)
 	return c:IsAbleToRemove() and aux.SpElimFilter(c,true)
-		-- and (c:IsSetCard(SET_STEELSWARM) or c:IsSetCard(SET_INFESTATION))
 end
 function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
