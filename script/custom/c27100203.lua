@@ -70,6 +70,7 @@ end
 function s.otop(e,tp,eg,ep,ev,re,r,rp,c)
 	local mi=c:GetTributeRequirement()
 	local g=Duel.SelectMatchingCard(tp,s.rmfilter,tp,LOCATION_EXTRA,0,mi,mi,false,nil)
+	c:SetMaterial(g)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 	g:DeleteGroup()	
 end
