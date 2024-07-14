@@ -32,10 +32,10 @@ function s.initial_effect(c)
 		e3:SetOperation(s.BanOp)
 	c:RegisterEffect(e3)
 end
-s.listed_series={0x100a,0xa}
+s.listed_series={SET_STEELSWARM,SET_LSWARM}
 -- {Activation Effect: Search lswarm Monster}
 function s.ActFilter(c)
-	return c:IsSetCard(0xa) 
+	return c:IsSetCard(SET_LSWARM) 
 		and c:IsType(TYPE_MONSTER) 
 		and c:IsAbleToHand()
 end
@@ -55,7 +55,8 @@ function s.ActOp(e,tp,eg,ep,ev,re,r,rp)
 end
 -- {Graveyard Effect: Attach}
 function s.AttFilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(0xa) 
+	return c:IsFaceup() and c:IsType(TYPE_XYZ) and c:IsSetCard(SET_LSWARM) 
+		and c:GetOverlayCount()==0
 end
 function s.AttTg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and s.AttFilter(chkc) end
@@ -81,7 +82,8 @@ function s.AttOp(e,tp,eg,ep,ev,re,r,rp)
 end
 -- {Graveyard Effect: Banish}
 function s.BanFilter(c)
-	return not (c:IsHasEffect(EFFECT_UNRELEASABLE_SUM) and c:IsHasEffect(EFFECT_UNRELEASABLE_NONSUM))
+	return not (c:IsHasEffect(EFFECT_UNRELEASABLE_SUM) 
+		and c:IsHasEffect(EFFECT_UNRELEASABLE_NONSUM))
 end
 function s.BanTg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and s.BanFilter(chkc) end
@@ -96,7 +98,7 @@ function s.BanOp(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetType(EFFECT_TYPE_SINGLE)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetCode(EFFECT_ADD_SETCODE)
-			e1:SetValue(0x100a)
+			e1:SetValue(SET_STEELSWARM)
 			e1:SetReset(RESET_EVENT+0x1fe0000)
 		tc:RegisterEffect(e1)
 		local e2=Effect.CreateEffect(e:GetHandler())
