@@ -3,12 +3,11 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Activate and (you can) Special Summon from the hand and Deck
 	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,0))
-	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_ACTIVATE)
 	e1:SetCode(EVENT_FREE_CHAIN)
 	e1:SetCountLimit(1,{id,0})
 	e1:SetCost(s.cost)
+	e1:SetTarget(s.target)
 	e1:SetOperation(s.activate)
 	c:RegisterEffect(e1)
 	Duel.AddCustomActivityCounter(id,ACTIVITY_SPSUMMON,s.counterfilter)
@@ -49,11 +48,6 @@ function s.costfilter(c,e,tp)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetCustomActivityCount(id,tp,ACTIVITY_SPSUMMON)==0 end
-	if Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND,0,1,nil,e,tp) then
-		e:SetLabel(1)
-	else
-		e:SetLabel(0)
-	end
 	local e1=Effect.CreateEffect(e:GetHandler())
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_OATH)
@@ -66,32 +60,40 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	--lizard check
 	aux.addTempLizardCheck(e:GetHandler(),tp,s.lizfilter)
 end
+function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+	if chk==0 then return true end
+	if Duel.IsExistingMatchingCard(s.costfilter,tp,LOCATION_HAND,0,1,nil,e,tp)
+		and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		e:SetCategory(CATEGORY_SPECIAL_SUMMON)
+		e:SetOperation(s.activate)
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
+		local tc=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
+		if tc then Duel.SendtoGrave(tc,REASON_COST+REASON_DISCARD) else return end
+		Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,2,tp,LOCATION_HAND+LOCATION_DECK)
+	else
+		e:SetCategory(0)
+		e:SetProperty(0)
+		e:SetOperation(nil)
+	end
+end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then return end
 	if Duel.GetLocationCount(tp,LOCATION_MZONE)<2 then return end
 	local g=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK,0,nil,e,tp)
-	if e:GetLabel()==1 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DISCARD)
-		local tc=Duel.SelectMatchingCard(tp,s.costfilter,tp,LOCATION_HAND,0,1,1,nil,e,tp)
-		if tc then g:RemoveCard(tc) else return end
-		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-		if Duel.SendtoGrave(tc,REASON_COST+REASON_DISCARD)~=0 and aux.SelectUnselectGroup(g,e,tp,2,2,s.spcheck,0) then 
-			local sg=aux.SelectUnselectGroup(g,e,tp,2,2,s.spcheck,1,tp,HINTMSG_SPSUMMON)
-			if  #sg~=2 then return end
-			for tc in sg:Iter() do
-				Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK)
-				local e1=Effect.CreateEffect(e:GetHandler())
-				e1:SetType(EFFECT_TYPE_SINGLE)
-				e1:SetCode(EFFECT_DISABLE)
-				e1:SetReset(RESET_EVENT+RESETS_STANDARD)
-				tc:RegisterEffect(e1)
-				local e2=e1:Clone()
-				e2:SetCode(EFFECT_DISABLE_EFFECT)
-				tc:RegisterEffect(e2)
-			end
-			Duel.SpecialSummonComplete()
-		end
-	end 
+	local sg=aux.SelectUnselectGroup(g,e,tp,2,2,s.spcheck,1,tp,HINTMSG_SPSUMMON)
+	if  #sg~=2 then return end
+	for tc in sg:Iter() do
+		Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP_ATTACK)
+		local e1=Effect.CreateEffect(e:GetHandler())
+		e1:SetType(EFFECT_TYPE_SINGLE)
+		e1:SetCode(EFFECT_DISABLE)
+		e1:SetReset(RESET_EVENT+RESETS_STANDARD)
+		tc:RegisterEffect(e1)
+		local e2=e1:Clone()
+		e2:SetCode(EFFECT_DISABLE_EFFECT)
+		tc:RegisterEffect(e2)
+	end
+	Duel.SpecialSummonComplete()
 	e:SetLabel(0)
 end
 function s.limfilter(c,tp)
