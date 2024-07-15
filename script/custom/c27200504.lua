@@ -146,6 +146,7 @@ function s.NegCon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.costfilter(c)
 	return c:IsSetCard({SET_GUSTO,SET_RITUAL_BEAST}) 
+		and c:IsPublic()
 		and c:IsAbleToDeckOrExtraAsCost()
 end
 function s.NegCost(e,tp,eg,ep,ev,re,r,rp,chk)
