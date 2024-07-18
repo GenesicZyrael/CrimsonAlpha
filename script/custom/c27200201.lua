@@ -12,17 +12,27 @@ function s.initial_effect(c)
 	e1:SetCondition(s.econ)
 	e1:SetValue(s.efilter)
 	c:RegisterEffect(e1)
-	--Make detaching cost optional for "Constellar" and "tellarknight" Xyz Monsters
+	-- --Make detaching cost optional for "Constellar" and "tellarknight" Xyz Monsters
+	-- local e2=Effect.CreateEffect(c)
+	-- e2:SetDescription(aux.Stringid(id,1))
+	-- e2:SetType(EFFECT_TYPE_FIELD)
+	-- e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
+	-- e2:SetCode(CARD_CONSTELLARKNIGHT_TROIVERNUM)
+	-- e2:SetRange(LOCATION_MZONE)
+	-- e2:SetCountLimit(1,{id,1})
+	-- e2:SetTargetRange(1,0)
+	-- e2:SetValue(s.repval)
+	-- e2:SetOperation(s.repop)
+	-- c:RegisterEffect(e2)
+	--Detach cost reduction
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,1))
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	e2:SetCode(CARD_CONSTELLARKNIGHT_TROIVERNUM)
+	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_OVERLAY_REMOVE_REPLACE)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,{id,1})
-	e2:SetTargetRange(1,0)
-	e2:SetValue(s.repval)
-	e2:SetOperation(s.repop)
+	e2:SetCountLimit(1,id)
+	e2:SetCondition(s.rcon)
+	-- e2:SetOperation(s.rop)
 	c:RegisterEffect(e2)
 	--destroy
 	local e3=Effect.CreateEffect(c)
@@ -52,6 +62,28 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)	
 end
 s.listed_series={SET_TELLARKNIGHT,SET_CONSTELLAR}
+function s.rfilter(c,tp,oc)
+	return c:IsFaceup() and c:IsType(TYPE_XYZ)
+		and c:CheckRemoveOverlayCard(tp,oc,REASON_COST)
+end
+function s.rtg(e,c)
+	return e:GetHandler():GetLinkedGroup():IsContains(c) 
+		and c:IsSetCard(SET_TELLARKNIGHT) or c:IsSetCard(SET_CONSTELLAR)
+end
+function s.rcon(e,tp,eg,ep,ev,re,r,rp)
+    local rc=re:GetHandler()
+    local ct=(ev&0xffff)-1
+    return (r&REASON_COST)~=0 and re:IsActivated()
+        and re:IsActiveType(TYPE_XYZ) and ep==e:GetOwnerPlayer()
+        and rc:CheckRemoveOverlayCard(tp,ct,REASON_COST)
+        and ( rc:IsSetCard(SET_TELLARKNIGHT) or rc:IsSetCard(SET_CONSTELLAR) )
+end
+function s.rop(e,tp,eg,ep,ev,re,r,rp)
+    -- local ct=(ev&0xffff)-1
+    -- local rc=re:GetHandler()
+	Duel.Hint(HINT_CARD,0,id)
+    -- return ct
+end
 function s.econ(e)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
