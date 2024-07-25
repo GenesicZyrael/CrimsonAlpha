@@ -26,6 +26,7 @@ function s.initial_effect(c)
 	e2:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e2:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
 	e2:SetCountLimit(1,{id,1})
+	e2:SetCost(s.descost)
 	e2:SetCondition(s.descon)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
@@ -82,6 +83,12 @@ function s.syop(e,tp,eg,ep,ev,re,r,rp)
 		end
 	end
 end
+function s.descost(e,tp,eg,ep,ev,re,r,rp,chk)
+	local c=e:GetHandler()
+	if chk==0 then return Duel.CheckPendulumZones(tp) end
+	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
+	Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
+end
 function s.descon(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.CheckPendulumZones(tp)
 		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
@@ -99,8 +106,7 @@ function s.destg(e,tp,eg,ep,ev,re,r,rp,chk)
 		return Duel.IsExistingMatchingCard(nil,tp,loc,0,1,nil)
 			and Duel.IsExistingMatchingCard(s.desfilter,tp,LOCATION_DECK,0,1,nil,e,tp) 
 	end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
-	Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)		
+		
 	local g=Duel.GetMatchingGroup(nil,tp,loc,0,nil)
 	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
