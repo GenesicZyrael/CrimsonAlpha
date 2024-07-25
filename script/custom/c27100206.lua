@@ -25,30 +25,10 @@ function s.initial_effect(c)
 	e1:SetOperation(s.operation)
 	c:RegisterEffect(e1)
 end
-s.listed_series={SET_DRAGUNITY}
--- {Pendulum Summon Restriction: lswarm}
+s.listed_series={SET_LSWARM}
 function s.splimit(e,c,sump,sumtype,sumpos,targetp)
 	if c:IsSetCard(SET_LSWARM) then return false end
 	return bit.band(sumtype,SUMMON_TYPE_PENDULUM)==SUMMON_TYPE_PENDULUM
-end
-
-function s.synlimit(e,c)
-	if not c then return false end
-	return not c:IsSetCard(SET_DRAGUNITY)
-end
-function s.slevel(e,c)
-	return 3<<16|e:GetHandler():GetLevel()
-end
-function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and c:IsCanBeSpecialSummoned(e,0,tp,false,false) end
-	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,0)
-end
-function s.spop(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)
 end
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetFieldGroupCount(tp,LOCATION_MZONE,0)==0
