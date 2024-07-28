@@ -21,7 +21,7 @@ function s.cond(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.filter(c,e,tp)
 	return (c:IsCode(27980138) or c:IsSetCard(SET_GUSTO)) 
-		and c:IsType(TYPE_SPELL+TYPE_TRAP)
+		and c:IsSpellTrap()
 		and (c:IsSSetable() and c:IsAbleToHand())
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
