@@ -32,7 +32,7 @@ function s.initial_effect(c)
 	e2:SetRange(LOCATION_MZONE)
 	e2:SetCountLimit(1,id)
 	e2:SetCondition(s.rcon)
-	-- e2:SetOperation(s.rop)
+	e2:SetOperation(s.rop)
 	c:RegisterEffect(e2)
 	--destroy
 	local e3=Effect.CreateEffect(c)
@@ -82,7 +82,7 @@ function s.rop(e,tp,eg,ep,ev,re,r,rp)
     -- local ct=(ev&0xffff)-1
     -- local rc=re:GetHandler()
 	Duel.Hint(HINT_CARD,0,id)
-    -- return ct
+    return true
 end
 function s.econ(e)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
