@@ -28,8 +28,8 @@ if not CustomArchetype then
 	}
 	Card.IsSetShinobird=MakeCheck({SET_SHINOBIRD},CustomArchetype.Shinobird)
 
-	CustomArchetype.Metalmorph={68540059,504700111,12503902,504700017,511006005}
-	Card.IsSetMetalmorph=MakeCheck({SET_METALMORPH},CustomArchetype.Metalmorph)
+	-- CustomArchetype.Metalmorph={68540059,504700111,12503902,504700017,511006005}
+	-- Card.IsSetMetalmorph=MakeCheck({SET_METALMORPH},CustomArchetype.Metalmorph)
 
 	CustomArchetype.Guardragon={11012154,35183584,6990577,43411769,79905468,84899094,95793022,
 	59537380,13143275,86148577,40003819,87571563,50186558,47393199,11908584}
