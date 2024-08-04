@@ -28,9 +28,9 @@ function s.initial_effect(c)
 	e3:SetCode(EVENT_REMOVE)
 	c:RegisterEffect(e3)
 end
-s.listed_series={0xc7,0xda}
+s.listed_series={SET_DRACOSLAYER,SET_DRACOVERLORD}
 function s.tgfilter(c,e)
-	return c:IsSetCard(0xc7) or c:IsSetCard(0xda)
+	return c:IsSetCard(SET_DRACOSLAYER) or c:IsSetCard(SET_DRACOVERLORD) and c:IsFaceup()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return false end
@@ -73,7 +73,7 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 		and c:IsPreviousLocation(LOCATION_ONFIELD)
 end
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0xda) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and ((c:IsLocation(LOCATION_DECK) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
+	return c:IsSetCard(SET_DRACOVERLORD) and c:IsCanBeSpecialSummoned(e,0,tp,true,false) and ((c:IsLocation(LOCATION_DECK) and Duel.GetLocationCount(tp,LOCATION_MZONE)>0)
 		or (c:IsLocation(LOCATION_EXTRA) and Duel.GetLocationCountFromEx(tp,tp,nil,c)>0))
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
