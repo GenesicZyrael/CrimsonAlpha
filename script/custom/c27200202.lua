@@ -47,7 +47,7 @@ function s.spop(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_XYZ_LEVEL)
 			e1:SetProperty(EFFECT_FLAG_IGNORE_IMMUNE)
 			e1:SetValue(g:GetFirst():GetRank())
-			e1:SetReset(RESET_PHASE|PHASE_END)
+			e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END)
 			c:RegisterEffect(e1)
 			--negate effects
 			local r1=Effect.CreateEffect(c)
