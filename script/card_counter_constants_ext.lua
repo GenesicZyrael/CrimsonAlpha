@@ -5,14 +5,14 @@ CARD_CONSTELLARKNIGHT_TROIVERNUM        = 27200201
 CARD_TOON_WORLD							= 15259703
 
 --Commonly used Tokens
-TOKEN_BLAZE						= 0x271
-TOKEN_HONEY						= 0x272
 
 --Specific Special Summons
 
 --Commonly used Rush Cards
 
 --Commonly used counters
+COUNTER_BLAZE						= 0x271
+COUNTER_HONEY						= 0x272
 
 --Archetypes
 SET_EXODIA_NECROSS 				= 0x10de
