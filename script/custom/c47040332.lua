@@ -2,7 +2,7 @@
 --When this card is activated: Add 1 "Volcanic" monster from your Deck to your hand. Each time your opponent takes damage from a card effect, place 1 Blaze Counter on this card. "Volcanic" monsters you control gain 100 ATK for each Blaze Counter on this card. During the Main Phase: You can send this card to the GY; Special Summon 1 "Volcanic" monster from your hand or Deck, whose Level is less than or equal to the number of Blaze Counters this card had on the field, ignoring its Summoning Conditions. You can only activate 1 "Omega Blaze Accelerator" once per turn.
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableCounterPermit(TOKEN_BLAZE)
+	c:EnableCounterPermit(COUNTER_BLAZE)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -44,7 +44,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 s.listed_series={SET_VOLCANIC}
-s.counter_list={TOKEN_BLAZE}
+s.counter_list={COUNTER_BLAZE}
 function s.filter(c)
 	return c:IsSetCard(SET_VOLCANIC) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
@@ -66,16 +66,16 @@ function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and (r&REASON_EFFECT)~=0
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(TOKEN_BLAZE,1)
+	e:GetHandler():AddCounter(COUNTER_BLAZE,1)
 end
 --
 function s.atkval(e,c)
-	return e:GetHandler():GetCounter(TOKEN_BLAZE)*100
+	return e:GetHandler():GetCounter(COUNTER_BLAZE)*100
 end
 --
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
-	local ct=e:GetHandler():GetCounter(TOKEN_BLAZE)
+	local ct=e:GetHandler():GetCounter(COUNTER_BLAZE)
 	e:SetLabel(ct)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
@@ -85,7 +85,7 @@ function s.spfilter(c,ct,e,tp)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e:GetHandler():GetCounter(TOKEN_BLAZE),e,tp) end
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e:GetHandler():GetCounter(COUNTER_BLAZE),e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
