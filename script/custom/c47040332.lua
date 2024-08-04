@@ -2,7 +2,7 @@
 --When this card is activated: Add 1 "Volcanic" monster from your Deck to your hand. Each time your opponent takes damage from a card effect, place 1 Blaze Counter on this card. "Volcanic" monsters you control gain 100 ATK for each Blaze Counter on this card. During the Main Phase: You can send this card to the GY; Special Summon 1 "Volcanic" monster from your hand or Deck, whose Level is less than or equal to the number of Blaze Counters this card had on the field, ignoring its Summoning Conditions. You can only activate 1 "Omega Blaze Accelerator" once per turn.
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableCounterPermit(0x32)
+	c:EnableCounterPermit(TOKEN_BLAZE)
 	--Activate
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -28,7 +28,7 @@ function s.initial_effect(c)
 	e3:SetCode(EFFECT_UPDATE_ATTACK)
 	e3:SetRange(LOCATION_FZONE)
 	e3:SetTargetRange(LOCATION_MZONE,0)
-	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,0x32))
+	e3:SetTarget(aux.TargetBoolFunction(Card.IsSetCard,SET_VOLCANIC))
 	e3:SetValue(s.atkval)
 	c:RegisterEffect(e3)
 	--special summon
@@ -43,10 +43,10 @@ function s.initial_effect(c)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
 end
-s.listed_series={0x32}
-s.counter_list={0x32}
+s.listed_series={SET_VOLCANIC}
+s.counter_list={TOKEN_BLAZE}
 function s.filter(c)
-	return c:IsSetCard(0x32) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(SET_VOLCANIC) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
@@ -66,26 +66,26 @@ function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp and (r&REASON_EFFECT)~=0
 end
 function s.ctop(e,tp,eg,ep,ev,re,r,rp)
-	e:GetHandler():AddCounter(0x32,1)
+	e:GetHandler():AddCounter(TOKEN_BLAZE,1)
 end
 --
 function s.atkval(e,c)
-	return e:GetHandler():GetCounter(0x32)*100
+	return e:GetHandler():GetCounter(TOKEN_BLAZE)*100
 end
 --
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToGraveAsCost() end
-	local ct=e:GetHandler():GetCounter(0x32)
+	local ct=e:GetHandler():GetCounter(TOKEN_BLAZE)
 	e:SetLabel(ct)
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function s.spfilter(c,ct,e,tp)
-	return c:IsLevelBelow(ct) and c:IsSetCard(0x32)
+	return c:IsLevelBelow(ct) and c:IsSetCard(SET_VOLCANIC)
 		and c:IsType(TYPE_EFFECT) and c:IsCanBeSpecialSummoned(e,0,tp,true,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0
-		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e:GetHandler():GetCounter(0x32),e,tp) end
+		and Duel.IsExistingMatchingCard(s.spfilter,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE,0,1,nil,e:GetHandler():GetCounter(TOKEN_BLAZE),e,tp) end
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_HAND+LOCATION_DECK+LOCATION_GRAVE)
 end
 function s.spop(e,tp,eg,ep,ev,re,r,rp)
