@@ -5,6 +5,8 @@ CARD_CONSTELLARKNIGHT_TROIVERNUM        = 27200201
 CARD_TOON_WORLD							= 15259703
 
 --Commonly used Tokens
+TOKEN_BLAZE						= 0x2701
+TOKEN_HONEY						= 0x2702
 
 --Specific Special Summons
 
