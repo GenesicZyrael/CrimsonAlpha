@@ -45,14 +45,16 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.xyzfilter(c,tp)
-	return c:IsSetCard(0x53) and c:IsType(TYPE_XYZ) and c:GetMaterial():IsExists(s.mtfilter,1,nil) and c:GetControler()==tp
+	return c:IsSetCard(0x53) and c:IsType(TYPE_XYZ) 
+		and c:GetMaterial():IsExists(s.mtfilter,1,nil) and c:GetControler()==tp
 end
 function s.setcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return e:GetHandler():IsAbleToRemoveAsCost() end
 	Duel.Remove(e:GetHandler(),POS_FACEUP,REASON_COST)
 end
 function s.setcon(e,tp,eg,ep,ev,re,r,rp)
-	return eg:IsExists(s.xyzfilter,1,nil,tp)
+	return eg:IsExists(s.xyzfilter,1,nil,tp) 
+		and #eg==1 and eg:GetFirst():IsSummonType(SUMMON_TYPE_XYZ) and eg:GetFirst():IsControler(tp)
 end
 function s.setfilter(c)
 	return c:IsSetCard(0x53) and c:IsType(TYPE_SPELL+TYPE_TRAP) and c:IsSSetable() and not c:IsCode(id)
