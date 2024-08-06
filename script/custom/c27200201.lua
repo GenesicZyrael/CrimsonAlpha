@@ -12,41 +12,25 @@ function s.initial_effect(c)
 	e1:SetCondition(s.econ)
 	e1:SetValue(s.efilter)
 	c:RegisterEffect(e1)
-	-- --Make detaching cost optional for "Constellar" and "tellarknight" Xyz Monsters
-	-- local e2=Effect.CreateEffect(c)
-	-- e2:SetDescription(aux.Stringid(id,1))
-	-- e2:SetType(EFFECT_TYPE_FIELD)
-	-- e2:SetProperty(EFFECT_FLAG_PLAYER_TARGET)
-	-- e2:SetCode(CARD_CONSTELLARKNIGHT_TROIVERNUM)
-	-- e2:SetRange(LOCATION_MZONE)
-	-- e2:SetCountLimit(1,{id,1})
-	-- e2:SetTargetRange(1,0)
-	-- e2:SetValue(s.repval)
-	-- e2:SetOperation(s.repop)
-	-- c:RegisterEffect(e2)
-	--Detach cost reduction
+	--Linked immunity
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_OVERLAY_REMOVE_REPLACE)
+	e2:SetType(EFFECT_TYPE_FIELD)
+	e2:SetCode(EFFECT_IMMUNE_EFFECT)
 	e2:SetRange(LOCATION_MZONE)
-	e2:SetCountLimit(1,id)
-	e2:SetCondition(s.rcon)
-	e2:SetOperation(s.rop)
+	e2:SetTargetRange(LOCATION_MZONE,LOCATION_MZONE)
+	e2:SetTarget(s.indtg)
+	e2:SetValue(s.efilter)
 	c:RegisterEffect(e2)
-	--destroy
+	--Detach cost reduction
 	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,3))
-	e3:SetCategory(CATEGORY_DESTROY)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_CHAINING)
+	e3:SetDescription(aux.Stringid(id,0))
+	e3:SetType(EFFECT_TYPE_CONTINUOUS+EFFECT_TYPE_FIELD)
+	e3:SetCode(EFFECT_OVERLAY_REMOVE_REPLACE)
 	e3:SetRange(LOCATION_MZONE)
-	e3:SetCountLimit(1,{id,2})
-	e3:SetCondition(s.descon)
-	e3:SetTarget(s.destg)
-	e3:SetOperation(s.desop)
-	c:RegisterEffect(e3)	
+	e3:SetCountLimit(1,id)
+	e3:SetCondition(s.rcon)
+	e3:SetOperation(s.rop)
+	c:RegisterEffect(e3)
 	--spsummon
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,4))
@@ -62,6 +46,16 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)	
 end
 s.listed_series={SET_TELLARKNIGHT,SET_CONSTELLAR}
+function s.econ(e)
+	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
+		and	not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
+end
+function s.efilter(e,te)
+	return te:IsActiveType(TYPE_XYZ) 
+end
+function s.indtg(e,c)
+	return c:IsFaceup() and e:GetHandler():GetLinkedGroup():IsContains(c)
+end
 function s.rfilter(c,tp,oc)
 	return c:IsFaceup() and c:IsType(TYPE_XYZ)
 		and c:CheckRemoveOverlayCard(tp,oc,REASON_COST)
@@ -79,46 +73,8 @@ function s.rcon(e,tp,eg,ep,ev,re,r,rp)
         and ( rc:IsSetCard(SET_TELLARKNIGHT) or rc:IsSetCard(SET_CONSTELLAR) )
 end
 function s.rop(e,tp,eg,ep,ev,re,r,rp)
-    -- local ct=(ev&0xffff)-1
-    -- local rc=re:GetHandler()
 	Duel.Hint(HINT_CARD,0,id)
     return true
-end
-function s.econ(e)
-	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-end
-function s.efilter(e,te)
-	return te:IsActiveType(TYPE_XYZ)
-end
-
-function s.repval(base,e,tp,eg,ep,ev,re,r,rp,chk,extracon)
-	local c=e:GetHandler()
-	return c:IsMonster() 
-		and ( c:IsSetCard(SET_TELLARKNIGHT) 
-		   or c:IsSetCard(SET_CONSTELLAR) )
-end
-function s.repop(base,e,tp,eg,ep,ev,re,r,rp)
-	Duel.Hint(HINT_CARD,0,id)
-end
-
-function s.descon(e,tp,eg,ep,ev,re,r,rp)
-	return ep~=tp
-end
-function s.tgfilter(c,rc)
-	return c~=rc
-end
-function s.destg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	if chkc then return chkc:IsOnField() and s.filter(chkc,re:GetHandler()) and chkc~=e:GetHandler() end
-	if chk==0 then return Duel.IsExistingTarget(s.tgfilter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,e:GetHandler(),re:GetHandler()) end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_DESTROY)
-	local g=Duel.SelectTarget(tp,s.filter,tp,LOCATION_ONFIELD,LOCATION_ONFIELD,1,1,e:GetHandler(),re:GetHandler())
-	Duel.SetOperationInfo(0,CATEGORY_DESTROY,g,1,0,0)
-end
-function s.desop(e,tp,eg,ep,ev,re,r,rp)
-	local tc=Duel.GetFirstTarget()
-	if tc:IsRelateToEffect(e) then
-		Duel.Destroy(tc,REASON_EFFECT)
-	end
 end
 
 function s.cfilter(c,g,tp,zone)
