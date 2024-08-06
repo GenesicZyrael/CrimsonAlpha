@@ -109,7 +109,7 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 					sg:Merge(sg_temp)
 				end
 			else
-				Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,LOCATION_DECK)
+				Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
 				sg:Merge(sg_temp)
 			end
 		end
