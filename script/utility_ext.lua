@@ -94,7 +94,7 @@ local function SummonLimit(limit,code,location)
 	end
 end
 -- Sets the max number of copies the card(code) can have on the field
-function Card.SetLimitCardOnField(c,limit,location,code,self,opp)
+function Card.SetLimitOnField(c,limit,code,location,self,opp)
 	if not limit then limit=1 end
 	if not location then location=LOCATION_ONFIELD end	
 	if not code then code=c:GetCode() end
