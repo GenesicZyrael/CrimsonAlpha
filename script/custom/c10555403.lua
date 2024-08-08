@@ -1,7 +1,7 @@
 --Slifer's Disciple
 local s,id=GetID()
 function s.initial_effect(c)
-	c:SetLimitCardOnField(3,LOCATION_MZONE,74875003)
+	c:SetLimitOnField(3,id)
 	--Change its name to "Ra's Disciple"
 	local e0=aux.ChangeCode(c,74875003,LOCATION_MZONE+LOCATION_HAND+LOCATION_DECK)
 	c:RegisterEffect(e0)
