@@ -1,10 +1,14 @@
 --Zefratorah Metaltron
 local s,id=GetID()
 function s.initial_effect(c)
-	c:EnableUnsummonable()
+	local rparams= {handler=c,
+					lvtype=RITPROC_EQUAL,
+					desc=aux.Stringid(84388461,1),
+					forcedselection=function(e,tp,g,sc)return g:IsContains(e:GetHandler()) end}
+	local rittg,ritop=Ritual.Target(rparams),Ritual.Operation(rparams)
 	--pendulum summon
 	Pendulum.AddProcedure(c)
-	--Destroy 1 card to Special Summon from Deck
+	--Special Summon from Deck
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_DESTROY+CATEGORY_SPECIAL_SUMMON)
@@ -14,39 +18,43 @@ function s.initial_effect(c)
 	e1:SetTarget(s.destg)
 	e1:SetOperation(s.desop)
 	c:RegisterEffect(e1)
-	--special summon
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD)
-	e2:SetCode(EFFECT_SPSUMMON_PROC)
-	e2:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
-	e2:SetRange(LOCATION_EXTRA+LOCATION_HAND)
-	e2:SetCondition(s.spcon)
-	e2:SetOperation(s.spop)
-	c:RegisterEffect(e2)
-	--Apply the effect of 1 "Zefra" monster
-	local e3=Effect.CreateEffect(c)
-	e3:SetDescription(aux.Stringid(id,3))
-	e3:SetType(EFFECT_TYPE_QUICK_O)
-	e3:SetCode(EVENT_FREE_CHAIN)
-	e3:SetRange(LOCATION_MZONE)
-	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e3:SetCountLimit(1)
-	e3:SetTarget(s.target)
-	e3:SetOperation(s.operation)
-	c:RegisterEffect(e3)
-	--to deck
+	--Requires 3 Tributes to Normal Summon/Set
+	local e2=aux.AddNormalSummonProcedure(c,true,false,3,3)
+	local e3=aux.AddNormalSetProcedure(c)
+	--Special Summon itself from Extra Deck
 	local e4=Effect.CreateEffect(c)
-	e4:SetDescription(aux.Stringid(id,4))
-	e4:SetCategory(CATEGORY_TODECK)
-	e4:SetType(EFFECT_TYPE_QUICK_O)
-	e4:SetRange(LOCATION_MZONE)
-	e4:SetCode(EVENT_FREE_CHAIN)
-	e4:SetProperty(EFFECT_FLAG_CARD_TARGET)
-	e4:SetHintTiming(0,TIMING_END_PHASE)
-	e4:SetCountLimit(1,{id,2})
-	e4:SetTarget(s.tdtg)
-	e4:SetOperation(s.tdop)
+	e4:SetType(EFFECT_TYPE_FIELD)
+	e4:SetCode(EFFECT_SPSUMMON_PROC)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e4:SetRange(LOCATION_EXTRA)
+	e4:SetCondition(s.spcon)
+	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
+	--Copy a "Zefra" monster's On Pendulum Summon Effect
+	local e5=Effect.CreateEffect(c)
+	e5:SetDescription(aux.Stringid(id,1))
+	e5:SetType(EFFECT_TYPE_QUICK_O)
+	e5:SetCode(EVENT_FREE_CHAIN)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e5:SetCountLimit(1)
+	e5:SetTarget(s.target(rittg,ritop))
+	e5:SetOperation(s.operation(rittg,ritop))
+	c:RegisterEffect(e5)
+	--to deck
+	local e6=Effect.CreateEffect(c)
+	e6:SetDescription(aux.Stringid(id,2))
+	e6:SetCategory(CATEGORY_TODECK)
+	e6:SetType(EFFECT_TYPE_QUICK_O)
+	e6:SetRange(LOCATION_MZONE)
+	e6:SetCode(EVENT_FREE_CHAIN)
+	e6:SetProperty(EFFECT_FLAG_CARD_TARGET)
+	e6:SetHintTiming(0,TIMING_END_PHASE)
+	e6:SetCountLimit(1,{id,2})
+	-- e6:SetCondition(s.tdcon)
+	e6:SetTarget(s.tdtg)
+	e6:SetOperation(s.tdop)
+	c:RegisterEffect(e6)
 end
 s.listed_series={SET_ZEFRA}
 function s.spfilter(c,e,tp)
@@ -80,8 +88,8 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 		or (tc and Duel.SpecialSummon(tc,SUMMON_TYPE_PENDULUM,tp,tp,false,false,POS_FACEUP)>0)	then
 			if c:IsLocation(LOCATION_PZONE) then
 				op=Duel.SelectEffect(tp,
-					{aux.TRUE,aux.Stringid(id,1)},
-					{aux.TRUE,aux.Stringid(id,2)})
+					{aux.TRUE,aux.Stringid(id,3)},
+					{aux.TRUE,aux.Stringid(id,4)})
 				if op==1 then
 					scale=1
 				elseif op==2 then
@@ -98,21 +106,15 @@ function s.desop(e,tp,eg,ep,ev,re,r,rp)
 				e2:SetValue(scale)
 				c:RegisterEffect(e2)
 			end
-			local e3=Effect.CreateEffect(c)
-			e3:SetDescription(aux.Stringid(id,5))
-			e3:SetType(EFFECT_TYPE_FIELD)
-			e3:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-			e3:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-			e3:SetTargetRange(1,0)
-			e3:SetTarget(function(e,c) return c:IsType(TYPE_PENDULUM) and not c:IsSetCard(SET_ZEFRA) end)
-			e3:SetReset(RESET_PHASE|PHASE_END)
-			Duel.RegisterEffect(e3,tp)
+			-- Deprecated
+			--s.splimit(e)
 		end
 	end
 end
 
 function s.rescon(sg,e,tp,mg)
-	return aux.ChkfMMZ(1)(sg,e,tp,mg) and sg:IsExists(Card.IsSetCard,3,nil,SET_ZEFRA)
+	return aux.ChkfMMZ(1)(sg,e,tp,mg) 
+		and sg:IsExists(Card.IsSetCard,3,nil,SET_ZEFRA)
 end
 function s.spcon(e,c)
 	if c==nil then return true end
@@ -137,6 +139,7 @@ function s.filter(c,tp)
 		and c:IsHasEffect(id)) then
 		return false
 	end
+	if c:IsCode(84388461) and c:IsHasEffect(id) then return true end
 	local eff=c:GetCardEffect(id)
 	local te=eff:GetLabelObject()
 	local con=te:GetCondition()
@@ -146,61 +149,66 @@ function s.filter(c,tp)
 	end
 	return false
 end
-function s.target(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
-	local c=e:GetHandler()
-	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE|LOCATION_DECK,0,1,nil,tp) end
-	local sc=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_GRAVE|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
-	Duel.SendtoExtraP(sc,tp,REASON_EFFECT)
-	sc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1)
-	e:SetLabelObject(sc:GetCardEffect(id):GetLabelObject())
-	local te=e:GetLabelObject()
-	local tg=te and te:GetTarget() or nil
-	if chkc then return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc) end
-	e:SetLabel(te:GetLabel())
-	e:SetLabelObject(te:GetLabelObject())
-	e:SetProperty(te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and EFFECT_FLAG_CARD_TARGET or 0)
-	if tg then
-		tg(e,tp,eg,ep,ev,re,r,rp,1)
+function s.target(rittg,ritop)
+	return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
+		local c=e:GetHandler()
+		if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE|LOCATION_DECK,0,1,nil,tp) end
+		local sc=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_GRAVE|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+		Duel.SendtoExtraP(sc,tp,REASON_EFFECT)
+		sc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1)
+		e:SetLabelObject(sc:GetCardEffect(id):GetLabelObject())
+		if sc:IsCode(84388461) and rittg(e,tp,eg,ep,ev,re,r,rp,0) then 
+			e:SetLabel(sc:GetCode())
+			return rittg(e,tp,eg,ep,ev,re,r,rp,0)
+		end
+		local te=e:GetLabelObject()
+		local tg=te and te:GetTarget() or nil
+		if chkc then return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc) end
+		e:SetLabel(te:GetLabel())
+		e:SetLabelObject(te:GetLabelObject())
+		e:SetProperty(te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and EFFECT_FLAG_CARD_TARGET or 0)
+		if tg then
+			tg(e,tp,eg,ep,ev,re,r,rp,1)
+		end
+		e:SetLabelObject(te)
+		Duel.ClearOperationInfo(0)
 	end
-	e:SetLabelObject(te)
-	Duel.ClearOperationInfo(0)
 end
-function s.aclimit(e,re,tp)
-	local rc=re:GetHandler()
-	return rc:IsType(TYPE_PENDULUM)
-		and not rc:IsSetCard(SET_ZEFRA)
-end
-function s.operation(e,tp,eg,ep,ev,re,r,rp)
-	local te=e:GetLabelObject()
-	if not te then return end
-	local sc=te:GetHandler()
-	if sc:GetFlagEffect(id)==0 then
+function s.operation(rittg,ritop)
+	return function(e,tp,eg,ep,ev,re,r,rp)
+		local c=e:GetHandler()
+		local tc=e:GetLabel()
+		-- Zefrasaber work-around
+		if tc==84388461 and rittg(e,tp,eg,ep,ev,re,r,rp,0) then 
+			ritop(e,tp,eg,ep,ev,re,r,rp)	
+			return 
+		end
+		local te=e:GetLabelObject()
+		if not te then return end
+		local sc=te:GetHandler()
+		if sc:GetFlagEffect(id)==0 then
+			e:SetLabel(0)
+			e:SetLabelObject(nil)
+			return
+		end
+		e:SetLabel(te:GetLabel())
+		e:SetLabelObject(te:GetLabelObject())
+		local op=te:GetOperation()
+		if op then
+			op(e,tp,Group.CreateGroup(),PLAYER_NONE,0,e,REASON_EFFECT,PLAYER_NONE)
+		end
 		e:SetLabel(0)
 		e:SetLabelObject(nil)
-		return
+		-- Deprecated
+		-- s.actlimit(e,tp,eg,ep,ev,re,r,rp)
 	end
-	e:SetLabel(te:GetLabel())
-	e:SetLabelObject(te:GetLabelObject())
-	local op=te:GetOperation()
-	if op then
-		op(e,tp,Group.CreateGroup(),PLAYER_NONE,0,e,REASON_EFFECT,PLAYER_NONE)
-	end
-	e:SetLabel(0)
-	e:SetLabelObject(nil)
-	local c=e:GetHandler()
-	-- Cannot activate monster effects
-	local e1=Effect.CreateEffect(c)
-	e1:SetDescription(aux.Stringid(id,6))
-	e1:SetType(EFFECT_TYPE_FIELD)
-	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
-	e1:SetTargetRange(1,0)
-	e1:SetValue(s.aclimit)
-	e1:SetReset(RESET_PHASE|PHASE_END)
-	Duel.RegisterEffect(e1,tp)
 end
 function s.tdcost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if not Duel.CheckLocation(1-tp,LOCATION_PZONE,0) and not Duel.CheckLocation(1-tp,LOCATION_PZONE,1) then return end
+	if not Duel.CheckLocation(1-tp,LOCATION_PZONE,0) 
+		and not Duel.CheckLocation(1-tp,LOCATION_PZONE,1) then return end
+end
+function s.tdcon(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsTurnPlayer(1-tp)
 end
 function s.tdfilter(c)
 	return c:IsAbleToDeck()
@@ -222,6 +230,12 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 			Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true) 
 		end
 	end
+	-- Deprecated
+	-- s.actlimit(e,tp,eg,ep,ev,re,r,rp)
+end
+
+function s.actlimit(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	-- Cannot activate monster effects
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,6))
@@ -229,7 +243,29 @@ function s.tdop(e,tp,eg,ep,ev,re,r,rp)
 	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
 	e1:SetCode(EFFECT_CANNOT_ACTIVATE)
 	e1:SetTargetRange(1,0)
-	e1:SetValue(s.aclimit)
+	e1:SetValue(s.acval)
 	e1:SetReset(RESET_PHASE|PHASE_END)
 	Duel.RegisterEffect(e1,tp)
+end 
+function s.acval(e,re,tp)
+	local rc=re:GetHandler()
+	return rc:IsType(TYPE_PENDULUM)
+		and not rc:IsSetCard(SET_ZEFRA)
+end
+function s.splimit(e)
+	local c=e:GetHandler()
+	local tp=e:GetHandlerPlayer()
+	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,5))
+	e1:SetType(EFFECT_TYPE_FIELD)
+	e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+	e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e1:SetTargetRange(1,0)
+	e1:SetTarget(s.splimfilter)
+	e1:SetReset(RESET_PHASE|PHASE_END)
+	Duel.RegisterEffect(e1,tp)
+end
+function s.splimfilter(e,c) 
+	return c:IsType(TYPE_PENDULUM) 
+		and not c:IsSetCard(SET_ZEFRA) 
 end
