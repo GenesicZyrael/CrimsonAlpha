@@ -2,7 +2,13 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	--Change its name to "Polymerization"
-	local e0=aux.ChangeCode(c,CARD_POLYMERIZATION,LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK)
+	-- local e0=aux.ChangeCode(c,CARD_POLYMERIZATION,LOCATION_GRAVE+LOCATION_HAND+LOCATION_DECK)
+	-- c:RegisterEffect(e0)
+	local e0=Effect.CreateEffect(c)
+	e0:SetType(EFFECT_TYPE_SINGLE)
+	e0:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_UNCOPYABLE)
+	e0:SetCode(EFFECT_ADD_CODE)
+	e0:SetValue(CARD_POLYMERIZATION)
 	c:RegisterEffect(e0)
 	--Activate
 	local e1=Fusion.CreateSummonEff(c,aux.FilterBoolFunction(Card.IsCode,74711057),nil,s.fextra,nil,nil,s.stage2)
