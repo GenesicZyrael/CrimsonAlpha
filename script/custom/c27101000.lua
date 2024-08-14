@@ -1,6 +1,6 @@
 -- Gem-Knight Sefiranite
 local s,id=GetID()
-local params = {nil,aux.OR(aux.FilterBoolFunction(Card.IsSetCard,SET_GEM_KNIGHT),aux.FilterBoolFunction(Card.IsSetCard,SET_ZEFRA))}
+local params = {nil,nil,function(e,tp,mg) return nil,s.fcheck end}
 function s.initial_effect(c)
 	--pendulum summon
 	Pendulum.AddProcedure(c)
@@ -41,6 +41,9 @@ function s.initial_effect(c)
 end
 s.listed_series={SET_GEM_KNIGHT}
 -- {Pendulum Effect: Use cards in Pendulum Zones or 1 Gem-Knight and Zefra from Deck as Fusion Materials}
+function s.fcheck(tp,sg,fc)
+	return sg:IsExists(Card.IsSetCard,1,nil,SET_GEM_KNIGHT)
+end
 function s.mtfilter(c)
 	return c:HasFlagEffect(id)
 end
