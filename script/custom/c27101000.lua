@@ -40,7 +40,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e6)
 end
 s.listed_series={SET_GEM_KNIGHT}
--- {Pendulum Effect: Use cards in Pendulum Zones or 1 Gem-Knight and Zefra from Deck as Fusion Materials}
 function s.fcheck(tp,sg,fc)
 	return sg:IsExists(Card.IsSetCard,1,nil,SET_GEM_KNIGHT)
 end
