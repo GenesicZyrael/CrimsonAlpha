@@ -19,17 +19,9 @@ function s.initial_effect(c)
 		e3:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_O)
 		e3:SetCode(EVENT_TO_GRAVE)
 		e3:SetProperty(EFFECT_FLAG_CARD_TARGET+EFFECT_FLAG_DELAY)
-		-- e3:SetCondition(s.thcon)
 		e3:SetTarget(s.thtg)
 		e3:SetOperation(s.thop)
 	c:RegisterEffect(e3)
-	-- --add tuner
-	-- local e4=Effect.CreateEffect(c)
-		-- e4:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_CONTINUOUS)
-		-- e4:SetCode(EVENT_BE_MATERIAL)
-		-- e4:SetCondition(s.tncon)
-		-- e4:SetOperation(s.tnop)
-	-- c:RegisterEffect(e4)
 end
 s.listed_series={SET_GEM,SET_GEM_KNIGHT}
 -- {Pendulum Summon Restriction: Gem-}
@@ -43,7 +35,6 @@ function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.thfilter(c)
 	return c:IsSetCard(SET_GEM_KNIGHT) 
-		and c:IsMonster()
 		and c:IsAbleToHand()
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

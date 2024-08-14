@@ -3,6 +3,7 @@ local s,id=GetID()
 function s.initial_effect(c)
 	--Special summon itself from hand
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,0))
 	e1:SetCategory(CATEGORY_SPECIAL_SUMMON)
 	e1:SetType(EFFECT_TYPE_IGNITION)
 	e1:SetRange(LOCATION_HAND)
@@ -13,7 +14,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Add 1 "Fusion" card that mentions "Gem-Knight" from deck
 	local e2=Effect.CreateEffect(c)
-	e2:SetDescription(aux.Stringid(id,0))
+	e2:SetDescription(aux.Stringid(id,1))
 	e2:SetCategory(CATEGORY_TOHAND+CATEGORY_SEARCH|CATEGORY_SPECIAL_SUMMON)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_MZONE)
@@ -56,15 +57,16 @@ function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
+	local tp=c:GetOwner()
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
 	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_DECK,0,1,1,nil)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		if Duel.IsExistingMatchingCard(s.exfil,tp,LOCATION_EXTRA,0,1,nil,tp) then
+		if Duel.IsExistingMatchingCard(s.exfil,tp,LOCATION_EXTRA,0,1,nil,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 			Duel.BreakEffect()
 			local tc=Duel.SelectMatchingCard(tp,s.exfil,tp,LOCATION_EXTRA,0,1,1,nil,tp):GetFirst()
-			if tc and Duel.IsPlayerCanSpecialSummonMonster(tp,27101030,0,0x4011,0,0,tc:GetLevel(),tc:GetRace(),tc:GetAttribute()) then 
+			if tc and Duel.IsPlayerCanSpecialSummonMonster(tp,27101030,0,0,0,0,tc:GetLevel(),tc:GetRace(),tc:GetAttribute()) then 
 				Duel.ConfirmCards(1-tp,tc) 
 				local token=Duel.CreateToken(tp,27101030)
 				local r1=Effect.CreateEffect(e:GetHandler())
