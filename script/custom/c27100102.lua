@@ -51,7 +51,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 			e1:SetCode(EFFECT_EXTRA_ATTACK)
 			e1:SetProperty(EFFECT_FLAG_CANNOT_DISABLE)
 			e1:SetReset(RESET_EVENT|RESETS_STANDARD|RESET_PHASE|PHASE_END)
-			e1:SetValue(ct)
+			e1:SetValue(ct-1)
 			c:RegisterEffect(e1)
 		elseif ct==0 then
 			local e2=Effect.CreateEffect(c)
