@@ -27,7 +27,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	-- Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
 end
 function s.filter(c)
-	return c:IsType(TYPE_RITUAL)--Spell() or (c:IsSetCard(SET_GISHKI) and c:IsMonster())
+	return c:IsRitualSpell() or (c:IsSetCard(SET_GISHKI) and c:IsMonster())
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
