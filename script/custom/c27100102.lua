@@ -13,7 +13,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,0))
-	e2:SetCategory(CATEGORY_HANDES)
+	e2:SetCategory(CATEGORY_HANDES+CATEGORY_REMOVE)
 	e2:SetType(EFFECT_TYPE_SINGLE+EFFECT_TYPE_TRIGGER_F)
 	e2:SetCode(EVENT_BATTLE_DAMAGE)
 	e2:SetCondition(s.rmcon)
@@ -23,11 +23,11 @@ function s.initial_effect(c)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Duel.GetDecktopGroup(tp,3)
-	if chk==0 then return #g>0 and g:GetFirst():IsAbleToHand() end
-	-- Duel.SetPossibleOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_DECK)
+	if chk==0 then return #g>0 end
 end
 function s.filter(c)
-	return c:IsRitualSpell() or (c:IsSetCard(SET_GISHKI) and c:IsMonster())
+	-- return c:IsRitualSpell() or (c:IsSetCard(SET_GISHKI) and c:IsMonster())
+	return c:IsType(TYPE_RITUAL)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
@@ -36,10 +36,10 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 	Duel.ConfirmDecktop(tp,3)
 	local g=Duel.GetDecktopGroup(tp,3)
 	local sg=g:Filter(s.filter,nil)
+	Duel.ShuffleDeck(tp)
 	if #sg>0 then
 		Duel.BreakEffect()
 		Duel.ConfirmCards(tp,sg)
-		Duel.ShuffleHand(tp)
 		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVE)
 		local rg=tg:Select(tp,1,#sg,nil)
 		local ct=#rg
