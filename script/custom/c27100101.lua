@@ -25,6 +25,7 @@ function s.filter(c,e,tp)
 		and not c:IsImmuneToEffect(e)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
+    if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then return end
 	local c=e:GetHandler()
 	local location=LOCATION_HAND|LOCATION_GRAVE
 	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
@@ -47,6 +48,7 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,c,1,tp,location)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
+    if Duel.GetLocationCount(tp,LOCATION_MZONE)>0 then return end
 	local location=LOCATION_HAND|LOCATION_GRAVE
 	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
 	local ec=Duel.IsExistingMatchingCard(s.spfilter,tp,location,0,1,nil,e,tp)
