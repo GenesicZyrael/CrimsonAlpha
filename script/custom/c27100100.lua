@@ -1,7 +1,7 @@
 --Gishki Nekrovance
 local s,id=GetID()
 function s.initial_effect(c)
-	local rparams={handler=c,lvtype=RITPROC_GREATER,desc=aux.Stringid(id,1),forcedselection=s.forcedselection}
+	local rparams={handler=c,lvtype=RITPROC_GREATER,desc=aux.Stringid(id,1),forcedselection=s.forcedselection,extrafil=s.extrafil,extratg=s.extratg}
 	local rittg,ritop=Ritual.Target(rparams),Ritual.Operation(rparams)
 	--pendulum summon
 	Pendulum.AddProcedure(c)
@@ -35,6 +35,18 @@ s.listed_series={SET_GISHKI}
 function s.forcedselection(e,tp,sg,sc)
 	return sg:IsExists(Card.IsSetCard,1,nil,SET_GISHKI)
 end
+function s.mfilter(c)
+	return not Duel.IsPlayerAffectedByEffect(c:GetControler(),69832741) and c:HasLevel() and c:IsSetCard(SET_GISHKI) 
+		and c:IsMonster() and c:IsAbleToRemove()
+end
+function s.extrafil(e,tp,eg,ep,ev,re,r,rp,chk)
+	return Duel.GetMatchingGroup(s.mfilter,tp,LOCATION_GRAVE,0,nil)
+end
+function s.extratg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return true end
+	Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,1,tp,LOCATION_GRAVE)
+end
+
 -- {Pendulum Effect: Use Deck and Extra Deck for Materials}
 function s.mtfil(c)
 	return c:IsSetCard(SET_GISHKI) 
