@@ -38,15 +38,15 @@ function s.initial_effect(c)
 	e5:SetValue(s.effectfilter)
 	c:RegisterEffect(e5)
 end
-s.listed_series={0x2a}
+s.listed_series={SET_NATURIA}
 function s.thcon(e,tp,eg,ep,ev,re,r,rp)
 	return ep~=tp
 end
 function s.filter1(c)
-	return c:IsSetCard(0x2a) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return c:IsSetCard(SET_NATURIA) and c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
 end
 function s.filter2(c)
-	return (c:IsSetCard(0x2a) or c:ListsArchetype(0x2a)) and not c:IsType(TYPE_MONSTER) and c:IsAbleToHand()
+	return (c:IsSetCard(SET_NATURIA) or c:ListsArchetype(SET_NATURIA)) and c:IsSpellTrap() and c:IsAbleToHand() and not c:IsCode(id)
 end
 function s.thtg1(e,tp,eg,ep,ev,re,r,rp,chk)
 	if re:IsHasType(EFFECT_TYPE_ACTIVATE) then 
@@ -81,7 +81,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.tgfilter(c)
-	return c:IsSetCard(0x2a) and c:IsType(TYPE_SYNCHRO) 
+	return c:IsSetCard(SET_NATURIA) and c:IsType(TYPE_SYNCHRO) 
 end
 function s.tgcon(e)
 	return Duel.IsExistingMatchingCard(s.tgfilter,e:GetHandlerPlayer(),LOCATION_MZONE,0,1,nil) 
@@ -90,5 +90,5 @@ function s.effectfilter(e,ct)
 	local p=e:GetHandlerPlayer()
 	local te,tp,loc=Duel.GetChainInfo(ct,CHAININFO_TRIGGERING_EFFECT,CHAININFO_TRIGGERING_PLAYER,CHAININFO_TRIGGERING_LOCATION)
 	local tc=te:GetHandler()
-	return p==tp and (loc&LOCATION_ONFIELD)~=0 and tc:IsSetCard(0x2a) and tc~=e:GetHandler()
+	return p==tp and (loc&LOCATION_ONFIELD)~=0 and tc:IsSetCard(SET_NATURIA) and tc~=e:GetHandler()
 end
