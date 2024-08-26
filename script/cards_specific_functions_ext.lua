@@ -326,14 +326,16 @@ end
 function Auxiliary.NaturiaWendiCost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
 		return e:GetHandler():IsReleasable() 
-			and Duel.GetFlagEffect(tp,CARD_NATURIA_WENDI)==0
+		and Duel.GetFlagEffect(tp,CARD_NATURIA_WENDI)==0
 	end
 	Duel.Release(e:GetHandler(),REASON_COST)
 	Auxiliary.NaturiaWendiOpe(e,tp,eg,ep,ev,re,r,rp)
+	return true
 end
 function Auxiliary.NaturiaWendiOpe(e,tp,eg,ep,ev,re,r,rp)
 	local tp=e:GetHandler():GetOwner()
 	Duel.Hint(HINT_CARD,0,CARD_NATURIA_WENDI)
 	Duel.RegisterFlagEffect(tp,CARD_NATURIA_WENDI,RESET_PHASE+PHASE_END,0,1)
+	Debug.Message('2',Duel.RegisterFlagEffect(tp,CARD_NATURIA_WENDI,RESET_PHASE+PHASE_END,0,1))
 	return true
 end
