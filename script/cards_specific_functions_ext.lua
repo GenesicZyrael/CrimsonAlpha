@@ -336,6 +336,5 @@ function Auxiliary.NaturiaWendiOpe(e,tp,eg,ep,ev,re,r,rp)
 	local tp=e:GetHandler():GetOwner()
 	Duel.Hint(HINT_CARD,0,CARD_NATURIA_WENDI)
 	Duel.RegisterFlagEffect(tp,CARD_NATURIA_WENDI,RESET_PHASE+PHASE_END,0,1)
-	Debug.Message('2',Duel.RegisterFlagEffect(tp,CARD_NATURIA_WENDI,RESET_PHASE+PHASE_END,0,1))
 	return true
 end
