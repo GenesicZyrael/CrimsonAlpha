@@ -28,7 +28,8 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	local e3=e2:Clone()
 	e3:SetRange(LOCATION_HAND)
-	e3:SetCost(aux.CostWithReplace(aux.AND(s.atcost,aux.NaturiaWendiCost),EFFECT_CAMELLIA_WENDI))
+	e3:SetCondition(aux.NaturiaWendiCheck)
+	e3:SetCost(aux.CostWithReplace(aux.AND(aux.NaturiaWendiCost,s.atcost),EFFECT_CAMELLIA_WENDI))
 	c:RegisterEffect(e3)
 end
 s.listed_series={SET_NATURIA}

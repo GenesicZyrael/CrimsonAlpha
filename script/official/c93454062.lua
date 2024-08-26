@@ -22,7 +22,7 @@ function s.initial_effect(c)
 	local e3=e1:Clone()
 	e3:SetRange(LOCATION_HAND)
 	e3:SetCondition(aux.NaturiaWendiCheck)
-	e3:SetCost(aux.CostWithReplace(aux.AND(s.spcost,aux.NaturiaWendiCost),EFFECT_CAMELLIA_WENDI))
+	e3:SetCost(aux.CostWithReplace(aux.NaturiaWendiCost,EFFECT_CAMELLIA_WENDI))
 	c:RegisterEffect(e3)	
 	-- Special Summon this card
 	local e2=Effect.CreateEffect(c)

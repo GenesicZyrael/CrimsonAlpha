@@ -34,7 +34,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e3)
 	local e6=e3:Clone()
 	e6:SetCode(EFFECT_CAMELLIA_WENDI)
-	-- e6:SetCondition(aux.AND(s.repcon,aux.NaturiaWendiCheck))
 	e6:SetOperation(aux.AND(aux.NaturiaWendiOpe,s.repop))
 	c:RegisterEffect(e6)
 	-- Special Summon 1 "Naturia" monster

@@ -20,7 +20,7 @@ function s.initial_effect(c)
 	local e2=e1:Clone()
 	e2:SetRange(LOCATION_HAND)
 	e2:SetCondition(aux.AND(s.discon,aux.NaturiaWendiCheck))
-	e2:SetCost(aux.CostWithReplace(aux.AND(s.discost,aux.NaturiaWendiCost),EFFECT_CAMELLIA_WENDI))
+	e2:SetCost(aux.CostWithReplace(aux.AND(aux.NaturiaWendiCost,s.discost),EFFECT_CAMELLIA_WENDI))
 	c:RegisterEffect(e2)
 end
 s.listed_series={SET_NATURIA}
