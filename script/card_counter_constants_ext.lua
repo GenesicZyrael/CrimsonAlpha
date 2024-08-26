@@ -3,6 +3,7 @@
 --Commonly used cards
 CARD_CONSTELLARKNIGHT_TROIVERNUM        = 27200201
 CARD_TOON_WORLD							= 15259703
+CARD_NATURIA_WENDI						= 27100604
 
 --Commonly used Tokens
 
