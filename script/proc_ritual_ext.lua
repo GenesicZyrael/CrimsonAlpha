@@ -271,7 +271,7 @@ function(filter,_type,lv,extrafil,extraop,matfilter,stage2,location,forcedselect
 							fc=fg:Select(tp,1,1,nil)
 						end
 						if Duel.IsExistingMatchingCard(Ritual.Filter,tp,location,0,1,e:GetHandler(),filter,_type,e,tp,mg,mg2,func,specificmatfilter,lv,requirementfunc,sumpos) then 
-							if Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_LOCATION,1)) then
+							if Duel.SelectYesNo(tp,aux.Stringid(fc:GetCode(),1)) then
 								Duel.Hint(HINT_CARD,0,fc:GetCode())
 								Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
 								location = Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
