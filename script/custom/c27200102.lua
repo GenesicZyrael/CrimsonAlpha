@@ -51,8 +51,8 @@ end
 function s.econ(e)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
-function s.efilter(e,te)
-	return te:IsActiveType(TYPE_RITUAL) and te:IsActiveType(TYPE_MONSTER) and te~=te
+function s.efilter(e,te,rc)
+	return te:IsActiveType(TYPE_RITUAL) and te:IsActiveType(TYPE_MONSTER) and rc~=te:GetHandler()
 end
 function s.indtg(e,c)
 	return c:IsFaceup() and e:GetHandler():GetLinkedGroup():IsContains(c)
