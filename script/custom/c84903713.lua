@@ -72,7 +72,7 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if tc then
 		Duel.SendtoHand(tc,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,tc)
-		if Duel.SelectYesNo(tp,aux.Stringid(id,0)) and Duel.CheckPendulumZones(tp) then 
+		if Duel.CheckPendulumZones(tp) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then 
 			Duel.MoveToField(e:GetHandler(),tp,tp,LOCATION_PZONE,POS_FACEUP,true)
 		end
 	end
