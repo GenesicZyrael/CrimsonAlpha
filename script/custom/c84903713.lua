@@ -26,7 +26,7 @@ function s.initial_effect(c)
 	local e3=e2:Clone()
 	e3:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e3)
-	--Special Summon 1 "Dark Magician" from your hand, Deck, or GY
+	--Special Summon 1 "Melodious Maestra" monster from your Deck or Extra Deck
 	local e4=Effect.CreateEffect(c)
 	e4:SetDescription(aux.Stringid(id,2))
 	e4:SetCategory(CATEGORY_SPECIAL_SUMMON)
@@ -40,7 +40,6 @@ function s.initial_effect(c)
 	c:RegisterEffect(e4)
 end
 s.listed_series={SET_MELODIOUS,SET_MELODIOUS_MAESTRA,SET_MAGICIAN}
-
 function s.penfilter(c)
 	return c:IsSetCard(SET_MELODIOUS) and c:IsType(TYPE_PENDULUM) and not c:IsCode(id) and not c:IsForbidden()
 end
