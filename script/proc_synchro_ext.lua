@@ -770,6 +770,7 @@ function Synchro.AddMajesticProcedure(c,f1,cbt1,f2,cbt2,f3,cbt3,...)
 	e1:SetOperation(Synchro.Operation)
 	e1:SetValue(SUMMON_TYPE_SYNCHRO)
 	c:RegisterEffect(e1)
+	return e1
 end
 function Synchro.MajesticCheck1(c,g,sg,card1,card2,card3,lv,sc,tp,pg,f1,cbt1,f2,cbt2,f3,cbt3,...)
 	local res
@@ -1025,6 +1026,7 @@ function Synchro.AddDarkSynchroProcedure(c,f1,f2,plv,nlv,...)
 	e1:SetOperation(Synchro.Operation)
 	e1:SetValue(SUMMON_TYPE_SYNCHRO)
 	c:RegisterEffect(e1)
+	return e1
 end
 function Synchro.DarkCheck1(c,g,sg,card1,card2,plv,nlv,sc,tp,pg,f1,f2,...)
 	local res
