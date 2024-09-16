@@ -1,0 +1,98 @@
+{
+	"repos": [
+		{
+			"url": "https://github.com/ProjectIgnis/DeltaPuppetOfStrings",
+			"repo_name": "Project Ignis updates",
+			"repo_path": "./repositories/delta-puppet",
+			"has_core": true,
+			"core_path": "bin",
+			"data_path": "",
+			"script_path": "script",
+			"should_update": true,
+			"should_read": true
+		},
+		{
+			"url": "https://github.com/GenesicZyrael/CrimsonAlpha",
+			"repo_name": "Crimson Alpha updates",
+			"repo_path": "./repositories/crimson-alpha",
+			"has_core": true,
+			"core_path": "bin",
+			"data_path": "",
+			"script_path": "script",
+			"should_update": true,
+			"should_read": true
+		},
+        {
+			"url": "https://github.com/Secuter/SecuterYGOCustomCards",
+			"repo_name": "Secuter Custom Cards",
+			"repo_path": "./repositories/secuter-custom-cards",
+			"data_path": "expansions",
+			"script_path": "script",
+			"should_update": true,
+			"should_read": true
+        },
+        {
+			"url": "https://github.com/KSB-Custom/KSB-CCG",
+			"repo_name": "KSB Custom Cards",
+			"repo_path": "./repositories/KSBCustoms",
+			"should_update": true,
+			"should_read": true
+        },
+		{
+			"url": "https://github.com/Satellaa/Custom-Cards",
+			"repo_name": "Satellaa",
+			"repo_path": "./repositories/Satella",
+			"has_core": true,
+			"core_path": "bin",
+			"data_path": "",
+			"script_path": "script",
+			"should_update": true,
+			"should_read": true
+    	},
+		{
+			"url": "https://github.com/Palafx/EP-Customs",
+			"repo_name": "EP Customs",
+			"repo_path": "./repositories/EP-Customs",
+			"should_update": true,
+			"should_read": true
+		},
+		{
+			"url": "https://github.com/Palafx/fieldpics",
+			"repo_name": "EP Custom Field pictures",
+			"repo_path": "./pics/field",
+			"should_update": true,
+			"should_read": true
+	 	},
+		{
+			"url": "https://github.com/Drakayshin/Cartas-Custom---DrakayStudios",
+			"repo_name": "Cartas Custom - DrakayStudios",
+			"repo_path": "./repositories/Drakayshin",
+			"data_path": "expansions",
+			"script_path": "script",
+			"should_update": true,
+			"should_read": true
+		},
+		{
+			"url": "https://github.com/Eronan/Eronan-Customs.git",
+			"repo_name": "Ere Customs",
+			"repo_path": "./repositories/ere-customs",
+			"has_core": true,
+			"core_path": "bin",
+			"data_path": "",
+			"script_path": "script",
+			"should_update": true,
+			"should_read": true
+		}
+		{
+			"url": "https://github.com/NeoYuno/Alphadios-cards",
+			"repo_name": "Alphadios updates",
+			"repo_path": "./repositories/Alphadios",
+			"has_core": true,
+			"core_path": "bin",
+			"data_path": "",
+			"script_path": "script",
+			"should_update": true,
+			"should_read": true
+		}
+	]
+}
