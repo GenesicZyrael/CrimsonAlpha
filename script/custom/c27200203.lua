@@ -44,7 +44,7 @@ function s.selfspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_REMOVEXYZ)
 	local sc=g:Select(tp,1,1,nil):GetFirst()
 	Duel.SendtoGrave(sc,REASON_COST)
-	if sc:IsLocation(LOCATION_GRAVE) and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+	if sc:IsLocation(LOCATION_GRAVE) and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 	and sc:IsSetCard(SET_TELLARKNIGHT) then
 		e:SetLabel(1)
 	else
@@ -66,9 +66,9 @@ function s.selfspop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local sc=Duel.GetOperatedGroup():GetFirst()
 	if c:IsRelateToEffect(e) and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP)>0 
-	and e:GetLabel()==1 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
+	and e:GetLabel()==1 and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP_DEFENSE)
 	and Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
-		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP)
+		Duel.SpecialSummon(sc,0,tp,tp,false,false,POS_FACEUP_DEFENSE)
 	end
 end
 function s.thfilter(c)
