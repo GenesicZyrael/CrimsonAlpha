@@ -31,11 +31,12 @@ Download CrimsonAlpha repo
 	]
 }
 
-Then, in the root folder, 
+Then, in the EDOPro root folder, 
 > Create the file and name it "init.lua"
 > add the text below
 
 	-- initialize script extensions
 	Duel.LoadScript ("crimson_alpha.lua")
-	
+
+Alternatively, you can just copy-paste the init.lua here to your EDOPro root folder
 
