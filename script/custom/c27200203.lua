@@ -33,7 +33,7 @@ function s.initial_effect(c)
 	e4:SetCode(EVENT_SPSUMMON_SUCCESS)
 	c:RegisterEffect(e4)
 end
-s.listed_series={SET_TELLARKNIGHT,SET_CONSTELLAR,SET_STELLARNOVA}
+s.listed_series={SET_TELLARKNIGHT,SET_STELLARNOVA}
 function s.selfspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local g=Group.CreateGroup()
 	local mg=Duel.GetMatchingGroup(s.cfilter,tp,LOCATION_MZONE,0,nil)
@@ -45,7 +45,7 @@ function s.selfspcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local sc=g:Select(tp,1,1,nil):GetFirst()
 	Duel.SendtoGrave(sc,REASON_COST)
 	if sc:IsLocation(LOCATION_GRAVE) and sc:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_FACEUP)
-	and (sc:IsSetCard(SET_TELLARKNIGHT) or sc:IsSetCard(SET_CONSTELLAR)) then
+	and sc:IsSetCard(SET_TELLARKNIGHT) then
 		e:SetLabel(1)
 	else
 		e:SetLabel(0)
@@ -76,8 +76,8 @@ function s.thfilter(c)
 end
 function s.exfilter(c)
 	return c:IsXyzSummonable()
-		and (c:IsSetCard(SET_TELLARKNIGHT) 
-		  or c:IsSetCard(SET_CONSTELLAR))
+		and c:IsAttribute(ATTRIBUTE_LIGHT)
+		 or c:IsAttribute(ATTRIBUTE_DARK)
 end
 function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then 
