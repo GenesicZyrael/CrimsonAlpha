@@ -25,7 +25,7 @@ function s.initial_effect(c)
 	e2:SetOperation(s.negop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={SET_EXODO,SET_EXODIA,SET_FORBIDDEN_ONE,SET_EXODIA_NECROSS}
+s.listed_series={SET_EXODD,SET_EXODIA,SET_FORBIDDEN_ONE,SET_EXODIA_NECROSS}
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return Duel.GetCustomActivityCount(id,tp,ACTIVITY_CHAIN)==0
 end
@@ -34,7 +34,7 @@ function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 end
 function s.thfilter1(c)
-	return (c:IsSetCard(SET_EXODO) or c:IsSetCard(SET_EXODIA))
+	return (c:IsSetCard(SET_EXODD) or c:IsSetCard(SET_EXODIA))
 		and c:IsSpellTrap()
 		and c:IsAbleToHand()
 		and not c:IsCode(id)
