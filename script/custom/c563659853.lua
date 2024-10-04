@@ -38,7 +38,7 @@ function s.initial_effect(c)
 	e4:SetOperation(s.spop)
 	c:RegisterEffect(e4)
 end
-s.listed_series={SET_CYBER_DRAGON,SET_CYBER}
+s.listed_series={SET_CYBER_DRAGON,SET_CYBER,SET_CYBERNETIC}
 function s.cfilter(c)
 	return c:IsMonster() and c:IsSetCard(SET_CYBER_DRAGON)
 		and c:IsReleasable()
@@ -52,7 +52,9 @@ function s.tgcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.Sendto(tc,LOCATION_GRAVE,REASON_RELEASE+REASON_COST)
 end
 function s.filter(c)
-	return c:IsSetCard(SET_CYBER) and c:IsSpellTrap() and c:IsAbleToHand()
+	return c:IsSetCard(SET_CYBER) or c:IsSetCard(SET_CYBERNETIC) 
+		and c:IsSpellTrap() 
+		and c:IsAbleToHand()
 end
 function s.tgtg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_DECK,0,1,nil) end
