@@ -115,6 +115,7 @@ function s.sccon(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	return c:IsPreviousPosition(POS_FACEUP) 
 		and c:IsPreviousLocation(LOCATION_ONFIELD)
+		and c:IsSummonType(SUMMON_TYPE_SYNCHRO)
 end
 function s.sctg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then
