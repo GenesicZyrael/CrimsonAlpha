@@ -16,7 +16,6 @@ function s.initial_effect(c)
 	local e2=Effect.CreateEffect(c)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
-	e2:SetCountLimit(1,{id,1})
 	e2:SetCost(aux.bfgcost)
 	e2:SetOperation(s.ritgy)
 	c:RegisterEffect(e2)
@@ -24,7 +23,6 @@ end
 s.listed_series={SET_GISHKI,SET_AQUAMIRROR}
 function s.thfilter(c)
 	return c:IsSetCard(SET_GISHKI) or c:IsSetCard(SET_AQUAMIRROR) and c:IsAbleToHand()
-		and not c:IsCode(id)
 end
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local a=Duel.GetFieldGroupCount(tp,LOCATION_DECK,0)>4 
@@ -59,7 +57,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 		Duel.DisableShuffleCheck()
 		if g:IsExists(s.thfilter,1,nil) then
 			Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_ATOHAND)
-			local tc=g:FilterSelect(tp,aux.NOT(Card.IsCode),1,1,false,nil,id)
+			local tc=g:FilterSelect(tp,s.thfilter,1,1,false,nil)
 			if tc then
 				Duel.SendtoHand(tc,nil,REASON_EFFECT)
 				Duel.ConfirmCards(1-tp,tc)
