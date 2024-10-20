@@ -6,6 +6,7 @@ function s.initial_effect(c)
 	Pendulum.AddProcedure(c)
 	-- Allow cards in the Extra Deck and Pendulum Zones as fusion materials
 	local e1=Effect.CreateEffect(c)
+	e1:SetDescription(aux.Stringid(id,1))
 	e1:SetType(EFFECT_TYPE_FIELD)
 	e1:SetCode(EFFECT_EXTRA_FUSION_MATERIAL)
 	e1:SetCountLimit(1,{id,0})
@@ -26,7 +27,7 @@ function s.initial_effect(c)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetProperty(EFFECT_FLAG_CARD_TARGET)
 	e3:SetHintTiming(0,TIMINGS_CHECK_MONSTER)
-	e3:SetCountLimit(1,{id,2})
+	e3:SetCountLimit(1,{id,1})
 	e3:SetTarget(s.target)
 	e3:SetOperation(s.operation(Fusion.SummonEffTG(table.unpack(params)),Fusion.SummonEffOP(table.unpack(params))))
 	c:RegisterEffect(e3)
@@ -92,8 +93,7 @@ function s.condition(e,tp,eg,ep,ev,re,r,rp)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_PENDULUM)
 end
 function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.CheckPendulumZones(tp)
-	end	
+	if chk==0 then return Duel.CheckPendulumZones(tp) end
 end
 function s.operation(fustg,fusop)
 	return function(e,tp,eg,ep,ev,re,r,rp)
