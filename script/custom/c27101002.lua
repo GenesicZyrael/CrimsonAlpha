@@ -63,7 +63,9 @@ function s.thop(e,tp,eg,ep,ev,re,r,rp)
 	if #g>0 then
 		Duel.SendtoHand(g,nil,REASON_EFFECT)
 		Duel.ConfirmCards(1-tp,g)
-		if Duel.IsExistingMatchingCard(s.exfil,tp,LOCATION_EXTRA,0,1,nil,tp) and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
+		if Duel.IsExistingMatchingCard(s.exfil,tp,LOCATION_EXTRA,0,1,nil,tp) 
+		and Duel.GetLocationCount(tp,LOCATION_MZONE)>0
+		and Duel.SelectYesNo(tp,aux.Stringid(id,0)) then
 			Duel.BreakEffect()
 			local tc=Duel.SelectMatchingCard(tp,s.exfil,tp,LOCATION_EXTRA,0,1,1,nil,tp):GetFirst()
 			if tc and Duel.IsPlayerCanSpecialSummonMonster(tp,27101030,0,0,0,0,tc:GetLevel(),tc:GetRace(),tc:GetAttribute()) then 
