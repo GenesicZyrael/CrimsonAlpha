@@ -1,6 +1,6 @@
 -- Gem-Knight Sefiranite
 local s,id=GetID()
-local params = {nil,nil,function(e,tp,mg) return nil,s.fcheck end}
+local params = {nil,nil,function(e,tp,mg) return Group.CreateGroup(),s.fcheck end}
 function s.initial_effect(c)
 	--pendulum summon
 	Pendulum.AddProcedure(c)
