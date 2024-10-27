@@ -50,8 +50,8 @@ function s.econ(e)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 		and	not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
 end
-function s.efilter(e,te)
-	return te:IsActiveType(TYPE_XYZ) 
+function s.efilter(e,te,rc)
+	return te:IsActiveType(TYPE_XYZ) and rc~=te:GetHandler()
 end
 function s.indtg(e,c)
 	return c:IsFaceup() and e:GetHandler():GetLinkedGroup():IsContains(c)
