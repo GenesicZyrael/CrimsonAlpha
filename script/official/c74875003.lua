@@ -51,10 +51,14 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK+LOCATION_HAND)
 end
 function s.operation(e,tp,eg,ep,ev,re,r,rp)
+	local c=e:GetHandler()
 	local ft=Duel.GetLocationCount(tp,LOCATION_MZONE)
 	if ft<=0 then return end
 	if ft>2 then ft=2 end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
+	local ct=Duel.GetMatchingGroupCount(aux.FaceupFilter(Card.IsCode,id),c:GetControler(),LOCATION_ONFIELD,0,c)
+	if ct>0 then ft=ft-ct end
+	if ft<1 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
 	local g=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK+LOCATION_HAND,0,1,ft,nil,e,tp)
 	if #g>0 then
