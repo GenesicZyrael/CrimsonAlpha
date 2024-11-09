@@ -33,6 +33,7 @@ function s.initial_effect(c)
 	e4:SetType(EFFECT_TYPE_SINGLE)
 	e4:SetRange(LOCATION_ONFIELD)
 	e4:SetCode(EFFECT_SYNCHRO_LEVEL)
+	e4:SetProperty(EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
 	e4:SetValue(s.slevel)
 	c:RegisterEffect(e4)
 end
