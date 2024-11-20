@@ -43,6 +43,16 @@ function s.initial_effect(c)
 	e6:SetCode(EVENT_TO_GRAVE)
 	e6:SetCondition(aux.TRUE)
 	c:RegisterEffect(e6)
+	local e7=e5:Clone()
+	e7:SetDescription(aux.Stringid(id,5))
+	e7:SetCode(EVENT_TO_DECK)
+	e7:SetTarget(s.pentg)
+	e7:SetOperation(s.penop)
+	c:RegisterEffect(e7)
+	local e8=e7:Clone()
+	e8:SetCode(EVENT_TO_GRAVE)
+	e8:SetCondition(aux.TRUE)
+	c:RegisterEffect(e8)
 	--Atk up
 	local eq1=Effect.CreateEffect(c)
 	eq1:SetType(EFFECT_TYPE_EQUIP)
@@ -192,4 +202,15 @@ function s.reptg(e,tp,eg,ep,ev,re,r,rp,chk)
 end
 function s.repop(e,tp,eg,ep,ev,re,r,rp)
 	Duel.Destroy(e:GetHandler(),REASON_EFFECT+REASON_REPLACE)
+end
+
+function s.pentg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.CheckPendulumZones(tp) end
+end
+function s.penop(e,tp,eg,ep,ev,re,r,rp)
+	if not Duel.CheckPendulumZones(tp) then return end
+	local c=e:GetHandler()
+	if c:IsRelateToEffect(e) then
+		Duel.MoveToField(c,tp,tp,LOCATION_PZONE,POS_FACEUP,true)
+	end
 end
