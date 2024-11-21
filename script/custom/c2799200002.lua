@@ -47,8 +47,17 @@ function s.initial_effect(c)
 	e4:SetTarget(s.pentg)
 	e4:SetOperation(s.penop)
 	c:RegisterEffect(e4)
+	--splimit
+	local e5=Effect.CreateEffect(c)
+	e5:SetType(EFFECT_TYPE_FIELD)
+	e5:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+	e5:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CANNOT_DISABLE+EFFECT_FLAG_CANNOT_NEGATE)
+	e5:SetRange(LOCATION_MZONE)
+	e5:SetTargetRange(1,0)
+	e5:SetTarget(s.splimit)
+	c:RegisterEffect(e5)
 end
-s.listed_series={0x10c,0xfe}
+s.listed_series={SET_MEKK_KNIGHT,SET_WORLD_LEGACY}
 s.listed_names={id}
 
 function s.costfilter(c)
@@ -59,7 +68,7 @@ function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.PayLPCost(tp,500)
 end
 function s.filter(c,e,tp)
-	return c:IsSetCard(0x10c) and c:IsMonster() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
+	return c:IsSetCard(SET_MEKK_KNIGHT) and c:IsMonster() and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.GetLocationCount(1-tp,LOCATION_MZONE)>0
@@ -106,23 +115,23 @@ function s.spop2(e,tp,eg,ep,ev,re,r,rp)
 		zone=(zone|tc:GetColumnZone(LOCATION_MZONE,0,0,tp))&ZONES_MMZ
 	end
 	if c:IsRelateToEffect(e) and zone~=0 and Duel.SpecialSummon(c,0,tp,tp,false,false,POS_FACEUP,zone)>0 then
-		local e1=Effect.CreateEffect(e:GetHandler())
-		e1:SetType(EFFECT_TYPE_FIELD)
-		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
-		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
-		e1:SetDescription(aux.Stringid(id,1))
-		e1:SetTargetRange(1,0)
-		e1:SetTarget(s.splimit)
-		e1:SetReset(RESET_PHASE|PHASE_END)
-		Duel.RegisterEffect(e1,tp)
-		--lizard check
-		aux.addTempLizardCheck(e:GetHandler(),tp,s.lizfilter)
+		-- local e1=Effect.CreateEffect(e:GetHandler())
+		-- e1:SetType(EFFECT_TYPE_FIELD)
+		-- e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		-- e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+		-- e1:SetDescription(aux.Stringid(id,1))
+		-- e1:SetTargetRange(1,0)
+		-- e1:SetTarget(s.splimit)
+		-- e1:SetReset(RESET_PHASE|PHASE_END)
+		-- Duel.RegisterEffect(e1,tp)
+		-- --lizard check
+		-- aux.addTempLizardCheck(e:GetHandler(),tp,s.lizfilter)
 	end
 end
 
 function s.ctcon(e,tp,eg,ep,ev,re,r,rp)
 	return re and re:IsHasType(EFFECT_TYPE_ACTIONS) 
-		and re:GetHandler():IsSetCard(0x10c) or re:GetHandler():IsSetCard(0xfe) 
+		and re:GetHandler():IsSetCard(SET_MEKK_KNIGHT) or re:GetHandler():IsSetCard(SET_WORLD_LEGACY) 
 end
 function s.cttg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 	if chkc then return chkc:IsLocation(LOCATION_MZONE) and chkc:IsControler(1-tp) and chkc:IsControlerCanBeChanged() end
