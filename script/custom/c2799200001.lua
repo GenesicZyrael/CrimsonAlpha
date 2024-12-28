@@ -74,8 +74,13 @@ function s.setop(e,tp,eg,ep,ev,re,r,rp)
 	if Duel.GetLocationCount(1-tp,LOCATION_SZONE)<=0 then return end
 	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_TOFIELD)
 	local tc=Duel.SelectMatchingCard(tp,s.setfilter,tp,LOCATION_DECK,0,1,1,nil):GetFirst()
+	local loc=LOCATION_SZONE
 	if tc then 
-		Duel.MoveToField(tc,tp,1-tp,LOCATION_SZONE,POS_FACEDOWN,true)
+		if tc:IsType(TYPE_FIELD) then
+			loc=LOCATION_FZONE
+		end
+		Duel.MoveToField(tc,tp,1-tp,loc,POS_FACEDOWN,true)
+		Duel.ConfirmCards(1-tp,tc)
 	end
 end
 function s.splimit(e,c)
