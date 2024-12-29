@@ -111,6 +111,7 @@ function s.penop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.value(e)
-	local isum=aux.GetPendulumScaleSum(e:GetHandler():GetOwner())
+	local tp=e:GetHandler():GetOwner()
+	local isum=aux.GetPendulumScaleSum(tp)+aux.GetScaleSum(1-tp)
 	return isum*300
 end
