@@ -174,3 +174,10 @@ function aux.IsSummonType(sumtype)
 		return e:GetHandler():IsSummonType(sumtype)
 	end
 end
+-- Return the Sum of all Pendulum Scales of tp
+function aux.GetPendulumScaleSum(tp)
+	local val=0
+	if not Duel.CheckLocation(tp,LOCATION_PZONE,0) then val=val+Duel.GetFieldCard(tp,LOCATION_PZONE,0):GetLeftScale() end
+	if not Duel.CheckLocation(tp,LOCATION_PZONE,1) then val=val+Duel.GetFieldCard(tp,LOCATION_PZONE,1):GetRightScale() end
+	return val
+end
