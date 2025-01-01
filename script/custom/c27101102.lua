@@ -1,7 +1,7 @@
 --Vylon Irregulus
 local s,id=GetID()
 function s.initial_effect(c)
-	aux.AddUnionProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,SET_VYLON),true,false)
+	aux.AddUnionProcedure(c,aux.FilterBoolFunction(Card.IsSetCard,SET_VYLON),false,false)
 	--equip
 	local e1=Effect.CreateEffect(c)
 	e1:SetDescription(aux.Stringid(id,0))
@@ -14,14 +14,14 @@ function s.initial_effect(c)
 	e1:SetTarget(s.eqtg)
 	e1:SetOperation(s.eqop)
 	c:RegisterEffect(e1)
-	--negate effect
-	local e2=Effect.CreateEffect(c)
-	e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
-	e2:SetCode(EVENT_BATTLED)
-	e2:SetRange(LOCATION_SZONE)
-	e2:SetCondition(s.negcon)
-	e2:SetOperation(s.negop)
-	c:RegisterEffect(e2)
+	-- --negate effect
+	-- local e2=Effect.CreateEffect(c)
+	-- e2:SetType(EFFECT_TYPE_FIELD+EFFECT_TYPE_CONTINUOUS)
+	-- e2:SetCode(EVENT_BATTLED)
+	-- e2:SetRange(LOCATION_SZONE)
+	-- e2:SetCondition(s.negcon)
+	-- e2:SetOperation(s.negop)
+	-- c:RegisterEffect(e2)
 end
 s.listed_series={SET_VYLON}
 function s.eqcon(e,tp,eg,ep,ev,re,r,rp)
@@ -47,6 +47,17 @@ function s.eqop(e,tp,eg,ep,ev,re,r,rp)
 	if c:IsRelateToEffect(e) and tc:IsFaceup() and tc:IsRelateToEffect(e) then
 		tc:EquipByEffectAndLimitRegister(e,tp,c)
 		aux.SetUnionState(c)
+		local e1=Effect.CreateEffect(c)
+		e1:SetType(EFFECT_TYPE_FIELD)
+		e1:SetCode(EFFECT_CANNOT_SPECIAL_SUMMON)
+		e1:SetProperty(EFFECT_FLAG_PLAYER_TARGET+EFFECT_FLAG_CLIENT_HINT)
+		e1:SetDescription(aux.Stringid(id,1))
+		e1:SetTargetRange(1,0)
+		e1:SetTarget(s.splimit)
+		e1:SetReset(RESET_PHASE+PHASE_END)
+		Duel.RegisterEffect(e1,tp)
+		--lizard check
+		aux.addTempLizardCheck(e:GetHandler(),tp,s.lizfilter)
 	end
 end
 function s.eqlimit(e,c)
@@ -74,4 +85,10 @@ function s.negop(e,tp,eg,ep,ev,re,r,rp)
 	e2:SetCode(EFFECT_DISABLE_EFFECT)
 	e2:SetReset(RESET_EVENT+0x57a0000)
 	tc:RegisterEffect(e2)
+end
+function s.splimit(e,c,sump,sumtype,sumpos,targetp,se)
+	return not c:IsSetCard(SET_VYLON) and c:IsLocation(LOCATION_EXTRA)
+end
+function s.lizfilter(e,c)
+	return not c:IsOriginalSetCard(SET_VYLON)
 end
