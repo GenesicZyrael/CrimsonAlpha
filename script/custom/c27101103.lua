@@ -37,7 +37,7 @@ function s.cfilter(c)
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
-		and re:IsSpellTrapEffect() and Duel.IsChainNegatable(ev)
+		and re:IsSpellTrapEffect() and Duel.IsChainNegatable(ev) and ep==1-tp
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_SZONE,0,1,nil)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
