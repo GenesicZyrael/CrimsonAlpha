@@ -33,7 +33,7 @@ function s.initial_effect(c)
 end
 s.listed_series={SET_VYLON}
 function s.cfilter(c)
-	return c:IsFaceup() and c:IsType(TYPE_EQUIP)
+	return c:IsFaceup() and c:IsType(TYPE_EQUIP) and c:IsDestructable()
 end
 function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 	return not e:GetHandler():IsStatus(STATUS_BATTLE_DESTROYED)
@@ -41,15 +41,10 @@ function s.negcon(e,tp,eg,ep,ev,re,r,rp)
 		and Duel.IsExistingMatchingCard(s.cfilter,tp,LOCATION_SZONE,0,1,nil)
 end
 function s.negtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	local rc=re:GetHandler()
-	local relation=rc:IsRelateToEffect(re)
-	if chk==0 then return rc:IsAbleToRemove(tp)
-		or (not relation and Duel.IsPlayerCanRemove(tp)) end
+	if chk==0 and Duel.SelectMatchingCard(tp,s.cfilter,tp,LOCATION_SZONE,0,1,1,nil)~=0 then return true end
 	Duel.SetOperationInfo(0,CATEGORY_NEGATE,eg,1,0,0)
-	if relation then
-		Duel.SetOperationInfo(0,CATEGORY_REMOVE,rc,1,rc:GetControler(),rc:GetLocation())
-	else
-		Duel.SetOperationInfo(0,CATEGORY_REMOVE,nil,0,0,rc:GetPreviousLocation())
+	if re:GetHandler():IsDestructable() and re:GetHandler():IsRelateToEffect(re) then
+		Duel.SetOperationInfo(0,CATEGORY_DESTROY,eg,1,0,0)
 	end
 end
 function s.negop(e,tp,eg,ep,ev,re,r,rp)
