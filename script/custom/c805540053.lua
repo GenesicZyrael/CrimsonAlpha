@@ -69,7 +69,7 @@ function s.incon(e)
 	return e:GetHandler():IsSummonType(SUMMON_TYPE_LINK)
 end
 function s.indes(e,c)
-	return c:IsSetCard(SET_AMORPHAGE) and c:IsSpellTrap()
+	return c:IsSetCard(SET_AMORPHAGE) and c:IsSpellTrap() and c:IsPublic()
 end
 function s.indval(e,re,tp)
 	return e:GetHandler():GetControler()~=tp
