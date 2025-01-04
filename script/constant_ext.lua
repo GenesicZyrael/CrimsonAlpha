@@ -13,5 +13,6 @@ EFFECT_CAMELLIA_WENDI					= 27100604+29942771
 CUSTOM_REGISTER_FLIP    				= 10
 CUSTOM_REGISTER_LIMIT  					= 20
 CUSTOM_REGISTER_ZEFRA				    = 30
+CUSTOM_REGISTER_NEKROZ				    = 40
 
 Duel.LoadScript("card_counter_constants_ext.lua")
