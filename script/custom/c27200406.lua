@@ -49,7 +49,7 @@ function s.operation(e,tp,eg,ep,ev,re,r,rp)
 				local sc=Duel.SelectMatchingCard(tp,s.ctfilter,tp,0,LOCATION_MZONE,1,1,nil):GetFirst()
 				if sc then
 					Duel.HintSelection(sc)
-					Duel.GetControl(sc,tp)
+					Duel.GetControl(sc,tp,PHASE_END,1)
 				end
 			end
 		end
