@@ -12,7 +12,7 @@ function s.initial_effect(c)
 	e1:SetCountLimit(1,id)
 	e1:SetTarget(s.drwtg)
 	e1:SetOperation(s.drwop)
-	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLIP)	)
+	c:RegisterEffect(e1,false,CUSTOM_REGISTER_FLIP)
 	--Change itself to face-down
 	local e2=Effect.CreateEffect(c)
 	e2:SetDescription(aux.Stringid(id,1))
