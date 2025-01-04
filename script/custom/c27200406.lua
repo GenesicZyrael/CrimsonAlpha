@@ -14,6 +14,7 @@ function s.initial_effect(c)
 end
 s.listed_series={SET_SHADDOLL}
 function s.condition(e,tp,eg,ep,ev,re,r,rp)
+	if ep==tp then return false end
 	return (re:IsActiveType(TYPE_MONSTER) or re:IsHasType(EFFECT_TYPE_ACTIVATE)) and Duel.IsChainNegatable(ev)
 end
 function s.ctfilter(c,e,tp)
