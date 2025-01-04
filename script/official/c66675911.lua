@@ -25,11 +25,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 	--Lists "Shaddoll" archetype
-s.listed_series={0x9d}
+s.listed_series={SET_SHADDOLL}
 
 	--Check for "Shaddoll" monster
 function s.immfilter(c)
-	return c:IsSetCard(0x9d) and c:IsFaceup()
+	return c:IsSetCard(SET_SHADDOLL) and c:IsFaceup()
 end
 	--Activation legality
 function s.immtg(e,tp,eg,ep,ev,re,r,rp,chk,chkc)

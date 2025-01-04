@@ -26,10 +26,10 @@ function s.initial_effect(c)
 	e2:SetOperation(s.tgop)
 	c:RegisterEffect(e2)
 end
-s.listed_series={0x9d}
+s.listed_series={SET_SHADDOLL}
 
 function s.filter(c,att)
-	return c:IsSetCard(0x9d) and c:IsAbleToGrave() and c:IsAttribute(att)
+	return c:IsSetCard(SET_SHADDOLL) and c:IsAbleToGrave() and c:IsAttribute(att)
 end
 function s.rmfilter(c,tp)
 	return c:IsFaceup() and Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_EXTRA,0,1,nil,c:GetAttribute())

@@ -26,11 +26,11 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 	--Part of "Shaddoll" archetype
-s.listed_series={0x9d}
+s.listed_series={SET_SHADDOLL}
 
 	--Check for "Shaddoll" monster that can be special summoned in defense
 function s.spfilter(c,e,tp)
-	return c:IsSetCard(0x9d) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_DEFENSE)
+	return c:IsSetCard(SET_SHADDOLL) and c:IsCanBeSpecialSummoned(e,0,tp,false,false,POS_DEFENSE)
 end
 	--Activation legality
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
@@ -53,7 +53,7 @@ function s.discon(e,tp,eg,ep,ev,re,r,rp)
 end
 	--Check for "Shaddoll" monster
 function s.disfilter(c)
-	return c:IsSetCard(0x9d) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
+	return c:IsSetCard(SET_SHADDOLL) and c:IsType(TYPE_MONSTER) and c:IsAbleToGrave()
 end
 	--Activation legality
 function s.distg(e,tp,eg,ep,ev,re,r,rp,chk)
