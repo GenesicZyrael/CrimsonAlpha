@@ -1,7 +1,6 @@
 --Renshaddoll Winda
---Modified for CrimsonAlpha
 local s,id=GetID()
-local params={aux.FilterBoolFunction(Card.IsSetCard,0x9d)}
+local params={aux.FilterBoolFunction(Card.IsSetCard,SET_SHADDOLL)}
 function s.initial_effect(c)
 	--flip 
 	local e1=Effect.CreateEffect(c)
@@ -26,7 +25,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 end
 function s.efffilter(c)
-	return c:IsSetCard(0x9d)
+	return c:IsSetCard(SET_SHADDOLL)
 		and c:IsType(TYPE_FUSION)
 end
 function s.effcon(e,tp,eg,ep,ev,re,r,rp)
@@ -42,7 +41,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	local c=e:GetHandler()
 	local tc=Duel.GetFirstTarget()
 	if tc and tc:IsFaceup() and tc:IsRelateToEffect(e) then
-		Duel.HintSelection(tc,true)
+		Duel.HintSelection(tc)
 		local e1=Effect.CreateEffect(tc)
 			e1:SetDescription(aux.Stringid(id,2))
 			e1:SetCategory(CATEGORY_TOGRAVE)
@@ -58,7 +57,7 @@ function s.effop(e,tp,eg,ep,ev,re,r,rp)
 	end
 end
 function s.filter(c,e,tp)
-	if not (c:IsSetCard(0x9d) and c:IsType(TYPE_MONSTER)
+	if not (c:IsSetCard(SET_SHADDOLL) and c:IsType(TYPE_MONSTER)
 		and c:IsHasEffect(TYPE_FLIP) and c:IsAbleToGraveAsCost()) then 
 		return false
 	end
