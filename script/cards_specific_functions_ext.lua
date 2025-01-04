@@ -338,3 +338,7 @@ function Auxiliary.NaturiaWendiOpe(e,tp,eg,ep,ev,re,r,rp)
 	Duel.RegisterFlagEffect(tp,CARD_NATURIA_WENDI,RESET_PHASE+PHASE_END,0,1)
 	return true
 end
+
+function Auxiliary.NekrozOuroCheck(e,tp,eg,ep,ev,re,r,rp)
+	return Duel.IsPlayerAffectedByEffect(tp,CARD_NEKROZ_OUROBOROS)
+end
