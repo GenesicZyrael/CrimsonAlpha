@@ -22,7 +22,6 @@ function s.initial_effect(c)
 	e2:SetTarget(s.destg)
 	e2:SetOperation(s.desop)
 	c:RegisterEffect(e2)
-	
 end
 s.listed_series={SET_YANG_ZING}
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
