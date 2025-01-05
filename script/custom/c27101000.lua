@@ -1,4 +1,4 @@
--- Gem-Knight Sefiranite
+-- Gem-Knight Angel Quartz
 local s,id=GetID()
 local params = {nil,nil,function(e,tp,mg) return Group.CreateGroup(),s.fcheck end}
 function s.initial_effect(c)
@@ -67,7 +67,7 @@ function s.extrafil_repl_filter(c,tp)
 	if Duel.GetFlagEffect(tp,id)~=0 then return false end
 	c:RegisterFlagEffect(id,RESET_EVENT+0x4fe0000+RESET_PHASE+PHASE_END,0,1)
 	return c:IsMonster() and c:IsCanBeFusionMaterial() 
-		and ( c:IsSetCard(SET_GEM_KNIGHT) or c:IsSetCard(SET_ZEFRA) )
+		and c:IsSetCard(SET_GEM_KNIGHT)
 end
 function s.extrafil_replacement(e,tp,mg)
 	local tp=e:GetHandler():GetOwner()
