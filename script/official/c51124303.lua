@@ -99,21 +99,23 @@ function s.activate(e,tp,eg,ep,ev,re,r,rp)
 	local sg=Duel.GetMatchingGroup(s.spfilter,tp,LOCATION_HAND,0,mc,e,tp,mc)
 	--- Custom ---
 	local location=LOCATION_HAND
-	local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
-	local sg_temp=Duel.GetMatchingGroup(s.spfilter,tp,extra_loc,0,mc,e,tp,mc)
-	if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 and extra_loc and (location&extra_loc)==0 then
-		if #sg_temp>0 then
-			if #sg>0 and sg:CheckWithSumEqual(Card.GetLevel,mc:GetLevel(),1,ft) then
-				if Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_LOCATION,1)) then
+	if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 then
+		local extra_loc=Duel.GetFlagEffectLabel(tp,CUSTOM_RITUAL_LOCATION)
+		local sg_temp=Duel.GetMatchingGroup(s.spfilter,tp,extra_loc,0,mc,e,tp,mc)
+		if Duel.GetFlagEffect(tp,CUSTOM_RITUAL_LOCATION)==1 and extra_loc and (location&extra_loc)==0 then
+			if #sg_temp>0 then
+				if #sg>0 and sg:CheckWithSumEqual(Card.GetLevel,mc:GetLevel(),1,ft) then
+					if Duel.SelectYesNo(tp,aux.Stringid(CUSTOM_RITUAL_LOCATION,1)) then
+						Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
+						sg:Merge(sg_temp)
+					end
+				else
 					Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
 					sg:Merge(sg_temp)
 				end
-			else
-				Duel.RegisterFlagEffect(tp,CUSTOM_RITUAL_LOCATION,RESET_PHASE+PHASE_END,0,1,extra_loc)
-				sg:Merge(sg_temp)
 			end
 		end
-	end
+	end 
 	--------------
 	if mc:IsLocation(LOCATION_MZONE) then ft=ft+1 end
 	if Duel.IsPlayerAffectedByEffect(tp,CARD_BLUEEYES_SPIRIT) then ft=1 end
