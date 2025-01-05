@@ -27,7 +27,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	local c2=e2:Clone()
 	c2:SetRange(LOCATION_MZONE)
-	c2:SetCondition(aux.NekrozOuroCheck)
+	c2:SetCondition(aux.AND(s.negcon,aux.NekrozOuroCheck))
 	c2:SetCost(aux.SelfTributeCost)
 	c:RegisterEffect(c2)
 	--remove
