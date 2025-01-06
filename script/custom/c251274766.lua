@@ -2,6 +2,7 @@
 local s,id=GetID()
 function s.initial_effect(c)
 	local e1=Fusion.CreateSummonEff(c,nil,nil,s.fextra)
+	e1:SetCountLimit(1,id)
 	c:RegisterEffect(e1)
 end
 function s.subcon(e)
