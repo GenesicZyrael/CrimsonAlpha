@@ -26,7 +26,12 @@ end
 s.listed_series={SET_YANG_ZING}
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
 	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
-	Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+	if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+		Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
+		e:SetLabel(1)
+	else
+		e:SetLabel(0)
+	end
 end
 function s.filter(c,e,tp)
 	return c:IsSetCard(SET_YANG_ZING) and c:IsCanBeSpecialSummoned(e,0,tp,false,false)
@@ -37,21 +42,23 @@ function s.target(e,tp,eg,ep,ev,re,r,rp,chk)
 	Duel.SetOperationInfo(0,CATEGORY_SPECIAL_SUMMON,nil,1,tp,LOCATION_DECK)
 end
 function s.activate(e,tp,eg,ep,ev,re,r,rp)
-	local c=e:GetHandler()
-	if not c:IsRelateToEffect(e) then return end
-	if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
-	Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
-	local tc=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
-	if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
-		-- Treated as a tuner
-		local e1=Effect.CreateEffect(c)
-		e1:SetType(EFFECT_TYPE_SINGLE)
-		e1:SetCode(EFFECT_ADD_TYPE)
-		e1:SetValue(TYPE_TUNER)
-		e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
-		tc:RegisterEffect(e1)
+	if e:GetLabel()==1 then
+		local c=e:GetHandler()
+		if not c:IsRelateToEffect(e) then return end
+		if Duel.GetLocationCount(tp,LOCATION_MZONE)<=0 then return end
+		Duel.Hint(HINT_SELECTMSG,tp,HINTMSG_SPSUMMON)
+		local tc=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_DECK,0,1,1,nil,e,tp):GetFirst()
+		if tc and Duel.SpecialSummonStep(tc,0,tp,tp,false,false,POS_FACEUP) and Duel.SelectYesNo(tp,aux.Stringid(id,1)) then
+			-- Treated as a tuner
+			local e1=Effect.CreateEffect(c)
+			e1:SetType(EFFECT_TYPE_SINGLE)
+			e1:SetCode(EFFECT_ADD_TYPE)
+			e1:SetValue(TYPE_TUNER)
+			e1:SetReset(RESET_EVENT+RESETS_STANDARD+RESET_PHASE+PHASE_END)
+			tc:RegisterEffect(e1)
+		end
+		Duel.SpecialSummonComplete()
 	end
-	Duel.SpecialSummonComplete()
 end
 function s.thfilter(c)
 	return c:IsSetCard(SET_YANG_ZING) and c:IsAbleToHand() and not c:IsCode(id)
