@@ -1,4 +1,5 @@
 --カタストルの影霊衣
+--Nekroz of Catastor
 --modified for CrimsonAlpha
 
 local s,id=GetID()
@@ -25,6 +26,7 @@ function s.initial_effect(c)
 	c:RegisterEffect(e2)
 	local c2=e2:Clone()
 	c2:SetRange(LOCATION_MZONE)
+	c2:SetCountLimit(1,{id,2})
 	c2:SetCondition(aux.NekrozOuroCheck)
 	c2:SetCost(aux.SelfTributeCost)
 	c:RegisterEffect(c2)
