@@ -14,13 +14,13 @@ function s.initial_effect(c)
 	c:RegisterEffect(e1)
 	--Shuffle 1 "Zefra" monster to the Deck
 	local e2=Effect.CreateEffect(c)
-	e2:SetCategory(CATEGORY_TODECK)
+	e2:SetCategory(CATEGORY_TOHAND)
 	e2:SetType(EFFECT_TYPE_IGNITION)
 	e2:SetRange(LOCATION_GRAVE)
 	e2:SetCountLimit(1,{id,1})
 	e2:SetCost(aux.bfgcost)
-	e2:SetTarget(s.tdtg)
-	e2:SetOperation(s.tdop)
+	e2:SetTarget(s.thtg)
+	e2:SetOperation(s.thop)
 	c:RegisterEffect(e2)
 end
 s.listed_series={SET_ZEFRA}
@@ -50,16 +50,17 @@ function s.extraop(mat,e,tp,eg,ep,ev,re,r,rp,sc)
 	end
 	Duel.ReleaseRitualMaterial(mat)
 end
-function s.tdfilter(c)
-	return c:IsSetCard(SET_ZEFRA) and c:IsPublic() and c:IsAbleToDeck() and c:IsMonster()
+function s.thfilter(c)
+	return c:IsSetCard(SET_ZEFRA) and c:IsPublic() and c:IsMonster() and c:IsAbleToHand()
 end
-function s.tdtg(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(s.tdfilter,tp,LOCATION_REMOVED|LOCATION_EXTRA,0,1,nil) end
-	Duel.SetOperationInfo(0,CATEGORY_TODECK,nil,1,tp,LOCATION_REMOVED|LOCATION_EXTRA)
+function s.thtg(e,tp,eg,ep,ev,re,r,rp,chk)
+	if chk==0 then return Duel.IsExistingMatchingCard(s.thfilter,tp,LOCATION_REMOVED,0,1,nil) end
+	Duel.SetOperationInfo(0,CATEGORY_TOHAND,nil,1,tp,LOCATION_REMOVED)
 end
-function s.tdop(e,tp,eg,ep,ev,re,r,rp)
-	local g=Duel.SelectMatchingCard(tp,s.tdfilter,tp,LOCATION_REMOVED|LOCATION_EXTRA,0,1,1,nil)
+function s.thop(e,tp,eg,ep,ev,re,r,rp)
+	local g=Duel.SelectMatchingCard(tp,s.thfilter,tp,LOCATION_REMOVED,0,1,1,nil)
 	if #g>0 then
-		Duel.SendtoDeck(g,nil,2,REASON_EFFECT)
+		Duel.SendtoHand(g,nil,REASON_EFFECT)
+		Duel.ConfirmCards(1-tp,g)
 	end
 end

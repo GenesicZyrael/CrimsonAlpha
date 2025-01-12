@@ -23,7 +23,7 @@ function s.initial_effect(c)
 	e2:SetValue(s.efilter)
 	c:RegisterEffect(e2)
 	--Ritual Summon
-	local e3=Ritual.CreateProc({handler=c,lvtype=RITPROC_EQUAL,desc=aux.Stringid(id,1)})
+	local e3=Ritual.CreateProc({handler=c,lvtype=RITPROC_GREATER,desc=aux.Stringid(id,1)})
 	e3:SetType(EFFECT_TYPE_QUICK_O)
 	e3:SetRange(LOCATION_MZONE)
 	e3:SetHintTiming(0,TIMING_MAIN_END)
