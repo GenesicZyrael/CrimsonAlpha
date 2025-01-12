@@ -25,8 +25,9 @@ function s.initial_effect(c)
 end
 s.listed_series={SET_YANG_ZING}
 function s.cost(e,tp,eg,ep,ev,re,r,rp,chk)
-	if chk==0 then return Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil) end
-	if Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
+	if chk==0 then return true end
+	if Duel.IsExistingMatchingCard(Card.IsDiscardable,tp,LOCATION_HAND,0,1,nil)
+	and Duel.SelectYesNo(tp,aux.Stringid(id,3)) then
 		Duel.DiscardHand(tp,Card.IsDiscardable,1,1,REASON_COST+REASON_DISCARD)
 		e:SetLabel(1)
 	else
