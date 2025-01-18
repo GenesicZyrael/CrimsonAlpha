@@ -153,25 +153,27 @@ function s.target(rittg,ritop)
 	return function(e,tp,eg,ep,ev,re,r,rp,chk,chkc)
 		local c=e:GetHandler()
 		if chk==0 then return Duel.IsExistingMatchingCard(s.filter,tp,LOCATION_GRAVE|LOCATION_DECK,0,1,nil,tp) end
-		local sc=Duel.SelectMatchingCard(tp,s.filter,tp,LOCATION_GRAVE|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
-		Duel.SendtoExtraP(sc,tp,REASON_EFFECT)
-		sc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1)
-		e:SetLabelObject(sc:GetCardEffect(id):GetLabelObject())
-		if sc:IsCode(84388461) and rittg(e,tp,eg,ep,ev,re,r,rp,0) then 
-			e:SetLabel(sc:GetCode())
-			return rittg(e,tp,eg,ep,ev,re,r,rp,0)
-		end
-		local te=e:GetLabelObject()
-		local tg=te and te:GetTarget() or nil
-		if chkc then return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc) end
-		e:SetLabel(te:GetLabel())
-		e:SetLabelObject(te:GetLabelObject())
-		e:SetProperty(te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and EFFECT_FLAG_CARD_TARGET or 0)
-		if tg then
-			tg(e,tp,eg,ep,ev,re,r,rp,1)
-		end
-		e:SetLabelObject(te)
-		Duel.ClearOperationInfo(0)
+		local sc=Duel.SelectMatchingCard(tp,aux.NecroValleyFilter(s.filter),tp,LOCATION_GRAVE|LOCATION_DECK,0,1,1,nil,tp):GetFirst()
+		if sc then 
+			Duel.SendtoExtraP(sc,tp,REASON_EFFECT)
+			sc:RegisterFlagEffect(id,RESET_EVENT+RESETS_STANDARD+RESET_CHAIN,0,1)
+			e:SetLabelObject(sc:GetCardEffect(id):GetLabelObject())
+			if sc:IsCode(84388461) and rittg(e,tp,eg,ep,ev,re,r,rp,0) then 
+				e:SetLabel(sc:GetCode())
+				return rittg(e,tp,eg,ep,ev,re,r,rp,0)
+			end
+			local te=e:GetLabelObject()
+			local tg=te and te:GetTarget() or nil
+			if chkc then return tg and tg(e,tp,eg,ep,ev,re,r,rp,0,chkc) end
+			e:SetLabel(te:GetLabel())
+			e:SetLabelObject(te:GetLabelObject())
+			e:SetProperty(te:IsHasProperty(EFFECT_FLAG_CARD_TARGET) and EFFECT_FLAG_CARD_TARGET or 0)
+			if tg then
+				tg(e,tp,eg,ep,ev,re,r,rp,1)
+			end
+			e:SetLabelObject(te)
+			Duel.ClearOperationInfo(0)
+		end 
 	end
 end
 function s.operation(rittg,ritop)
