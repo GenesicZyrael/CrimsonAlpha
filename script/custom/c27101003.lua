@@ -46,9 +46,8 @@ s.material_setcode={SET_GEM,SET_GEM_KNIGHT}
 function s.costfilter(c,tp)
 	local atk=c:GetAttack()
 	if atk<0 then atk=0 end
-	return c:IsSetCard(SET_GEM_KNIGHT) 
-		and c:IsMonster() 
-		and c:IsType(TYPE_FUSION) 
+	return c:IsMonster() 
+		and (c:IsType(TYPE_FUSION) or c:IsSetCard(SET_GEM_KNIGHT))
 		and c:IsAbleToRemoveAsCost()
 		and Duel.IsExistingMatchingCard(s.rmfilter,tp,0,LOCATION_MZONE,1,nil,atk)
 end
@@ -84,8 +83,11 @@ function s.spcon(e,tp,eg,ep,ev,re,r,rp)
 end
 function s.spcost(e,tp,eg,ep,ev,re,r,rp,chk)
 	local c=e:GetHandler()
-	if chk==0 then return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 and Duel.IsExistingMatchingCard(s.spcostfilter,tp,LOCATION_GRAVE,0,1,c) end
-	local g=Duel.SelectMatchingCard(tp,s.spcostfilter,tp,LOCATION_GRAVE,0,1,1,c)
+	if chk==0 then 
+		return Duel.GetLocationCount(tp,LOCATION_MZONE)>0 
+			and Duel.IsExistingMatchingCard(s.spcostfilter,tp,LOCATION_GRAVE,0,3,c) 
+	end
+	local g=Duel.SelectMatchingCard(tp,s.spcostfilter,tp,LOCATION_GRAVE,0,3,3,c)
 	Duel.Remove(g,POS_FACEUP,REASON_COST)
 end
 function s.sptg(e,tp,eg,ep,ev,re,r,rp,chk)
