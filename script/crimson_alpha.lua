@@ -2,6 +2,7 @@
 Duel.LoadScript ("constant_ext.lua")
 Duel.LoadScript ("utility_ext.lua")
 Duel.LoadScript ("cards_specific_functions_ext.lua")
+Duel.LoadScript ("proc_fusion_spell_ext.lua")
 Duel.LoadScript ("proc_ritual_ext.lua")
 Duel.LoadScript ("proc_synchro_ext.lua")
 Duel.LoadScript ("proc_pendulum_ext.lua")
