@@ -1,7 +1,7 @@
 # CrimsonAlpha 
 
 Download CrimsonAlpha repo
-> Go to "./config"
+> Go to "./config"  
 > Create a new .json and name it user_configs.json
 > add the ff text:
 {
